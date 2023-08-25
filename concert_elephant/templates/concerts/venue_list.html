@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <br />
+  <div class="content-section">
+    <h1>VENUES</h1>
+    {% for venue in venue_list %}{{ venue }}{% endfor %}
+  </div>
+{% endblock content %}
