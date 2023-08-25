@@ -17,7 +17,7 @@ class Venue(models.Model):
 
     name = models.CharField(max_length=100)
     city = models.CharField(max_length=100)
-    country = CountryField()
+    country = CountryField(default="US")
 
     def __str__(self):
         if self.country:
