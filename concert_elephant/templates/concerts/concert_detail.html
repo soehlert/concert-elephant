@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>{{ concert.artist }}</h1>
+  <div class="row d-flex mt-4">
+    <div class="col col-md-4 offset-md-2">
+      <table class="table table-striped" style="white-space:nowrap;">
+        <tr>
+          <th>Artist</th>
+          <th>Venue</th>
+          <th>Date</th>
+        </tr>
+        <tr>
+          <td>{{ concert.artist }}</td>
+          <td>{{ concert.venue }}</td>
+          <td>{{ concert.date }}</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+{% endblock %}
