@@ -38,8 +38,8 @@ class Venue(models.Model):
 
 
 class Concert(models.Model):
-    artist = models.ForeignKey(Artist, on_delete=models.CASCADE, related_name="artist")
-    venue = models.ForeignKey(Venue, on_delete=models.CASCADE)
+    artist = models.ForeignKey(Artist, on_delete=models.CASCADE, related_name="concerts")
+    venue = models.ForeignKey(Venue, on_delete=models.CASCADE, related_name="concerts")
     date = models.DateField()
     opener = models.CharField(max_length=100, null=True, blank=True)
     festival = models.BooleanField(default=False)
