@@ -1,4 +1,6 @@
 from django.db import models
+from django.db.models import UniqueConstraint
+from django.db.models.functions import Lower
 from django_countries.fields import CountryField
 
 
@@ -6,7 +8,16 @@ from django_countries.fields import CountryField
 class Artist(models.Model):
     """The artist you saw"""
 
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
+
+    # Don't allow multiple bands with the same name
+    class Meta:
+        constraints = [
+            UniqueConstraint(
+                Lower("name"),
+                name="artist_name_unique",
+            ),
+        ]
 
     def __str__(self):
         return str(f"{self.name}")
