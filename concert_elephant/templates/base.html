@@ -36,6 +36,9 @@
               integrity="sha512-1/RvZTcCDEUjY/CypiMz+iqqtaoQfAITmNSJY17Myp4Ms5mdxPS5UV7iOfdZoxcGhzFbOm6sntTKJppjvuhg4g=="
               crossorigin="anonymous"
               referrerpolicy="no-referrer"></script>
+      <script src="https://code.jquery.com/jquery-3.7.0.slim.min.js"
+              integrity="sha256-tG5mcZUtJsZvyKAxYLVXrmjKBVLd6VpVccqz/r4ypFE="
+              crossorigin="anonymous"></script>
       <!-- Your stuff: Third-party javascript libraries go here -->
       <!-- place project specific Javascript in this file -->
       <script defer src="{% static 'js/project.js' %}"></script>
@@ -54,14 +57,11 @@
                   aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
-          <a class="navbar-brand" href="{% url 'home' %}">Concert Elephant</a>
+          <a class="navbar-brand" href="{% url 'concerts:home' %}">Concert Elephant</a>
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
               <li class="nav-item active">
-                <a class="nav-link" href="{% url 'home' %}">Home <span class="visually-hidden">(current)</span></a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="{% url 'about' %}">About</a>
+                <a class="nav-link" href="{% url 'concerts:home' %}">Home <span class="visually-hidden">(current)</span></a>
               </li>
               {% if request.user.is_authenticated %}
                 <li class="nav-item">

@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <br />
+  <div class="content-section">
+    <h1>ARTISTS</h1>
+    {% for artist in artist_list %}{{ artist }}{% endfor %}
+  </div>
+{% endblock content %}
