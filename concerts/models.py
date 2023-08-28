@@ -44,5 +44,8 @@ class Concert(models.Model):
     opener = models.CharField(max_length=100, null=True, blank=True)
     festival = models.BooleanField(default=False)
 
+    class Meta:
+        ordering = ["-date"]
+
     def __str__(self):
         return str(f"{self.artist} - {self.venue} on {self.date}")
