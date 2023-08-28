@@ -18,6 +18,9 @@ class ConcertForm(forms.ModelForm):
                     "data-placeholder": "Search...",
                     # Only trigger autocompletion after 2 characters have been typed
                     "data-minimum-input-length": 2,
+                    # Makes the positioning play nicely with bootstrap
+                    "data-container-css-class": "",
+                    "data-theme": "bootstrap-5",
                 },
             ),
             "venue": autocomplete.ModelSelect2(
@@ -27,6 +30,9 @@ class ConcertForm(forms.ModelForm):
                     "data-placeholder": "Search...",
                     # Only trigger autocompletion after 2 characters have been typed
                     "data-minimum-input-length": 2,
+                    # Makes the positioning play nicely with bootstrap
+                    "data-container-css-class": "",
+                    "data-theme": "bootstrap-5",
                 },
             ),
         }
@@ -39,22 +45,8 @@ class ArtistForm(forms.ModelForm):
             "name",
         ]
 
-    def clean_name(self):
-        """change `whatever_field` to the variable name of
-        the field from the model
-        """
-        data = self.cleaned_data["name"].title()
-        return data.title()
-
 
 class VenueForm(forms.ModelForm):
     class Meta:
         model = Venue
         fields = ["name", "city", "country"]
-
-    def clean_name(self):
-        """change `whatever_field` to the variable name of
-        the field from the model
-        """
-        data = self.cleaned_data["name"].title()
-        return data.title()

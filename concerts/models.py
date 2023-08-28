@@ -22,6 +22,10 @@ class Artist(models.Model):
     def __str__(self):
         return str(f"{self.name}")
 
+    def save(self, *args, **kwargs):
+        self.name = self.name.title()
+        super().save(*args, **kwargs)
+
 
 class Venue(models.Model):
     """The venue you saw the concert"""
@@ -35,6 +39,11 @@ class Venue(models.Model):
             return str(f"{self.name} - {self.city}, {self.country}")
         else:
             return str(f"{self.name} - {self.city}")
+
+    def save(self, *args, **kwargs):
+        self.name = self.name.title()
+        self.city = self.city.title()
+        super().save(*args, **kwargs)
 
 
 class Concert(models.Model):
