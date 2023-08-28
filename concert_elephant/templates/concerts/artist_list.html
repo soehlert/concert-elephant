@@ -4,6 +4,19 @@
   <br />
   <div class="content-section">
     <h1>ARTISTS</h1>
-    {% for artist in artist_list %}{{ artist }}{% endfor %}
+    <table class="table table-striped" style="white-space:nowrap;">
+      {% for artist in artist_list %}
+        <tr>
+          <td>
+            <a class="link" href="{% url 'concerts:artist-detail' artist.id %}"></a>
+            {{ artist }}
+          </td>
+        </tr>
+      {% endfor %}
+    </table>
+  </div>
+  <div class="form-group">
+    <a class="link" href="{% url 'concerts:artist-create' %}"></a>
+    <button class="btn btn-outline-info" type="submit">Add Artist</button>
   </div>
 {% endblock content %}

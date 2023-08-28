@@ -3,7 +3,29 @@
 {% block content %}
   <br />
   <div class="content-section">
-    <h1>Concerts</h1>
-    {% for concert in concert_list %}{{ concert }}{% endfor %}
+    <h1>CONCERTS</h1>
+    <table class="table table-striped" style="white-space:nowrap;">
+      <tr>
+        <th>Artist</th>
+        <th>Venue</th>
+        <th>Date</th>
+        <th>Detail</th>
+      </tr>
+      {% for concert in concert_list %}
+        <tr>
+          <td>{{ concert.artist }}</td>
+          <td>{{ concert.venue }}</td>
+          <td>{{ concert.date }}</td>
+          <td>
+            <a class="link" href="{% url 'concerts:concert-detail' concert.id %}"></a>
+            <span>Detail</span>
+          </td>
+        </tr>
+      {% endfor %}
+    </table>
+  </div>
+  <div class="form-group">
+    <a class="link" href="{% url 'concerts:concert-create' %}"></a>
+    <button class="btn btn-outline-info" type="submit">Add Concert</button>
   </div>
 {% endblock content %}

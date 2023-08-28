@@ -4,6 +4,19 @@
   <br />
   <div class="content-section">
     <h1>VENUES</h1>
-    {% for venue in venue_list %}{{ venue }}{% endfor %}
+    <table class="table table-striped" style="white-space:nowrap;">
+      {% for venue in venue_list %}
+        <tr>
+          <td>
+            <a class="link" href="{% url 'concerts:venue-detail' venue.id %}"></a>
+            {{ venue.name }} - {{ venue.city }}
+          </td>
+        </tr>
+      {% endfor %}
+    </table>
+  </div>
+  <div class="form-group">
+    <a class="link" href="{% url 'concerts:venue-create' %}"></a>
+    <button class="btn btn-outline-info" type="submit">Add Venue</button>
   </div>
 {% endblock content %}

@@ -1,18 +1,22 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <h1>{{ artist.name }}</h1>
-  <div class="row d-flex mt-4">
-    <div class="col col-md-4 offset-md-2">
+  <div class="row d-flex mt-4 text-center">
+    <h1>{{ artist.name }}</h1>
+  </div>
+  <div class="row d-flex mt-2">
+    <div class="col col-md-4 align-items-center justify-content-center">
       <table class="table table-striped" style="white-space:nowrap;">
         <tr>
           <th>Venue</th>
           <th>Date</th>
         </tr>
-        <tr>
-          {#          <td>{{ artist.name }}</td>#}
-          {#          <td class="text-center">{{ artist__concert }}</td>#}
-        </tr>
+        {% for concert in artist.concerts.all %}
+          <tr>
+            <td>{{ concert.venue }}</td>
+            <td>{{ concert.date }}</td>
+          </tr>
+        {% endfor %}
       </table>
     </div>
   </div>

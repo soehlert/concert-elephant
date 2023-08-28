@@ -63,6 +63,15 @@
               <li class="nav-item active">
                 <a class="nav-link" href="{% url 'concerts:home' %}">Home <span class="visually-hidden">(current)</span></a>
               </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'concerts:artist-list' %}">Artists</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'concerts:concert-list' %}">Concerts</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'concerts:venue-list' %}">Venues</a>
+              </li>
               {% if request.user.is_authenticated %}
                 <li class="nav-item">
                   <a class="nav-link"

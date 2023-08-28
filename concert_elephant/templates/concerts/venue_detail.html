@@ -1,7 +1,9 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <h1>{{ venue.name }}</h1>
+  <div class="row d-flex mt-4">
+    <h1>{{ venue.name|title }}</h1>
+  </div>
   <div class="row d-flex mt-4">
     <div class="col col-md-4 offset-md-2">
       <table class="table table-striped" style="white-space:nowrap;">
@@ -9,10 +11,12 @@
           <th>Venue</th>
           <th>Date</th>
         </tr>
-        <tr>
-          {#          <td>{{ artist.name }}</td>#}
-          {#          <td class="text-center">{{ artist__concert }}</td>#}
-        </tr>
+        {% for concert in venue.concerts.all %}
+          <tr>
+            <td>{{ concert.artist|title }}</td>
+            <td>{{ concert.date }}</td>
+          </tr>
+        {% endfor %}
       </table>
     </div>
   </div>
