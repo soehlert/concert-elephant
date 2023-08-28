@@ -3,20 +3,23 @@
 {% block content %}
   <br />
   <div class="content-section">
-    <h1>VENUES</h1>
+    <div class="row d-flex mt-4 text-center">
+      <h1>Venues</h1>
+    </div>
     <table class="table table-striped" style="white-space:nowrap;">
       {% for venue in venue_list %}
         <tr>
           <td>
-            <a class="link" href="{% url 'concerts:venue-detail' venue.id %}"></a>
-            {{ venue.name }} - {{ venue.city }}
+            <a class="link-info link-offset-2 link-underline-opacity-0 link-underline-opacity-100-hover text-decoration-none link"
+               href="{% url 'concerts:venue-detail' venue.id %}">{{ venue.name }} - {{ venue.city }}</a>
           </td>
         </tr>
       {% endfor %}
     </table>
   </div>
   <div class="form-group">
-    <a class="link" href="{% url 'concerts:venue-create' %}"></a>
-    <button class="btn btn-outline-info" type="submit">Add Venue</button>
+    <a class="link" href="{% url 'concerts:venue-create' %}">
+      <button class="btn btn-outline-info" type="submit">Add Venue</button>
+    </a>
   </div>
 {% endblock content %}

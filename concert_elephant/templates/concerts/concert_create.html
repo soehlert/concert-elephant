@@ -5,7 +5,6 @@
 {% block content %}
   <br />
   <div class="content-section">
-    {{ form.media }}  {# Adds widget's JS/CSS files from CDN #}
     <form method="post">
       {% csrf_token %}
       <fieldset class="form-group">
@@ -17,5 +16,6 @@
       </div>
       <br />
     </form>
+    {{ form.media }}
   </div>
 {% endblock content %}
