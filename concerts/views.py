@@ -1,12 +1,33 @@
+from dal import autocomplete
 from django.shortcuts import render, reverse
 from django.views.generic import CreateView, DetailView, ListView
 
-from .forms import ConcertForm
+from .forms import ArtistForm, ConcertForm, VenueForm
 from .models import Artist, Concert, Venue
 
 
 def home_page(request):
     return render(request, "pages/home.html")
+
+
+class ArtistAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        qs = Artist.objects.all()
+
+        if self.q:
+            qs = qs.filter(name__istartswith=self.q)
+
+        return qs
+
+
+class VenueAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        qs = Venue.objects.all()
+
+        if self.q:
+            qs = qs.filter(name__istartswith=self.q)
+
+        return qs
 
 
 class ArtistListView(ListView):
@@ -21,9 +42,7 @@ class ArtistDetailView(DetailView):
 class ArtistCreateView(CreateView):
     model = Artist
     template_name = "concerts/artist_create.html"
-    fields = [
-        "name",
-    ]
+    form_class = ArtistForm
 
     def get_success_url(self):
         return reverse("concerts:artist-list")
@@ -41,7 +60,7 @@ class VenueDetailView(DetailView):
 class VenueCreateView(CreateView):
     model = Venue
     template_name = "concerts/venue_create.html"
-    fields = ["name", "city", "country"]
+    form_class = VenueForm
 
     def get_success_url(self):
         return reverse("concerts:venue-list")

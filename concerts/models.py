@@ -22,6 +22,10 @@ class Artist(models.Model):
     def __str__(self):
         return str(f"{self.name}")
 
+    def save(self, *args, **kwargs):
+        self.name = self.name.title()
+        super().save(*args, **kwargs)
+
 
 class Venue(models.Model):
     """The venue you saw the concert"""
@@ -36,13 +40,21 @@ class Venue(models.Model):
         else:
             return str(f"{self.name} - {self.city}")
 
+    def save(self, *args, **kwargs):
+        self.name = self.name.title()
+        self.city = self.city.title()
+        super().save(*args, **kwargs)
+
 
 class Concert(models.Model):
-    artist = models.ForeignKey(Artist, on_delete=models.CASCADE, related_name="artist")
-    venue = models.ForeignKey(Venue, on_delete=models.CASCADE)
+    artist = models.ForeignKey(Artist, on_delete=models.CASCADE, related_name="concerts")
+    venue = models.ForeignKey(Venue, on_delete=models.CASCADE, related_name="concerts")
     date = models.DateField()
     opener = models.CharField(max_length=100, null=True, blank=True)
     festival = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ["-date"]
 
     def __str__(self):
         return str(f"{self.artist} - {self.venue} on {self.date}")
