@@ -8,7 +8,11 @@ app_name = "route_manager"
 urlpatterns = [
     path("", views.home_page, name="home"),
     # Artists
-    path("artist-autocomplete/", ArtistAutocomplete.as_view(), name="artist-autocomplete"),
+    path(
+        "artist-autocomplete/",
+        ArtistAutocomplete.as_view(create_field="name", validate_create=True),
+        name="artist-autocomplete",
+    ),
     path("artists/", views.ArtistListView.as_view(), name="artist-list"),
     path("artists/add/", views.ArtistCreateView.as_view(), name="artist-create"),
     path("artists/<int:pk>", views.ArtistDetailView.as_view(), name="artist-detail"),
