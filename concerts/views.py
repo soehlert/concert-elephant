@@ -1,3 +1,4 @@
+from dal import autocomplete
 from django.shortcuts import render, reverse
 from django.views.generic import CreateView, DetailView, ListView
 
@@ -7,6 +8,26 @@ from .models import Artist, Concert, Venue
 
 def home_page(request):
     return render(request, "pages/home.html")
+
+
+class ArtistAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        qs = Artist.objects.all()
+
+        if self.q:
+            qs = qs.filter(name__istartswith=self.q)
+
+        return qs
+
+
+class VenueAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        qs = Venue.objects.all()
+
+        if self.q:
+            qs = qs.filter(name__istartswith=self.q)
+
+        return qs
 
 
 class ArtistListView(ListView):
