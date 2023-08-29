@@ -7,6 +7,7 @@ app_name = "route_manager"
 
 urlpatterns = [
     path("", views.home_page, name="home"),
+    path("search/", views.main_search, name="main_search"),
     # Artists
     path(
         "artist-autocomplete/",
