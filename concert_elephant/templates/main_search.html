@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+  {% if artists %}<h5>Artists</h5>{% endif %}
+  {% for artist in artists %}<p>{{ artist.name }}</p>{% endfor %}
+  {% if concerts %}<h5>Concerts</h5>{% endif %}
+  {% for concert in concerts %}<p>{{ concert }}</p>{% endfor %}
+  {% if venues %}<h5>Venues</h5>{% endif %}
+  {% for venue in venues %}<p>{{ venue.name }} - {{ venue.city }}, {{ venue.country }}</p>{% endfor %}
+{% endblock %}

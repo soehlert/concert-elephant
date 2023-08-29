@@ -1,4 +1,5 @@
 from dal import autocomplete
+from django.db.models import Q
 from django.shortcuts import render, reverse
 from django.views.generic import CreateView, DetailView, ListView
 
@@ -8,6 +9,21 @@ from .models import Artist, Concert, Venue
 
 def home_page(request):
     return render(request, "pages/home.html")
+
+
+def main_search(request):
+    q = request.GET["search_query"]
+
+    artists = Artist.objects.filter(name__icontains=q)
+    concerts = Concert.objects.filter(
+        Q(artist__name__icontains=q) | Q(venue__name__icontains=q) | Q(venue__city__icontains=q)
+    )
+    venues = Venue.objects.filter(Q(name__icontains=q) | Q(city__icontains=q))
+    return render(
+        request,
+        "main_search.html",
+        {"artists": artists, "concerts": concerts, "venues": venues, "page_name": "Search Results", "q": q},
+    )
 
 
 class ArtistAutocomplete(autocomplete.Select2QuerySetView):
