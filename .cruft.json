@@ -1,0 +1,38 @@
+{
+  "template": "https://github.com/cookiecutter/cookiecutter-django",
+  "commit": "fb55b453647a2ec108785621b369c7f849b889ba",
+  "checkout": null,
+  "context": {
+    "cookiecutter": {
+      "project_name": "Concert Elephant",
+      "project_slug": "concert_elephant",
+      "description": "Never forget the concerts you've seen",
+      "author_name": "Sam Oehlert",
+      "domain_name": "concertelephant.com",
+      "email": "sam.oehlert@gmail.com",
+      "version": "0.1.0",
+      "open_source_license": "MIT",
+      "username_type": "username",
+      "timezone": "UTC",
+      "windows": "n",
+      "editor": "PyCharm",
+      "use_docker": "y",
+      "postgresql_version": "15",
+      "cloud_provider": "None",
+      "mail_service": "Other SMTP",
+      "use_async": "n",
+      "use_drf": "y",
+      "frontend_pipeline": "None",
+      "use_celery": "n",
+      "use_mailhog": "n",
+      "use_sentry": "n",
+      "use_whitenoise": "y",
+      "use_heroku": "y",
+      "ci_tool": "Github",
+      "keep_local_envs_in_vcs": "y",
+      "debug": "y",
+      "_template": "https://github.com/cookiecutter/cookiecutter-django"
+    }
+  },
+  "directory": null
+}
