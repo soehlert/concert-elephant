@@ -1,6 +1,7 @@
 from dal import autocomplete
+from django.contrib.auth.decorators import login_required
 from django.db.models import Q
-from django.shortcuts import render, reverse
+from django.shortcuts import redirect, render, reverse
 from django.views.generic import CreateView, DetailView, ListView
 
 from .forms import ArtistForm, ConcertForm, VenueForm
@@ -44,6 +45,14 @@ class VenueAutocomplete(autocomplete.Select2QuerySetView):
             qs = qs.filter(name__istartswith=self.q)
 
         return qs
+
+
+@login_required
+def attend_concert(request, pk):
+    concert = Concert.objects.get(pk=pk)
+    Concert.attend_concert(request.user, concert)
+
+    return redirect("concerts:concert-list")
 
 
 class ArtistListView(ListView):
