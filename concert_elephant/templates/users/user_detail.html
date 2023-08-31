@@ -26,6 +26,20 @@
         </div>
       </div>
       <!-- End Action buttons -->
+      <table class="table table-striped" style="white-space:nowrap;">
+        <tr>
+          <th>Artist</th>
+          <th>Venue</th>
+          <th>Date</th>
+        </tr>
+        {% for concert in object.concerts.all %}
+          <tr>
+            <td>{{ concert.artist }}</td>
+            <td>{{ concert.venue }}</td>
+            <td>{{ concert.date }}</td>
+          </tr>
+        {% endfor %}
+      </table>
     {% endif %}
   </div>
 {% endblock content %}
