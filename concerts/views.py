@@ -99,6 +99,11 @@ class ConcertListView(ListView):
 class ConcertDetailView(DetailView):
     model = Concert
 
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["user_concerts"] = Concert.objects.filter(attendees=self.request.user).values_list("id", flat=True)
+        return context
+
 
 class ConcertCreateView(CreateView):
     model = Concert
