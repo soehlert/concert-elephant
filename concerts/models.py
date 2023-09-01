@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 from django.db.models import UniqueConstraint
 from django.db.models.functions import Lower
@@ -52,9 +53,14 @@ class Concert(models.Model):
     date = models.DateField()
     opener = models.CharField(max_length=100, null=True, blank=True)
     festival = models.BooleanField(default=False)
+    attendees = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="concerts")
 
     class Meta:
         ordering = ["-date"]
 
     def __str__(self):
         return str(f"{self.artist} - {self.venue} on {self.date}")
+
+    @classmethod
+    def attend_concert(cls, current_user, concert):
+        concert.attendees.add(current_user)

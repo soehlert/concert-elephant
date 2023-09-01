@@ -11,7 +11,7 @@
         <th>Artist</th>
         <th>Venue</th>
         <th>Date</th>
-        <th>Detail</th>
+        <th></th>
       </tr>
       {% for concert in concert_list %}
         <tr>
@@ -21,7 +21,7 @@
           <td>
             <a class="link-info link-offset-2 link-underline-opacity-0 link-underline-opacity-25-hover text-decoration-none link"
                href="{% url 'concerts:concert-detail' concert.id %}">
-              <span>Detail</span>
+              <span>More info</span>
             </a>
           </td>
         </tr>
