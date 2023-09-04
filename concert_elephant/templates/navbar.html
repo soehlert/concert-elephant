@@ -25,7 +25,9 @@
             <a class="nav-link" href="{% url 'concerts:venue-list' %}">Venues</a>
           </li>
         </ul>
-        <form class="d-flex w-100 mt-2 d-inline" action="{% url 'concerts:main_search' %} method="POST">
+        <form class="d-flex w-100 mt-2 d-inline"
+              action="{% url 'concerts:main_search' %}"
+              method="POST">
           {% csrf_token %}
           <input class="form-control pl-2 me-2"
                  type="search"
