@@ -1,7 +1,7 @@
 {% load static i18n %}
 
 <div class="mb-1">
-  <nav class="navbar sticky-top navbar-expand-md navbar-dark justify-content-between bg-dark">
+  <nav class="navbar navbar-custom sticky-top navbar-expand-md navbar-dark justify-content-between bg-dark">
     <div class="container-fluid">
       <a class="navbar-brand" href="{% url 'concerts:home' %}">Concert Elephant<span class="visually-hidden">(current)</span></a>
       <button class="navbar-toggler navbar-toggler-right"
@@ -16,13 +16,16 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto text-nowrap">
           <li class="nav-item d-inline mt-2">
-            <a class="nav-link" href="{% url 'concerts:artist-list' %}">Artists</a>
+            <a class="nav-link nav-link-custom"
+               href="{% url 'concerts:artist-list' %}">Artists</a>
           </li>
           <li class="nav-item d-inline mt-2">
-            <a class="nav-link" href="{% url 'concerts:concert-list' %}">Concerts</a>
+            <a class="nav-link nav-link-custom"
+               href="{% url 'concerts:concert-list' %}">Concerts</a>
           </li>
           <li class="nav-item d-inline mt-2">
-            <a class="nav-link" href="{% url 'concerts:venue-list' %}">Venues</a>
+            <a class="nav-link nav-link-custom"
+               href="{% url 'concerts:venue-list' %}">Venues</a>
           </li>
         </ul>
         <form class="d-flex w-100 mt-2 d-inline"
@@ -34,28 +37,32 @@
                  placeholder="Artist or Venue..."
                  name="search_query" />
           <button type="submit"
-                  class="btn btn-info btn-lg btn-block text-white btn-search">Search</button>
+                  class="btn btn-dark btn-lg btn-block text-white btn-search">Search</button>
         </form>
         <ul class="navbar-nav ml-auto text-nowrap">
           {% if request.user.is_authenticated %}
             <li class="nav-item d-inline mt-2">
-              <a class="nav-link"
+              <a class="nav-link nav-link-custom"
                  href="{% url 'users:detail' request.user.username %}">{% translate "My Profile" %}</a>
             </li>
             <li class="nav-item d-inline mt-2">
               {# URL provided by django-allauth/account/urls.py #}
-              <a class="nav-link" href="{% url 'account_logout' %}">{% translate "Sign Out" %}</a>
+              <a class="nav-link nav-link-custom" href="{% url 'account_logout' %}">{% translate "Sign Out" %}</a>
             </li>
           {% else %}
             {% if ACCOUNT_ALLOW_REGISTRATION %}
               <li class="nav-item d-inline mt-2">
                 {# URL provided by django-allauth/account/urls.py #}
-                <a id="sign-up-link" class="nav-link" href="{% url 'account_signup' %}">{% translate "Sign Up" %}</a>
+                <a id="sign-up-link nav-link-custom"
+                   class="nav-link"
+                   href="{% url 'account_signup' %}">{% translate "Sign Up" %}</a>
               </li>
             {% endif %}
             <li class="nav-item d-inline mt-2">
               {# URL provided by django-allauth/account/urls.py #}
-              <a id="log-in-link" class="nav-link" href="{% url 'account_login' %}">{% translate "Sign In" %}</a>
+              <a id="log-in-link nav-link-custom"
+                 class="nav-link"
+                 href="{% url 'account_login' %}">{% translate "Sign In" %}</a>
             </li>
           {% endif %}
         </ul>
