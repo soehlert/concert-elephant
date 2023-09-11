@@ -20,6 +20,10 @@
   color: #040D12;
 }
 
+.nva-link-custom:hover {
+  color: #93B1A6;
+}
+
 .btn {
   background-color: #040D12;
   border-color: #040D12;
@@ -40,4 +44,12 @@
 thead.table-custom {
   background-color: #5C8374 !important;
   color: #040D12;
+}
+
+.link-custom {
+  color: #040D12;
+}
+
+.link-custom:hover {
+  color: #93B1A6;
 }

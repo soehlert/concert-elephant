@@ -74,6 +74,11 @@ class ArtistListView(ListView):
 class ArtistDetailView(DetailView):
     model = Artist
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["recent_concerts"] = Concert.objects.filter(artist=self.object.id)
+        return context
+
 
 class ArtistCreateView(CreateView):
     model = Artist
@@ -91,6 +96,11 @@ class VenueListView(ListView):
 
 class VenueDetailView(DetailView):
     model = Venue
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["recent_concerts"] = Concert.objects.filter(venue=self.object.id)
+        return context
 
 
 class VenueCreateView(CreateView):
