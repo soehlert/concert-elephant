@@ -11,3 +11,45 @@
   background-color: #f2dede;
   border-color: #eed3d7;
 }
+
+.navbar-custom {
+  background-color: #5C8374 !important;
+}
+
+.nav-link-custom {
+  color: #040D12;
+}
+
+.nva-link-custom:hover {
+  color: #93B1A6;
+}
+
+.btn {
+  background-color: #040D12;
+  border-color: #040D12;
+  color: #93B1A6;
+}
+
+.btn:hover {
+  background-color:#93B1A6;
+  border-color: #93B1A6;
+  transition: 0.7s;
+}
+
+.card-header-custom {
+  color: #040D12;
+  background-color: #93B1A6;
+}
+
+thead.table-custom {
+  background-color: #5C8374 !important;
+  color: #040D12;
+}
+
+.link-custom {
+  color: #040D12;
+}
+
+.link-custom:hover {
+  color: #93B1A6;
+}

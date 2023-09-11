@@ -3,19 +3,22 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-  <br />
-  <div class="content-section">
-    <form method="post">
-      {% csrf_token %}
-      <fieldset class="form-group">
-        <legend class="text-info border-bottom mb-4">New Concert</legend>
-        {{ form | crispy }}  {# Renders form fields #}
-      </fieldset>
-      <div class="form-group">
-        <button class="btn btn-outline-info" type="submit">Add Concert</button>
+  <div class="row justify-content-center">
+    <div class="col col-md-8 col-sm-12">
+      <div class="card">
+        <h5 class="card-header card-header-custom display-4 text-center">New Concert</h5>
       </div>
-      <br />
-    </form>
-    {{ form.media }}
+      <form method="POST">
+        {% csrf_token %}
+        <fieldset class="form-group">
+          {{ form|crispy }}
+        </fieldset>
+        <div class="text-center">
+          <button class="btn btn-outline-info text-white" type="submit">Add Concert</button>
+        </div>
+        <br />
+      </form>
+      {{ form.media }}
+    </div>
   </div>
 {% endblock content %}

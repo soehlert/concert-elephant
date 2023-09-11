@@ -1,36 +1,60 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <br />
-  <div class="content-section">
-    <div class="row d-flex mt-4 text-center">
-      <h1>Concerts</h1>
+  <div class="row justify-content-center">
+    <div class="col col-md-12 col-sm-12">
+      <div class="card">
+        <h5 class="card-header card-header-custom display-4 text-center">Concerts</h5>
+      </div>
+      <table class="table table-striped table-hover">
+        <thead class="table-custom">
+          <tr>
+            <th scope="col">Artist</th>
+            <th class="text-center" scope="col">Venue</th>
+            <th class="text-center" scope="col">Date</th>
+            <th class="text-center" scope="col">Openers</th>
+            <th class="text-center" scope="col">Festival</th>
+            <th></th>
+          </tr>
+        </thead>
+        {% for concert in concert_list %}
+          <tr>
+            <td>{{ concert.artist }}</td>
+            <td class="text-center">{{ concert.venue }}</td>
+            <td class="text-center">{{ concert.date }}</td>
+            <td class="text-center">{{ concert.openers }}</td>
+            <td class="text-center">
+              {% if concert.festival %}
+                <input class="form-check-input"
+                       type="checkbox"
+                       value=""
+                       id="flexCheckCheckedDisabled"
+                       checked
+                       disabled />
+                <label class="form-check-label" for="flexCheckChecked"></label>
+              {% else %}
+                <input class="form-check-input"
+                       type="checkbox"
+                       value=""
+                       id="flexCheckDisabled"
+                       disabled />
+                <label class="form-check-label" for="flexCheckDefault"></label>
+              {% endif %}
+            </td>
+            <td>
+              <a class="link-custom link-offset-2 link-underline-opacity-0 link-underline-opacity-25-hover text-decoration-none"
+                 href="{% url 'concerts:concert-detail' concert.id %}">
+                <span>More info</span>
+              </a>
+            </td>
+          </tr>
+        {% endfor %}
+      </table>
     </div>
-    <table class="table table-striped" style="white-space:nowrap;">
-      <tr>
-        <th>Artist</th>
-        <th>Venue</th>
-        <th>Date</th>
-        <th></th>
-      </tr>
-      {% for concert in concert_list %}
-        <tr>
-          <td>{{ concert.artist }}</td>
-          <td>{{ concert.venue }}</td>
-          <td>{{ concert.date }}</td>
-          <td>
-            <a class="link-info link-offset-2 link-underline-opacity-0 link-underline-opacity-25-hover text-decoration-none link"
-               href="{% url 'concerts:concert-detail' concert.id %}">
-              <span>More info</span>
-            </a>
-          </td>
-        </tr>
-      {% endfor %}
-    </table>
   </div>
-  <div class="form-group">
+  <div class="text-center">
     <a class="link" href="{% url 'concerts:concert-create' %}">
-      <button class="btn btn-outline-info" type="submit">Add Concert</button>
+      <button class="btn btn-outline-info text-white" type="submit">Add Concert</button>
     </a>
   </div>
 {% endblock content %}

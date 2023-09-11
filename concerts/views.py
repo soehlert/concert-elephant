@@ -1,6 +1,6 @@
 from dal import autocomplete
 from django.contrib.auth.decorators import login_required
-from django.db.models import Q
+from django.db.models import Count, Q
 from django.shortcuts import redirect, render, reverse
 from django.views.generic import CreateView, DetailView, ListView
 
@@ -9,11 +9,22 @@ from .models import Artist, Concert, Venue
 
 
 def home_page(request):
-    return render(request, "pages/home.html")
+    recent_artists = Artist.objects.all().order_by("-id")[:5]
+    recent_concerts = Concert.objects.all().order_by("-date")[:5]
+    recent_venues = Venue.objects.all().order_by("-id")[:5]
+    popular_concerts = Concert.objects.all().annotate(num_attendees=Count("attendees")).order_by("-num_attendees")[:5]
+
+    context = {
+        "recent_artists": recent_artists,
+        "recent_concerts": recent_concerts,
+        "recent_venues": recent_venues,
+        "popular_concerts": popular_concerts,
+    }
+    return render(request, "pages/home.html", context)
 
 
 def main_search(request):
-    q = request.GET["search_query"]
+    q = request.POST.get("search_query")
 
     artists = Artist.objects.filter(name__icontains=q)
     concerts = Concert.objects.filter(
@@ -63,6 +74,11 @@ class ArtistListView(ListView):
 class ArtistDetailView(DetailView):
     model = Artist
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["recent_concerts"] = Concert.objects.filter(artist=self.object.id)
+        return context
+
 
 class ArtistCreateView(CreateView):
     model = Artist
@@ -80,6 +96,11 @@ class VenueListView(ListView):
 
 class VenueDetailView(DetailView):
     model = Venue
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["recent_concerts"] = Concert.objects.filter(venue=self.object.id)
+        return context
 
 
 class VenueCreateView(CreateView):
