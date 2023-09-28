@@ -69,6 +69,7 @@ def attend_concert(request, pk):
 class ArtistListView(ListView):
     model = Artist
     template_name = "concerts/artist_list.html"
+    paginate_by = 20
 
 
 class ArtistDetailView(DetailView):
@@ -92,6 +93,7 @@ class ArtistCreateView(CreateView):
 class VenueListView(ListView):
     model = Venue
     template_name = "concerts/venue_list.html"
+    paginate_by = 20
 
 
 class VenueDetailView(DetailView):
@@ -115,6 +117,7 @@ class VenueCreateView(CreateView):
 class ConcertListView(ListView):
     model = Concert
     template_name = "concerts/concert_list.html"
+    paginate_by = 20
 
 
 class ConcertDetailView(DetailView):

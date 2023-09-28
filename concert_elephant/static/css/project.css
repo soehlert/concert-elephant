@@ -31,7 +31,18 @@
 }
 
 .btn:hover {
-  background-color:#93B1A6;
+  background-color: #93B1A6;
+  border-color: #93B1A6;
+  transition: 0.7s;
+}
+
+.btn.active {
+  background-color: #5C8374;
+  border-color: #5C8374;
+}
+
+.btn.active:hover {
+  background-color: #93B1A6;
   border-color: #93B1A6;
   transition: 0.7s;
 }
