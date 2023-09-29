@@ -9,7 +9,7 @@ from django_countries.fields import CountryField
 class Artist(models.Model):
     """The artist you saw"""
 
-    name = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=100)
 
     # Don't allow multiple bands with the same name
     class Meta:
@@ -34,6 +34,9 @@ class Venue(models.Model):
     name = models.CharField(max_length=100)
     city = models.CharField(max_length=100)
     country = CountryField(default="US")
+
+    class Meta:
+        unique_together = ["name", "city"]
 
     def __str__(self):
         if self.country:
