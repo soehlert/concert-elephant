@@ -11,7 +11,7 @@ urlpatterns = [
     # Artists
     path(
         "artist-autocomplete/",
-        ArtistAutocomplete.as_view(create_field="name", validate_create=True),
+        ArtistAutocomplete.as_view(),
         name="artist-autocomplete",
     ),
     path("artists/", views.ArtistListView.as_view(), name="artist-list"),

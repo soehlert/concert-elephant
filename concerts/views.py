@@ -1,9 +1,9 @@
-from dal import autocomplete
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count, Q
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render, reverse
+from django.views import View
 from django.views.generic import CreateView, DetailView, ListView
 
 from .forms import ArtistForm, ConcertForm, VenueForm
@@ -40,26 +40,33 @@ def main_search(request):
     )
 
 
-class ArtistAutocomplete(autocomplete.Select2QuerySetView):
-    def get_queryset(self):
-        term = self.request.GET.get("term", "")
+class ArtistAutocomplete(View):
+    def get_queryset(self, term):
         return Artist.objects.filter(name__icontains=term)
 
     def render_to_response(self, context):
-        artists = self.get_queryset()
+        artists = self.get_queryset(context["term"])
         artist_data = [{"id": artist.id, "label": artist.name} for artist in artists]
         return JsonResponse(artist_data, safe=False)
 
+    def get(self, request, *args, **kwargs):
+        term = request.GET.get("term", "")
+        context = {"term": term}
+        return self.render_to_response(context)
 
-class VenueAutocomplete(autocomplete.Select2QuerySetView):
-    def get_queryset(self):
-        term = self.request.GET.get("term", "")
+
+class VenueAutocomplete(View):
+    def get_queryset(self, term):
+        # Filter venues that contain the search term in their name
         return Venue.objects.filter(name__icontains=term)
 
-    def render_to_response(self, context):
-        venues = self.get_queryset()
-        # Return both the name (label) and the ID (value) for each venue
-        data = [{"id": venue.id, "label": venue.name} for venue in venues]
+    def get(self, request, *args, **kwargs):
+        term = request.GET.get("term", "")
+        venues = self.get_queryset(term)
+
+        # Prepare the data for autocomplete
+        data = [{"id": venue.id, "label": str(venue)} for venue in venues]
+
         return JsonResponse(data, safe=False)
 
 
