@@ -3,7 +3,7 @@ from django.urls import path
 from . import views
 from .views import ArtistAutocomplete, VenueAutocomplete
 
-app_name = "route_manager"
+app_name = "concerts"
 
 urlpatterns = [
     path("", views.home_page, name="home"),
