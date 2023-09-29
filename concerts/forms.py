@@ -1,41 +1,27 @@
 from bootstrap_datepicker_plus.widgets import DatePickerInput
-from dal import autocomplete
 from django import forms
+from django_countries.widgets import CountrySelectWidget
 
 from .models import Artist, Concert, Venue
 
 
 class ConcertForm(forms.ModelForm):
+    # artist = forms.ModelChoiceField(
+    #     queryset=Artist.objects.all(),
+    #     widget=forms.Select(attrs={"class": "form-control", "id": "artist-autocomplete"}),
+    # )
+
     class Meta:
         model = Concert
         fields = ["artist", "venue", "date", "opener", "festival"]
         widgets = {
-            "date": DatePickerInput(options={"format": "MM/DD/YYYY"}),
-            "artist": autocomplete.ModelSelect2(
-                url="concerts:artist-autocomplete",
-                attrs={
-                    # Set some placeholder
-                    "data-placeholder": "Search...",
-                    # Only trigger autocompletion after 2 characters have been typed
-                    "data-minimum-input-length": 2,
-                    # Makes the positioning play nicely with bootstrap
-                    "data-container-css-class": "",
-                    "data-theme": "bootstrap-5",
-                },
-            ),
-            "venue": autocomplete.ModelSelect2(
-                url="concerts:venue-autocomplete",
-                attrs={
-                    # Set some placeholder
-                    "data-placeholder": "Search...",
-                    # Only trigger autocompletion after 2 characters have been typed
-                    "data-minimum-input-length": 2,
-                    # Makes the positioning play nicely with bootstrap
-                    "data-container-css-class": "",
-                    "data-theme": "bootstrap-5",
-                },
-            ),
+            "date": DatePickerInput(options={"format": "MM/DD/YYYY"}, attrs={"class": "form-control"}),
         }
+
+    #
+    # def __init__(self, *args, **kwargs):
+    #     super().__init__(*args, **kwargs)
+    #     self.fields["artist"].queryset = Artist.objects.all()
 
 
 class ArtistForm(forms.ModelForm):
@@ -50,3 +36,4 @@ class VenueForm(forms.ModelForm):
     class Meta:
         model = Venue
         fields = ["name", "city", "country"]
+        widgets = {"country": CountrySelectWidget(attrs={"class": "form-control"})}
