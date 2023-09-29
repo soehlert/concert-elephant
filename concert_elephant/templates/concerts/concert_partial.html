@@ -7,24 +7,28 @@
         action="{% url 'concerts:concert-create' %}">
     {% csrf_token %}
     <!-- Render all fields except the artist field -->
-    <div class="form-group">
-      <label for="artist-autocomplete">Artist</label>
+    <div class="form-group mb-2">
+      <div>
+        <label for="artist-autocomplete">Artist*</label>
+        <i class="bi bi-plus-circle" id="createArtistButton"></i>
+      </div>
       <input type="text"
              id="artist-autocomplete"
              class="form-control"
              placeholder="Start typing artist name..." />
       <!-- This hidden input will hold the actual selected artist ID for submission -->
       <input type="hidden" name="artist" id="concert-artist" />
-      <i class="bi bi-plus-circle" id="createArtistButton"></i>
     </div>
-    <div class="form-group">
-      <label for="venue-autocomplete">Venue</label>
+    <div class="form-group mb-2">
+      <div>
+        <label for="venue-autocomplete">Venue*</label>
+        <i class="bi bi-plus-circle" id="createVenueButton"></i>
+      </div>
       <input type="text"
              id="venue-autocomplete"
              placeholder="Start typing a venue..."
              class="form-control" />
       <input type="hidden" name="venue" id="concert-venue" />
-      <i class="bi bi-plus-circle" id="createVenueButton"></i>
     </div>
     <!-- Render all fields except the artist field with crispy forms -->
     {{ form.non_field_errors|as_crispy_errors }}
