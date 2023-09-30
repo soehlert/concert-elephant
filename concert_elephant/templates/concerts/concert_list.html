@@ -22,7 +22,12 @@
             <td>{{ concert.artist }}</td>
             <td class="text-center">{{ concert.venue }}</td>
             <td class="text-center">{{ concert.date }}</td>
-            <td class="text-center">{{ concert.openers }}</td>
+            <td class="text-center">
+              {% for opener in concert.opener.all %}
+                {{ opener.name }}
+                {% if not forloop.last %},{% endif %}
+              {% endfor %}
+            </td>
             <td class="text-center">
               {% if concert.festival %}
                 <input class="form-check-input"
