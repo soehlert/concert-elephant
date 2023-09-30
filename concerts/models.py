@@ -9,7 +9,7 @@ from django_countries.fields import CountryField
 class Artist(models.Model):
     """The artist you saw"""
 
-    name = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=100)
 
     # Don't allow multiple bands with the same name
     class Meta:
@@ -35,6 +35,9 @@ class Venue(models.Model):
     city = models.CharField(max_length=100)
     country = CountryField(default="US")
 
+    class Meta:
+        unique_together = ["name", "city"]
+
     def __str__(self):
         if self.country:
             return str(f"{self.name} - {self.city}, {self.country}")
@@ -51,7 +54,7 @@ class Concert(models.Model):
     artist = models.ForeignKey(Artist, on_delete=models.CASCADE, related_name="concerts")
     venue = models.ForeignKey(Venue, on_delete=models.CASCADE, related_name="concerts")
     date = models.DateField()
-    opener = models.CharField(max_length=100, null=True, blank=True)
+    opener = models.ManyToManyField(Artist, related_name="opener_concerts", blank=True)
     festival = models.BooleanField(default=False)
     attendees = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="concerts")
 

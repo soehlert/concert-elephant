@@ -64,3 +64,41 @@ thead.table-custom {
 .link-custom:hover {
   color: #93B1A6;
 }
+
+.alert {
+    text-align: center;
+}
+
+/* Custom styles for jQuery UI Autocomplete */
+.ui-autocomplete {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000; /* Ensure the dropdown is above other content */
+    border: 1px solid #ccc;
+    background-color: #F8F8FF;
+    width: auto; /* Match the width of the input field */
+}
+
+.ui-menu-item {
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+.ui-menu-item:hover {
+    background-color: #93B1A6;
+}
+
+.ui-helper-hidden-accessible{
+    display:none;
+}
+
+.modal-messages {
+  width: 75%;
+  margin: 0 auto;
+  padding: 5px;
+}
+
+.country-select-flag {
+display: none;
+}

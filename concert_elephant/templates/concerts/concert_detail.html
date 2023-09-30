@@ -20,7 +20,12 @@
           <td>{{ concert.artist }}</td>
           <td class="text-center">{{ concert.venue }}</td>
           <td class="text-center">{{ concert.date }}</td>
-          <td class="text-center">{{ concert.openers }}</td>
+          <td class="text-center">
+            {% for opener in concert.opener.all %}
+              {{ opener.name }}
+              {% if not forloop.last %},{% endif %}
+            {% endfor %}
+          </td>
           <td class="text-center">
             {% if concert.festival %}
               <input class="form-check-input"
@@ -47,7 +52,9 @@
                 action="{% url 'concerts:attend-concert' pk=concert.id %}"
                 method="POST">
             {% csrf_token %}
-            <button class="btn btn-info btn-sm" type="submit">I was there!</button>
+            <div class="text-center">
+              <button class="btn btn-info btn-sm text-white" type="submit">I Was There!</button>
+            </div>
           </form>
         {% endif %}
       {% endif %}
