@@ -278,7 +278,7 @@
           success: function(data) {
             if (data.status === 'success') {
               // Display a success message in the modal
-              $("#modal-venue-messages").html('<div class="alert alert-success">' + data.message + '</div>');
+              $("#modal-venue-messages").html('<div class="alert alert-success text-center">' + data.message + '</div>');
 
               // Update the venue field in the main form if needed
               let venueName = data.venue.name + " - " + data.venue.city + ", " + data.venue.country;
@@ -297,7 +297,7 @@
                 }
               }
               errorsHtml += '</ul>';
-              $("#modal-venue-messages").html('<div class="alert alert-danger">' + errorsHtml + '</div>');
+              $("#modal-venue-messages").html('<div class="alert alert-danger text-center">' + errorsHtml + '</div>');
             }
           },
           error: function(error) {
@@ -321,7 +321,7 @@
           success: function(data) {
             if (data.status === 'success') {
               // Display a success message in the modal
-              $("#modal-opener-messages").html('<div class="alert alert-success">' + data.message + '</div>');
+              $("#modal-opener-messages").html('<div class="alert alert-success text-center">' + data.message + '</div>');
               console.log(data.message)
               // Update the opener input with the new opener's (artist's) name
               $('#opener-autocomplete-1').val(data.artist);
@@ -359,7 +359,7 @@
             if (data.status === 'success') {
               console.log("ajax post sent")
               // Display a success message in the modal
-              $("#modal-messages").html('<div class="alert alert-success">' + data.message + '</div>');
+              $("#modal-messages").html('<div class="alert alert-success text-center">' + data.message + '</div>');
 
               // Update the artist input with the new artist's name.
               $('#artist-autocomplete').val(data.artist);
@@ -380,7 +380,7 @@
                 }
               }
               errorsHtml += '</ul>';
-              $("#modal-messages").html('<div class="alert alert-danger">' + errorsHtml + '</div>');
+              $("#modal-messages").html('<div class="alert alert-danger text-center">' + errorsHtml + '</div>');
             }
           },
           error: function(error) {

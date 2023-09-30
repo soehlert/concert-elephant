@@ -65,6 +65,10 @@ thead.table-custom {
   color: #93B1A6;
 }
 
+.alert {
+    text-align: center;
+}
+
 /* Custom styles for jQuery UI Autocomplete */
 .ui-autocomplete {
     position: absolute;

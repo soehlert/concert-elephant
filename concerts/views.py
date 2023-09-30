@@ -229,7 +229,6 @@ class ConcertCreateView(CreateView):
         return context
 
     def form_valid(self, form):
-        print(form.cleaned_data)
         # Extract the artist name from the form data
         artist_name = form.cleaned_data.get("artist")
 
@@ -245,6 +244,13 @@ class ConcertCreateView(CreateView):
 
         # Assign the artist to the concert instance
         form.instance.artist = artist_instance
+
+        # Save the form instance but don't commit to DB yet
+        concert = form.save(commit=False)
+        concert.save()  # This will save the instance to DB, allowing many-to-many operations
+
+        # Automatically set the creator as an attendee
+        concert.attendees.add(self.request.user)
 
         messages.success(self.request, "Concert successfully created!")
         return super().form_valid(form)
