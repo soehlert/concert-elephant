@@ -10,7 +10,7 @@
     <div class="form-group mb-2">
       <div>
         <label for="artist-autocomplete">Artist*</label>
-        <i class="bi bi-plus-circle" id="createArtistButton"></i>
+        <i class="bi bi-person-plus-fill" id="createArtistButton"></i>
       </div>
       <input type="text"
              id="artist-autocomplete"
@@ -22,7 +22,7 @@
     <div class="form-group mb-2">
       <div>
         <label for="venue-autocomplete">Venue*</label>
-        <i class="bi bi-plus-circle" id="createVenueButton"></i>
+        <i class="bi bi-plus-square" id="createVenueButton"></i>
       </div>
       <input type="text"
              id="venue-autocomplete"
@@ -30,10 +30,22 @@
              class="form-control" />
       <input type="hidden" name="venue" id="concert-venue" />
     </div>
-    <!-- Render all fields except the artist field with crispy forms -->
+    <div class="form-group mb-2" id="opener-container">
+      <div>
+        <label for="opener-autocomplete-1">Opener</label>
+        <i class="bi bi-person-plus-fill" id="createOpenerButton"></i>
+      </div>
+      <input type="text"
+             id="opener-autocomplete-1"
+             placeholder="Start typing opener name..."
+             class="form-control opener-input" />
+      <!-- This hidden input will hold the actual selected opener ID -->
+      <input type="hidden" name="opener-1" id="concert-opener-1" />
+      <i class="bi bi-plus-circle" id="createOpenerButton-1"></i>
+    </div>
     {{ form.non_field_errors|as_crispy_errors }}
     {% for field in form %}
-      {% if field.name != "artist" and field.name != "venue" %}
+      {% if field.name != "artist" and field.name != "venue" and field.name != "opener" %}
         <div class="form-group">{{ field|as_crispy_field }}</div>
       {% endif %}
     {% endfor %}
