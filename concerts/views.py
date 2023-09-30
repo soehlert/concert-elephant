@@ -12,7 +12,7 @@ from .models import Artist, Concert, Venue
 
 def home_page(request):
     recent_artists = Artist.objects.all().order_by("-id")[:5]
-    recent_concerts = Concert.objects.all().order_by("-date")[:5]
+    recent_concerts = Concert.objects.select_related("artist", "venue").order_by("-date")[:5]
     recent_venues = Venue.objects.all().order_by("-id")[:5]
     popular_concerts = Concert.objects.all().annotate(num_attendees=Count("attendees")).order_by("-num_attendees")[:5]
 
@@ -70,6 +70,14 @@ class VenueAutocomplete(View):
         return JsonResponse(data, safe=False)
 
 
+class OpenerAutocomplete(View):
+    def get(self, request, *args, **kwargs):
+        query = request.GET.get("term", "")
+        artists = Artist.objects.filter(name__icontains=query)[:10]
+        results = [{"id": artist.id, "label": artist.name, "value": artist.name} for artist in artists]
+        return JsonResponse(results, safe=False)
+
+
 @login_required
 def attend_concert(request, pk):
     concert = get_object_or_404(Concert, pk=pk)
@@ -92,7 +100,7 @@ class ArtistDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["recent_concerts"] = Concert.objects.filter(artist=self.object.id)
+        context["recent_concerts"] = Concert.objects.filter(artist=self.object.id).select_related("venue")
         return context
 
 
@@ -143,7 +151,7 @@ class VenueDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["recent_concerts"] = Concert.objects.filter(venue=self.object.id)
+        context["recent_concerts"] = Concert.objects.filter(venue=self.object.id).select_related("artist")
         return context
 
 
@@ -194,6 +202,11 @@ class ConcertListView(ListView):
 
 class ConcertDetailView(DetailView):
     model = Concert
+    context_object_name = "concert"
+
+    def get_object(self, **kwargs):
+        # Use select_related to fetch related artist and venue in a single query
+        return get_object_or_404(Concert.objects.select_related("artist", "venue"), pk=self.kwargs["pk"])
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -215,23 +228,25 @@ class ConcertCreateView(CreateView):
         context["venue_form"] = VenueForm()
         return context
 
-    def post(self, request, *args, **kwargs):
-        print("POST request received for ConcertCreateView")
-        return super().post(request, *args, **kwargs)
-
     def form_valid(self, form):
-        # Get the artist name from the form data
+        print(form.cleaned_data)
+        # Extract the artist name from the form data
         artist_name = form.cleaned_data.get("artist")
 
-        # Find or create the artist instance by name
-        artist, created = Artist.objects.get_or_create(name=artist_name)
+        try:
+            artist_instance = Artist.objects.get(name=artist_name)
+        except Artist.DoesNotExist:
+            artist_form = ArtistForm(data={"name": artist_name})
+            if artist_form.is_valid():
+                artist_instance = artist_form.save(commit=True)
+            else:
+                form._errors = {**form._errors, **artist_form.errors}
+                return self.form_invalid(form)
 
-        # Set the artist instance on the form's instance
-        form.instance.artist = artist
+        # Assign the artist to the concert instance
+        form.instance.artist = artist_instance
 
         messages.success(self.request, "Concert successfully created!")
-
-        # Continue with the regular form save
         return super().form_valid(form)
 
     def form_invalid(self, form):
