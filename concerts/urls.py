@@ -1,7 +1,7 @@
 from django.urls import path
 
 from . import views
-from .views import ArtistAutocomplete, VenueAutocomplete
+from .views import ArtistAutocomplete, OpenerAutocomplete, VenueAutocomplete
 
 app_name = "concerts"
 
@@ -17,6 +17,8 @@ urlpatterns = [
     path("artists/", views.ArtistListView.as_view(), name="artist-list"),
     path("artists/add/", views.ArtistCreateView.as_view(), name="artist-create"),
     path("artists/<int:pk>", views.ArtistDetailView.as_view(), name="artist-detail"),
+    # Opener to let us do autocomplete on the opener field
+    path("opener/autocomplete/", OpenerAutocomplete.as_view(), name="opener-autocomplete"),
     # Venues
     path("venue-autocomplete/", VenueAutocomplete.as_view(), name="venue-autocomplete"),
     path("venues/", views.VenueListView.as_view(), name="venue-list"),
