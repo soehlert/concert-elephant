@@ -10,7 +10,9 @@
     <div class="form-group mb-2">
       <div>
         <label for="artist-autocomplete">Artist*</label>
-        <i class="bi bi-person-plus-fill" id="createArtistButton"></i>
+        <i class="bi bi-person-plus-fill"
+           title="Add new artist"
+           id="createArtistButton"></i>
       </div>
       <input type="text"
              id="artist-autocomplete"
@@ -22,7 +24,9 @@
     <div class="form-group mb-2">
       <div>
         <label for="venue-autocomplete">Venue*</label>
-        <i class="bi bi-plus-square" id="createVenueButton"></i>
+        <i class="bi bi-plus-square"
+           title="Add new venue"
+           id="createVenueButton"></i>
       </div>
       <input type="text"
              id="venue-autocomplete"
@@ -33,7 +37,9 @@
     <div class="form-group mb-2" id="opener-container">
       <div>
         <label for="opener-autocomplete-1">Opener</label>
-        <i class="bi bi-person-plus-fill" id="createOpenerButton"></i>
+        <i class="bi bi-person-plus-fill"
+           title="Add new opener"
+           id="createOpenerButton"></i>
       </div>
       <input type="text"
              id="opener-autocomplete-1"
@@ -41,7 +47,9 @@
              class="form-control opener-input" />
       <!-- This hidden input will hold the actual selected opener ID -->
       <input type="hidden" name="opener-1" id="concert-opener-1" />
-      <i class="bi bi-plus-circle" id="createOpenerButton-1"></i>
+      <i class="bi bi-plus-circle"
+         title="Add another opener"
+         id="createOpenerButton-1"></i>
     </div>
     {{ form.non_field_errors|as_crispy_errors }}
     {% for field in form %}
@@ -53,4 +61,10 @@
       <button class="btn btn-outline-info text-white" type="submit">Add Concert</button>
     </div>
   </form>
+  <!-- Initialize Bootstrap tooltips -->
+  <script>
+    $(document).ready(function() {
+      $('[data-toggle="tooltip"]').tooltip();
+    });
+  </script>
 {% endblock form %}

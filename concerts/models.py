@@ -55,7 +55,6 @@ class Concert(models.Model):
     venue = models.ForeignKey(Venue, on_delete=models.CASCADE, related_name="concerts")
     date = models.DateField()
     opener = models.ManyToManyField(Artist, related_name="opener_concerts", blank=True)
-    festival = models.BooleanField(default=False)
     attendees = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="concerts")
 
     class Meta:
