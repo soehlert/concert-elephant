@@ -29,4 +29,5 @@ urlpatterns = [
     path("concerts/add/", views.ConcertCreateView.as_view(), name="concert-create"),
     path("concerts/<int:pk>", views.ConcertDetailView.as_view(), name="concert-detail"),
     path("concerts/attend/<int:pk>", view=views.attend_concert, name="attend-concert"),
+    path("concert/<int:pk>/add_review/", views.AddConcertReviewView.as_view(), name="add_concert_review"),
 ]

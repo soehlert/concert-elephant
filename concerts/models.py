@@ -66,3 +66,17 @@ class Concert(models.Model):
     @classmethod
     def attend_concert(cls, current_user, concert):
         concert.attendees.add(current_user)
+
+
+class ConcertReview(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    concert = models.ForeignKey(Concert, on_delete=models.CASCADE)
+    rating = models.PositiveIntegerField(choices=[(i, i) for i in range(1, 6)])  # 1-5 rating
+    note = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name_plural = "Concert Reviews"
+
+    def __str__(self):
+        return str(f"{self.user} - {self.concert}")
