@@ -120,12 +120,24 @@
       $(`#opener-autocomplete-${openerCounter}`).autocomplete({
         source: "{% url 'concerts:opener-autocomplete' %}",
         minLength: 2,
+        response: function(event, ui) {
+          if (ui.content.length === 0) {
+            $(this).val("No results found; please add a new one");
+          }
+        },
         select: function(event, ui) {
-          console.log(`Selected opener for input opener-autocomplete-${openerCounter}`);
+          // Get the ID of the opener input that triggered this autocomplete
+          let id = $(this).attr('id');
+
+          // Extract the counter number from the ID
+          let counter = id.split('-').pop();
+
           // Set the selected Opener ID into the hidden input
-          $(`#concert-opener-${openerCounter}`).val(ui.item.id);
+          $(`#opener-${counter}`).val(ui.item.id);
+
           // Display the selected opener's name in the text input
-          $(`#opener-autocomplete-${openerCounter}`).val(ui.item.label);
+          $(this).val(ui.item.label);
+
           return false; // Prevents default action
         }
       });
@@ -135,6 +147,11 @@
       $("#artist-autocomplete").autocomplete({
         source: "{% url 'concerts:artist-autocomplete' %}",
         minLength: 2,
+        response: function(event, ui) {
+          if (ui.content.length === 0) {
+            $(this).val("No results found; please add a new one");
+          }
+        },
         select: function(event, ui) {
           console.log("Selected item:", ui.item); // This should log the selected artist's data
 
@@ -150,6 +167,11 @@
       $("#venue-autocomplete").autocomplete({
         source: "{% url 'concerts:venue-autocomplete' %}",
         minLength: 2,
+        response: function(event, ui) {
+          if (ui.content.length === 0) {
+            $(this).val("No results found; please add a new one");
+          }
+        },
         select: function(event, ui) {
           // Set the selected Venue ID into the hidden input
           $("#concert-venue").val(ui.item.id);
@@ -246,6 +268,14 @@
         $(`#opener-autocomplete-${openerCounter}`).autocomplete({
           source: "{% url 'concerts:opener-autocomplete' %}",
           minLength: 2,
+          response: function(event, ui) {
+            if (ui.content.length === 0) {
+              setTimeout(function() {
+                $("#createVenueModal").modal("hide");
+              }, 300);
+              $(this).val("No results found; please add a new one");
+            }
+          },
           select: function(event, ui) {
             // Get the ID of the opener input that triggered this autocomplete
             let id = $(this).attr('id');
