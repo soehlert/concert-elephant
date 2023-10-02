@@ -24,6 +24,10 @@
   color: #93B1A6;
 }
 
+.nav-link-active {
+    color: #93B1A6 !important;
+}
+
 .btn {
   background-color: #040D12;
   border-color: #040D12;

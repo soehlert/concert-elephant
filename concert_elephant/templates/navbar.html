@@ -16,15 +16,18 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto text-nowrap">
           <li class="nav-item d-inline mt-2">
-            <a class="nav-link nav-link-custom"
+            {% url 'concerts:artist-list' as path %}
+            <a class="nav-link nav-link-custom {% if request.path == path %}nav-link-active{% endif %}"
                href="{% url 'concerts:artist-list' %}">Artists</a>
           </li>
           <li class="nav-item d-inline mt-2">
-            <a class="nav-link nav-link-custom"
+            {% url 'concerts:concert-list' as path %}
+            <a class="nav-link nav-link-custom {% if request.path == path %}nav-link-active{% endif %}"
                href="{% url 'concerts:concert-list' %}">Concerts</a>
           </li>
           <li class="nav-item d-inline mt-2">
-            <a class="nav-link nav-link-custom"
+            {% url 'concerts:venue-list' as path %}
+            <a class="nav-link nav-link-custom {% if request.path == path %}nav-link-active{% endif %}"
                href="{% url 'concerts:venue-list' %}">Venues</a>
           </li>
         </ul>
@@ -42,12 +45,13 @@
         <ul class="navbar-nav ml-auto text-nowrap">
           {% if request.user.is_authenticated %}
             <li class="nav-item d-inline mt-2">
-              <a class="nav-link nav-link-custom"
+              {% url 'users:detail' request.user.username as path %}
+              <a class="nav-link nav-link-custom {% if request.path == path %}nav-link-active{% endif %}"
                  href="{% url 'users:detail' request.user.username %}">{% translate "My Profile" %}</a>
             </li>
             <li class="nav-item d-inline mt-2">
               {# URL provided by django-allauth/account/urls.py #}
-              <a class="nav-link nav-link-custom" href="{% url 'account_logout' %}">{% translate "Sign Out" %}</a>
+              <a class="nav-link nav-link-custom " href="{% url 'account_logout' %}">{% translate "Sign Out" %}</a>
             </li>
           {% else %}
             {% if ACCOUNT_ALLOW_REGISTRATION %}
