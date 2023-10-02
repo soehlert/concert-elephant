@@ -3,11 +3,12 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Count, Q
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render, reverse
+from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import CreateView, DetailView, ListView
 
-from .forms import ArtistForm, ConcertForm, VenueForm
-from .models import Artist, Concert, Venue
+from .forms import ArtistForm, ConcertForm, ConcertReviewForm, VenueForm
+from .models import Artist, Concert, ConcertReview, Venue
 
 
 def home_page(request):
@@ -145,6 +146,9 @@ class VenueListView(ListView):
     template_name = "concerts/venue_list.html"
     paginate_by = 20
 
+    def get_queryset(self):
+        return Venue.objects.all().order_by("-id")
+
 
 class VenueDetailView(DetailView):
     model = Venue
@@ -259,3 +263,25 @@ class ConcertCreateView(CreateView):
         print("Form errors:", form.errors)
         messages.error(self.request, "There was an error creating the concert.")
         return super().form_invalid(form)
+
+
+class ConcertReviewCreateView(CreateView):
+    model = ConcertReview
+    form_class = ConcertReviewForm
+
+    def get_success_url(self):
+        return reverse_lazy("users:detail", args=[self.request.user.username])
+
+    def form_valid(self, form):
+        concert = get_object_or_404(Concert, pk=self.kwargs["pk"])
+
+        # Ensure the user hasn't reviewed this concert already
+        if ConcertReview.objects.filter(user=self.request.user, concert=concert).exists():
+            form.add_error(None, "You've already reviewed this concert!")
+            return self.form_invalid(form)
+
+        review = form.save(commit=False)
+        review.user = self.request.user
+        review.concert = concert
+        review.save()
+        return super().form_valid(form)
