@@ -12,7 +12,7 @@ class ArtistSerializer(serializers.ModelSerializer):
 class ConcertSerializer(serializers.ModelSerializer):
     class Meta:
         model = Concert
-        fields = ["artist", "venue", "date", "opener", "festival"]
+        fields = ["artist", "venue", "date", "opener"]
 
 
 class VenueSerializer(serializers.ModelSerializer):

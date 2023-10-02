@@ -8,7 +8,7 @@ from .models import Artist, Concert, Venue
 class ConcertForm(forms.ModelForm):
     class Meta:
         model = Concert
-        fields = ["artist", "venue", "date", "opener", "festival"]
+        fields = ["artist", "venue", "date", "opener"]
         widgets = {
             "date": DatePickerInput(options={"format": "MM/DD/YYYY"}, attrs={"class": "form-control"}),
         }
