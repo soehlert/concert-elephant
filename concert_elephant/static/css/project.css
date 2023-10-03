@@ -106,3 +106,7 @@ thead.table-custom {
 .country-select-flag {
 display: none;
 }
+
+.review-note {
+    word-wrap: break-word;
+}

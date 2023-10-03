@@ -2,7 +2,13 @@ from bootstrap_datepicker_plus.widgets import DatePickerInput
 from django import forms
 from django_countries.widgets import CountrySelectWidget
 
-from .models import Artist, Concert, Venue
+from .models import Artist, Concert, ConcertReview, Venue
+
+
+class ConcertReviewForm(forms.ModelForm):
+    class Meta:
+        model = ConcertReview
+        fields = ["rating", "note"]
 
 
 class ConcertForm(forms.ModelForm):

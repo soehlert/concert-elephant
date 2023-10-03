@@ -1,13 +1,15 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ValidationError
 from django.db.models import Count, Q
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render, reverse
+from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import CreateView, DetailView, ListView
 
-from .forms import ArtistForm, ConcertForm, VenueForm
-from .models import Artist, Concert, Venue
+from .forms import ArtistForm, ConcertForm, ConcertReviewForm, VenueForm
+from .models import Artist, Concert, ConcertReview, Venue
 
 
 def home_page(request):
@@ -57,7 +59,6 @@ class ArtistAutocomplete(View):
 
 class VenueAutocomplete(View):
     def get_queryset(self, term):
-        # Filter venues that contain the search term in their name
         return Venue.objects.filter(name__icontains=term)
 
     def get(self, request, *args, **kwargs):
@@ -145,6 +146,9 @@ class VenueListView(ListView):
     template_name = "concerts/venue_list.html"
     paginate_by = 20
 
+    def get_queryset(self):
+        return Venue.objects.all().order_by("-id")
+
 
 class VenueDetailView(DetailView):
     model = Venue
@@ -164,7 +168,6 @@ class VenueCreateView(CreateView):
         return reverse("concerts:venue-list")
 
     def form_valid(self, form):
-        # Save the venue
         venue = form.save()
 
         # Check if the request is AJAX
@@ -182,7 +185,6 @@ class VenueCreateView(CreateView):
         return HttpResponseRedirect(self.get_success_url())
 
     def form_invalid(self, form):
-        # Prepare the error messages
         errors = {field: error[0] for field, error in form.errors.items()}
 
         # Check if the request is AJAX
@@ -259,3 +261,94 @@ class ConcertCreateView(CreateView):
         print("Form errors:", form.errors)
         messages.error(self.request, "There was an error creating the concert.")
         return super().form_invalid(form)
+
+
+class ConcertReviewCreateView(CreateView):
+    model = ConcertReview
+    form_class = ConcertReviewForm
+    template_name = "users/user_detail.html"
+
+    def get_success_url(self):
+        return reverse_lazy("users:detail", args=[self.request.user.username])
+
+    def form_valid(self, form):
+        concert = get_object_or_404(Concert, pk=self.kwargs["pk"])
+
+        # Ensure the user hasn't reviewed this concert already
+        if ConcertReview.objects.filter(user=self.request.user, concert=concert).exists():
+            form.add_error(None, "You've already reviewed this concert!")
+            return self.form_invalid(form)
+
+        review = form.save(commit=False)
+        review.user = self.request.user
+        review.concert = concert
+        review.save()
+
+        # Check if it's an AJAX request
+        if self.request.headers.get("X-Requested-With") == "XMLHttpRequest":
+            data = {"success": True}
+            return JsonResponse(data)
+
+        # For non-AJAX requests:
+        messages.success(self.request, "Venue successfully created.")
+        return HttpResponseRedirect(self.get_success_url())
+
+    def form_invalid(self, form):
+        errors = {field: error[0] for field, error in form.errors.items()}
+
+        # Check if the request is AJAX
+        if self.request.headers.get("x-requested-with") == "XMLHttpRequest":
+            return JsonResponse({"status": "error", "errors": errors}, status=400)
+
+        # For non-AJAX requests:
+        messages.error(self.request, "There was an error creating the review.")
+        return self.render_to_response(self.get_context_data(form=form))
+
+
+class ConcertReviewDetailView(View):
+    def get(self, request, *args, **kwargs):
+        review_id = kwargs.get("review_id")
+        try:
+            review = ConcertReview.objects.get(pk=review_id)
+            review_data = {
+                "note": review.note,
+                "rating": review.rating,
+                "review_id": review_id,
+            }
+            return JsonResponse(review_data)
+        except ConcertReview.DoesNotExist:
+            return JsonResponse({"error": "Review not found"}, status=404)
+
+
+class ConcertReviewUpdateView(View):
+    def post(self, request, *args, **kwargs):
+        review_id = self.kwargs.get("review_id")
+        review = get_object_or_404(ConcertReview, id=review_id)
+
+        note = request.POST.get("note")
+        rating = request.POST.get("rating")
+
+        review.note = note
+        review.rating = rating
+        review.save()
+
+        try:
+            # Attempt to save. This may fail due to model field validations.
+            review.full_clean()  # This will run all model field validations
+            review.save()
+        except ValidationError as e:
+            # Catch validation errors and return them
+            return JsonResponse({"success": False, "errors": e.message_dict}, status=400)
+
+        return JsonResponse({"success": True, "note": review.note, "rating": review.rating, "reviewId": review_id})
+
+
+class ConcertReviewDeleteView(View):
+    def delete(self, request, *args, **kwargs):
+        review_id = kwargs.get("review_id")
+        try:
+            review = ConcertReview.objects.get(pk=review_id)
+            review.delete()
+            return JsonResponse({"success": True, "message": "Review deleted successfully."})
+        except ConcertReview.DoesNotExist:
+            return JsonResponse({"success": False, "errors": "Review not found."}, status=404)

@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% load custom_filters %}
+
 {% block content %}
   <div class="row justify-content-center">
     <div class="col col-md-8 col-sm-12">
@@ -35,13 +37,15 @@
                class="btn btn-outline-primary text-white">previous</a>
           {% endif %}
           {% for page_number in page_obj.paginator.page_range %}
-            {% if page_obj.number == page_number %}
-              <button class="btn btn-outline-primary active text-white">
-                <span class="current-page">{{ page_obj.number }}</span>
-              </button>
-            {% else %}
-              <a href="?page={{ page_number }}"
-                 class="btn btn-outline-primary text-white">{{ page_number }}</a>
+            {% if page_number >= page_obj.number|subtract:"2" and page_number <= page_obj.number|add:"2" %}
+              {% if page_obj.number == page_number %}
+                <button class="btn btn-outline-primary active text-white">
+                  <span class="current-page">{{ page_obj.number }}</span>
+                </button>
+              {% else %}
+                <a href="?page={{ page_number }}"
+                   class="btn btn-outline-primary text-white">{{ page_number }}</a>
+              {% endif %}
             {% endif %}
           {% endfor %}
           {% if page_obj.has_next %}
