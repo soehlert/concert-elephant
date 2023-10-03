@@ -2,6 +2,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ValidationError
 from django.db.models import Count, Q
+from django.db.models.functions import Lower
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render, reverse
 from django.urls import reverse_lazy
@@ -200,6 +201,46 @@ class ConcertListView(ListView):
     model = Concert
     template_name = "concerts/concert_list.html"
     paginate_by = 20
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        sort_by = self.request.GET.get("sort_by", "date")
+        order = self.request.GET.get("order", "asc")
+        prefix = "-" if order == "desc" else ""
+
+        # For some reason, sorting is broken unless we compare the artist names after using Lower
+        # Something about being case sensitive breaks it apparently
+        if sort_by == "artist":
+            if prefix:
+                queryset = queryset.annotate(lower_artist=Lower("artist__name")).order_by(f"{prefix}lower_artist")
+            else:
+                queryset = queryset.annotate(lower_artist=Lower("artist__name")).order_by("lower_artist")
+        else:
+            queryset = queryset.order_by(f"{prefix}{sort_by}")
+        return queryset
+
+    def render_to_response(self, context, **response_kwargs):
+        if self.request.headers.get("X-Requested-With") == "XMLHttpRequest":
+            page_data = context.get("page_obj").object_list
+
+            data = []
+            for concert in page_data:
+                concert_data = {
+                    "pk": concert.pk,
+                    "fields": {
+                        "artist": str(concert.artist),
+                        "venue": str(concert.venue),
+                        "date": concert.date.strftime("%Y-%m-%d"),
+                        "openers": [str(opener) for opener in concert.opener.all()],
+                    },
+                }
+                data.append(concert_data)
+
+            sort_by = self.request.GET.get("sort_by", "date")
+            order = self.request.GET.get("order", "asc")
+
+            return JsonResponse({"concerts": data, "sort": {"column": sort_by, "direction": order}})
+        return super().render_to_response(context, **response_kwargs)
 
 
 class ConcertDetailView(DetailView):

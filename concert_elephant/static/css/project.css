@@ -110,3 +110,7 @@ display: none;
 .review-note {
     word-wrap: break-word;
 }
+
+.sort-icon .asc-icon, .sort-icon .desc-icon {
+    display: none;
+}
