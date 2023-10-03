@@ -225,7 +225,10 @@ class ConcertListView(ListView):
                 }
                 data.append(concert_data)
 
-            return JsonResponse({"concerts": data})
+            sort_by = self.request.GET.get("sort_by", "date")
+            order = self.request.GET.get("order", "asc")
+
+            return JsonResponse({"concerts": data, "sort": {"column": sort_by, "direction": order}})
         return super().render_to_response(context, **response_kwargs)
 
 
