@@ -207,6 +207,9 @@ class ConcertListView(ListView):
         sort_by = self.request.GET.get("sort_by", "date")
         order = self.request.GET.get("order", "asc")
         prefix = "-" if order == "desc" else ""
+
+        # For some reason, sorting is broken unless we compare the artist names after using Lower
+        # Something about being case sensitive breaks it apparently
         if sort_by == "artist":
             if prefix:
                 queryset = queryset.annotate(lower_artist=Lower("artist__name")).order_by(f"{prefix}lower_artist")
