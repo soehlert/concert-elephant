@@ -25,8 +25,7 @@
             <td class="text-center">{{ concert.date }}</td>
             <td class="text-center">
               {% for opener in concert.opener.all %}
-                {{ opener.name }}
-                {% if not forloop.last %},{% endif %}
+                {{ opener.name }}{% if not forloop.last %},{% endif %}
               {% endfor %}
             </td>
             <td>
