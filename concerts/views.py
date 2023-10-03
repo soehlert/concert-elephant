@@ -201,6 +201,33 @@ class ConcertListView(ListView):
     template_name = "concerts/concert_list.html"
     paginate_by = 20
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        sort_by = self.request.GET.get("sort_by", "date")  # Default to sorting by date
+        order = self.request.GET.get("order", "asc")  # Default to ascending order
+        prefix = "-" if order == "desc" else ""
+        return queryset.order_by(f"{prefix}{sort_by}")
+
+    def render_to_response(self, context, **response_kwargs):
+        if self.request.headers.get("X-Requested-With") == "XMLHttpRequest":
+            page_data = context.get("page_obj").object_list
+
+            data = []
+            for concert in page_data:
+                concert_data = {
+                    "pk": concert.pk,
+                    "fields": {
+                        "artist": str(concert.artist),
+                        "venue": str(concert.venue),
+                        "date": concert.date.strftime("%Y-%m-%d"),
+                        "openers": [str(opener) for opener in concert.opener.all()],
+                    },
+                }
+                data.append(concert_data)
+
+            return JsonResponse({"concerts": data})
+        return super().render_to_response(context, **response_kwargs)
+
 
 class ConcertDetailView(DetailView):
     model = Concert
