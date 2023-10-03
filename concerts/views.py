@@ -2,6 +2,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ValidationError
 from django.db.models import Count, Q
+from django.db.models.functions import Lower
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render, reverse
 from django.urls import reverse_lazy
@@ -203,10 +204,17 @@ class ConcertListView(ListView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        sort_by = self.request.GET.get("sort_by", "date")  # Default to sorting by date
-        order = self.request.GET.get("order", "asc")  # Default to ascending order
+        sort_by = self.request.GET.get("sort_by", "date")
+        order = self.request.GET.get("order", "asc")
         prefix = "-" if order == "desc" else ""
-        return queryset.order_by(f"{prefix}{sort_by}")
+        if sort_by == "artist":
+            if prefix:
+                queryset = queryset.annotate(lower_artist=Lower("artist__name")).order_by(f"{prefix}lower_artist")
+            else:
+                queryset = queryset.annotate(lower_artist=Lower("artist__name")).order_by("lower_artist")
+        else:
+            queryset = queryset.order_by(f"{prefix}{sort_by}")
+        return queryset
 
     def render_to_response(self, context, **response_kwargs):
         if self.request.headers.get("X-Requested-With") == "XMLHttpRequest":
