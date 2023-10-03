@@ -1,21 +1,23 @@
 {% extends "base.html" %}
 
-{% load crispy_forms_tags %}
+{% load crispy_forms_filters %}
 
 {% block content %}
-  <h1>ARTISTS</h1>
-  <br />
-  <div class="content-section">
-    <form method="POST">
-      {% csrf_token %}
-      <fieldset class="form-group">
-        <legend class="text-info border-bottom mb-4">New Artist</legend>
-        {{ form|crispy }}
-      </fieldset>
-      <div class="form-group">
-        <button class="btn btn-outline-info" type="submit">Add Artist</button>
+  <div class="row justify-content-center">
+    <div class="col col-md-8 col-sm-12">
+      <div class="card">
+        <h5 class="card-header card-header-custom display-4 text-center">New Artist</h5>
       </div>
-      <br />
-    </form>
+      <form method="POST">
+        {% csrf_token %}
+        <fieldset class="form-group">
+          {{ form|crispy }}
+        </fieldset>
+        <div class="text-center">
+          <button class="btn btn-outline-info text-white" type="submit">Add Artist</button>
+        </div>
+        <br />
+      </form>
+    </div>
   </div>
 {% endblock content %}

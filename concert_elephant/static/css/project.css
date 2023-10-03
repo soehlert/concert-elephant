@@ -11,3 +11,102 @@
   background-color: #f2dede;
   border-color: #eed3d7;
 }
+
+.navbar-custom {
+  background-color: #5C8374 !important;
+}
+
+.nav-link-custom {
+  color: #040D12;
+}
+
+.nva-link-custom:hover {
+  color: #93B1A6;
+}
+
+.nav-link-active {
+    color: #93B1A6 !important;
+}
+
+.btn {
+  background-color: #040D12;
+  border-color: #040D12;
+  color: #93B1A6;
+}
+
+.btn:hover {
+  background-color: #93B1A6;
+  border-color: #93B1A6;
+  transition: 0.7s;
+}
+
+.btn.active {
+  background-color: #5C8374;
+  border-color: #5C8374;
+}
+
+.btn.active:hover {
+  background-color: #93B1A6;
+  border-color: #93B1A6;
+  transition: 0.7s;
+}
+
+.card-header-custom {
+  color: #040D12;
+  background-color: #93B1A6;
+}
+
+thead.table-custom {
+  background-color: #5C8374 !important;
+  color: #040D12;
+}
+
+.link-custom {
+  color: #040D12;
+}
+
+.link-custom:hover {
+  color: #93B1A6;
+}
+
+.alert {
+    text-align: center;
+}
+
+/* Custom styles for jQuery UI Autocomplete */
+.ui-autocomplete {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000; /* Ensure the dropdown is above other content */
+    border: 1px solid #ccc;
+    background-color: #F8F8FF;
+    width: auto; /* Match the width of the input field */
+}
+
+.ui-menu-item {
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+.ui-menu-item:hover {
+    background-color: #93B1A6;
+}
+
+.ui-helper-hidden-accessible{
+    display:none;
+}
+
+.modal-messages {
+  width: 75%;
+  margin: 0 auto;
+  padding: 5px;
+}
+
+.country-select-flag {
+display: none;
+}
+
+.review-note {
+    word-wrap: break-word;
+}

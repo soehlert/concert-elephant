@@ -9,7 +9,7 @@ from django_countries.fields import CountryField
 class Artist(models.Model):
     """The artist you saw"""
 
-    name = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=100)
 
     # Don't allow multiple bands with the same name
     class Meta:
@@ -35,6 +35,9 @@ class Venue(models.Model):
     city = models.CharField(max_length=100)
     country = CountryField(default="US")
 
+    class Meta:
+        unique_together = ["name", "city"]
+
     def __str__(self):
         if self.country:
             return str(f"{self.name} - {self.city}, {self.country}")
@@ -51,8 +54,7 @@ class Concert(models.Model):
     artist = models.ForeignKey(Artist, on_delete=models.CASCADE, related_name="concerts")
     venue = models.ForeignKey(Venue, on_delete=models.CASCADE, related_name="concerts")
     date = models.DateField()
-    opener = models.CharField(max_length=100, null=True, blank=True)
-    festival = models.BooleanField(default=False)
+    opener = models.ManyToManyField(Artist, related_name="opener_concerts", blank=True)
     attendees = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="concerts")
 
     class Meta:
@@ -64,3 +66,17 @@ class Concert(models.Model):
     @classmethod
     def attend_concert(cls, current_user, concert):
         concert.attendees.add(current_user)
+
+
+class ConcertReview(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    concert = models.ForeignKey(Concert, on_delete=models.CASCADE)
+    rating = models.PositiveIntegerField(choices=[(i, i) for i in range(1, 6)])  # 1-5 rating
+    note = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name_plural = "Concert Reviews"
+
+    def __str__(self):
+        return str(f"{self.user} - {self.concert}")

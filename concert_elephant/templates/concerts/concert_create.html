@@ -1,21 +1,424 @@
 {% extends "base.html" %}
 
+{% load crispy_forms_filters %}
 {% load crispy_forms_tags %}
 
 {% block content %}
-  <br />
-  <div class="content-section">
-    <form method="post">
-      {% csrf_token %}
-      <fieldset class="form-group">
-        <legend class="text-info border-bottom mb-4">New Concert</legend>
-        {{ form | crispy }}  {# Renders form fields #}
-      </fieldset>
-      <div class="form-group">
-        <button class="btn btn-outline-info" type="submit">Add Concert</button>
+  <div class="row justify-content-center">
+    <div class="col col-md-8 col-sm-12">
+      <div class="card">
+        <h5 class="card-header card-header-custom display-4 text-center">New Concert</h5>
       </div>
-      <br />
-    </form>
-    {{ form.media }}
+      <div id="form-container">{% include "concerts/concert_partial.html" %}</div>
+      {{ form.media }}
+    </div>
   </div>
+  <!-- Bootstrap Modal for Creating a New Artist -->
+  <div class="modal fade"
+       id="createArtistModal"
+       tabindex="-1"
+       role="dialog"
+       aria-labelledby="createArtistModalLabel"
+       aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="createArtistModalLabel">Create New Artist</h5>
+          <button type="button"
+                  id="closeArtistModalButton"
+                  class="btn btn-info text-white close"
+                  data-dismiss="modal"
+                  aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="modal-messages" id="modal-messages"></div>
+          <form method="post"
+                id="createArtistForm"
+                action="{% url 'concerts:artist-create' %}">
+            {% csrf_token %}
+            {{ artist_form|crispy }}
+            <div class="text-center">
+              <button type="submit" class="btn btn-primary text-white mt-2">Create Artist</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Bootstrap Modal for Creating a New Opener -->
+  <div class="modal fade"
+       id="createOpenerModal"
+       tabindex="-1"
+       role="dialog"
+       aria-labelledby="createOpenerModalLabel"
+       aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="createOpenerModalLabel">Create New Opener</h5>
+          <button type="button"
+                  id="closeOpenerModalButton"
+                  class="btn btn-info text-white close"
+                  data-dismiss="modal"
+                  aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="modal-messages" id="modal-opener-messages"></div>
+          <form method="post"
+                id="createOpenerForm"
+                action="{% url 'concerts:artist-create' %}">
+            {% csrf_token %}
+            {{ artist_form|crispy }}
+            <div class="text-center">
+              <button type="submit" class="btn btn-primary text-white mt-2">Create Opener</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Bootstrap Modal for Creating a New Venue -->
+  <div class="modal fade"
+       id="createVenueModal"
+       tabindex="-1"
+       role="dialog"
+       aria-labelledby="createVenueModalLabel"
+       aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="createVenueModalLabel">Add Venue</h5>
+          <button type="button"
+                  id="closeVenueModalButton"
+                  class="btn btn-info text-white close"
+                  data-dismiss="modal"
+                  aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="modal-messages" id="modal-venue-messages"></div>
+          <form id="createVenueForm">
+            {% csrf_token %}
+            {{ venue_form|crispy }}
+            <div class="text-center">
+              <button type="submit" class="btn btn-primary text-white mt-2">Add Venue</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    let openerCounter = 1;
+    $(document).ready(function() {
+      // Attach autocomplete functionality to the new opener input
+      $(`#opener-autocomplete-${openerCounter}`).autocomplete({
+        source: "{% url 'concerts:opener-autocomplete' %}",
+        minLength: 2,
+        response: function(event, ui) {
+          if (ui.content.length === 0) {
+            $(this).val("No results found; please add a new one");
+          }
+        },
+        select: function(event, ui) {
+          // Get the ID of the opener input that triggered this autocomplete
+          let id = $(this).attr('id');
+
+          // Extract the counter number from the ID
+          let counter = id.split('-').pop();
+
+          // Set the selected Opener ID into the hidden input
+          $(`#opener-${counter}`).val(ui.item.id);
+
+          // Display the selected opener's name in the text input
+          $(this).val(ui.item.label);
+
+          return false; // Prevents default action
+        }
+      });
+
+
+      // Autocomplete for Artists
+      $("#artist-autocomplete").autocomplete({
+        source: "{% url 'concerts:artist-autocomplete' %}",
+        minLength: 2,
+        response: function(event, ui) {
+          if (ui.content.length === 0) {
+            $(this).val("No results found; please add a new one");
+          }
+        },
+        select: function(event, ui) {
+          console.log("Selected item:", ui.item); // This should log the selected artist's data
+
+          // Set the selected Artist ID into the hidden input
+          $("#concert-artist").val(ui.item.id);
+          // Optionally, display the selected artist's name in the text input
+          $("#artist-autocomplete").val(ui.item.label);
+          return false; // Prevents default action
+        }
+      });
+
+      // Autocomplete for Venues
+      $("#venue-autocomplete").autocomplete({
+        source: "{% url 'concerts:venue-autocomplete' %}",
+        minLength: 2,
+        response: function(event, ui) {
+          if (ui.content.length === 0) {
+            $(this).val("No results found; please add a new one");
+          }
+        },
+        select: function(event, ui) {
+          // Set the selected Venue ID into the hidden input
+          $("#concert-venue").val(ui.item.id);
+          // Display the selected venue's name in the text input
+          $("#venue-autocomplete").val(ui.item.label);
+          return false; // Prevents default action
+        }
+      });
+
+      // Add the Bootstrap 'rounded' class to the autocomplete container
+      $(".ui-autocomplete").addClass("rounded");
+
+      function openCreateArtistModal() {
+        $("#createArtistForm")[0].reset();
+        $("#createArtistModal").modal("show");
+      }
+
+      function closeCreateArtistModal() {
+        $("#createArtistModal").modal("hide");
+      }
+
+      function openCreateVenueModal() {
+        $("#createVenueForm")[0].reset();
+        $("#createVenueModal").modal("show");
+      }
+
+      function closeCreateVenueModal() {
+        $("#createVenueModal").modal("hide");
+      }
+
+      function openCreateOpenerModal() {
+        $("#createOpenerForm")[0].reset();
+        $("#createOpenerModal").modal("show");
+      }
+
+      function closeCreateOpenerModal() {
+        $("#createOpenerModal").modal("hide");
+      }
+
+      // Event listener for the "Create New Artist" button
+      $("#createArtistButton").click(function() {
+        openCreateArtistModal();
+      });
+
+      // Event listener for the "Close New Artist modal" button
+      $("#closeArtistModalButton").click(function() {
+        closeCreateArtistModal()
+      });
+
+      //Event listener for the "Create New Venue" button
+      $("#createVenueButton").click(function() {
+        openCreateVenueModal();
+      });
+
+      // Event listener for the "Close New Artist modal" button
+      $("#closeVenueModalButton").click(function() {
+        closeCreateVenueModal()
+      });
+
+      // Event listener for the "Create New Opener" button
+      $("#createOpenerButton").click(function() {
+        openCreateOpenerModal();
+      });
+
+      // Event listener for the "Close New Opener modal" button (if you have one)
+      $("#closeOpenerModalButton").click(function() {
+        closeCreateOpenerModal();
+      });
+
+      // Event listener for the "Add Opener" button
+      $(document).on("click", "[id^=createOpenerButton-]", function() {
+        addOpenerField();
+      });
+
+      function addOpenerField() {
+        openerCounter++;
+        console.log(`openerCounter: ${openerCounter}`);
+
+        // Create the new opener fields
+        const newOpener = `
+        <div class="form-group mb-2">
+            <div>
+                <label for="opener-autocomplete-${openerCounter}">Opener ${openerCounter}</label>
+            </div>
+            <input type="text" id="opener-autocomplete-${openerCounter}" class="form-control opener-input" placeholder="Start typing opener name..." />
+            <input type="hidden" name="opener-${openerCounter}" id="opener-${openerCounter}" />
+        </div>
+        `;
+
+        // Append the new opener fields to the container
+        $("#opener-container").append(newOpener);
+
+        // Attach autocomplete functionality to the new opener input
+        $(`#opener-autocomplete-${openerCounter}`).autocomplete({
+          source: "{% url 'concerts:opener-autocomplete' %}",
+          minLength: 2,
+          response: function(event, ui) {
+            if (ui.content.length === 0) {
+              setTimeout(function() {
+                $("#createVenueModal").modal("hide");
+              }, 300);
+              $(this).val("No results found; please add a new one");
+            }
+          },
+          select: function(event, ui) {
+            // Get the ID of the opener input that triggered this autocomplete
+            let id = $(this).attr('id');
+
+            // Extract the counter number from the ID
+            let counter = id.split('-').pop();
+
+            // Set the selected Opener ID into the hidden input
+            $(`#opener-${counter}`).val(ui.item.id);
+
+            // Display the selected opener's name in the text input
+            $(this).val(ui.item.label);
+            return false; // Prevents default action
+          }
+        });
+      }
+
+      // Create new venue from modal
+      $("#createVenueForm").on("submit", function(event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        // Serialize the form data
+        let formData = $(this).serialize();
+
+        // Send an AJAX POST request
+        $.ajax({
+          url: "{% url 'concerts:venue-create' %}",
+          method: "POST",
+          data: formData,
+          success: function(data) {
+            if (data.status === 'success') {
+              // Display a success message in the modal
+              $("#modal-venue-messages").html('<div class="alert alert-success text-center">' + data.message + '</div>');
+
+              // Update the venue field in the main form if needed
+              let venueName = data.venue.name + " - " + data.venue.city + ", " + data.venue.country;
+              $('#venue-autocomplete').val(venueName).trigger('change');
+              $('#concert-venue').val(data.venue.id);
+
+              setTimeout(function() {
+                $("#createVenueModal").modal("hide");
+              }, 1000);
+            } else if (data.status === 'error') {
+              // Display validation errors in the modal
+              let errorsHtml = '<ul>';
+              for (let field in data.errors) {
+                if (data.errors.hasOwnProperty(field)) {
+                  errorsHtml += '<li>' + data.errors[field] + '</li>';
+                }
+              }
+              errorsHtml += '</ul>';
+              $("#modal-venue-messages").html('<div class="alert alert-danger text-center">' + errorsHtml + '</div>');
+            }
+          },
+          error: function(error) {
+            // Handle AJAX request errors (e.g., network issues)
+            console.error(error);
+          }
+        });
+      });
+
+
+      // Create new opener (which is essentially an artist) from modal
+      $("#createOpenerForm").on("submit", function(event) {
+        event.preventDefault(); // Prevent default form submission
+
+        let formData = $(this).serialize();
+
+        $.ajax({
+          url: "{% url 'concerts:artist-create' %}", // Reusing artist-create URL
+          method: "POST",
+          data: formData,
+          success: function(data) {
+            if (data.status === 'success') {
+              // Display a success message in the modal
+              $("#modal-opener-messages").html('<div class="alert alert-success text-center">' + data.message + '</div>');
+              console.log(data.message)
+              // Update the opener input with the new opener's (artist's) name
+              $('#opener-autocomplete-1').val(data.artist);
+
+              // Update the hidden input with the opener's (artist's) ID
+              $('#concert-opener-1').val(data.artist);
+
+              setTimeout(function() {
+                closeCreateOpenerModal();
+              }, 1000);
+            } else if (data.status === 'error') {
+              // Handle the errors
+            }
+          },
+          error: function(error) {
+            console.error(error);
+          }
+        });
+      });
+
+
+      // Create new artist from modal
+      $("#createArtistForm").on("submit", function(event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        // Serialize the form data
+        let formData = $(this).serialize();
+
+        // Send an AJAX POST request
+        $.ajax({
+          url: "{% url 'concerts:artist-create' %}",
+          method: "POST",
+          data: formData,
+          success: function(data) {
+            if (data.status === 'success') {
+              console.log("ajax post sent")
+              // Display a success message in the modal
+              $("#modal-messages").html('<div class="alert alert-success text-center">' + data.message + '</div>');
+
+              // Update the artist input with the new artist's name.
+              $('#artist-autocomplete').val(data.artist);
+
+              // Update the hidden input with the artist's ID.
+              $('#concert-artist').val(data.artistId);
+
+              setTimeout(function() {
+                $("#createArtistModal").modal("hide");
+              }, 1000);
+
+            } else if (data.status === 'error') {
+              // Display validation errors in the modal
+              let errorsHtml = '<ul>';
+              for (let field in data.errors) {
+                if (data.errors.hasOwnProperty(field)) {
+                  errorsHtml += '<li>' + data.errors[field] + '</li>';
+                }
+              }
+              errorsHtml += '</ul>';
+              $("#modal-messages").html('<div class="alert alert-danger text-center">' + errorsHtml + '</div>');
+            }
+          },
+          error: function(error) {
+            // Handle AJAX request errors (e.g., network issues)
+            console.error(error);
+          }
+        });
+      });
+    });
+  </script>
 {% endblock content %}
