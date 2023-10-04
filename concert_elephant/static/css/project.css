@@ -35,19 +35,19 @@
 }
 
 .btn:hover {
-  background-color: #183D3D;
-  border-color: #183D3D;
+  background-color: #5C8374;
+  border-color: #5C8374;
   transition: 0.7s;
 }
 
 .btn.active {
-  background-color: #040D12;
-  border-color: #040D12;
+  background-color: #93B1A6;
+  border-color: #93B1A6;
 }
 
 .btn.active:hover {
-  background-color: #183D3D;
-  border-color: #183D3D;
+  background-color: #93B1A6;
+  border-color: #93B1A6;
   transition: 0.7s;
 }
 
