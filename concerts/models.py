@@ -10,6 +10,7 @@ class Artist(models.Model):
     """The artist you saw"""
 
     name = models.CharField(max_length=100)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     # Don't allow multiple bands with the same name
     class Meta:
@@ -29,11 +30,12 @@ class Artist(models.Model):
 
 
 class Venue(models.Model):
-    """The venue you saw the concert"""
+    """The venue you saw the concert at"""
 
     name = models.CharField(max_length=100)
     city = models.CharField(max_length=100)
     country = CountryField(default="US")
+    created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         unique_together = ["name", "city"]
@@ -51,11 +53,14 @@ class Venue(models.Model):
 
 
 class Concert(models.Model):
+    """The concert itself"""
+
     artist = models.ForeignKey(Artist, on_delete=models.CASCADE, related_name="concerts")
     venue = models.ForeignKey(Venue, on_delete=models.CASCADE, related_name="concerts")
     date = models.DateField()
     opener = models.ManyToManyField(Artist, related_name="opener_concerts", blank=True)
     attendees = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="concerts")
+    created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         ordering = ["-date"]
@@ -69,6 +74,8 @@ class Concert(models.Model):
 
 
 class ConcertReview(models.Model):
+    """Allows users to give ratings and save notes on their concerts"""
+
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     concert = models.ForeignKey(Concert, on_delete=models.CASCADE)
     rating = models.PositiveIntegerField(choices=[(i, i) for i in range(1, 6)])  # 1-5 rating
