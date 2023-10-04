@@ -79,6 +79,11 @@ down: docker-compose.yaml
 exec: docker-compose.yaml
 	@docker-compose exec $(CONTAINER) $(COMMAND)
 
+## generate-data: generates some test data of all types (users, artists, venues, concerts, concert reviews)
+.Phony: generate-data
+generate_data:
+	@docker-compose run django python manage.py generate_test_data
+
 # This automatically builds the help target based on commands prepended with a double hashbang
 ## help: print this help output
 .Phony: help
