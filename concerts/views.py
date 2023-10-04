@@ -14,9 +14,9 @@ from .models import Artist, Concert, ConcertReview, Venue
 
 
 def home_page(request):
-    recent_artists = Artist.objects.all().order_by("-id")[:5]
+    recent_artists = Artist.objects.all().order_by("-created_at")[:5]
     recent_concerts = Concert.objects.select_related("artist", "venue").order_by("-date")[:5]
-    recent_venues = Venue.objects.all().order_by("-id")[:5]
+    recent_venues = Venue.objects.all().order_by("-created_at")[:5]
     popular_concerts = Concert.objects.all().annotate(num_attendees=Count("attendees")).order_by("-num_attendees")[:5]
 
     context = {
@@ -94,7 +94,7 @@ class ArtistListView(ListView):
     paginate_by = 20
 
     def get_queryset(self):
-        return Artist.objects.all().order_by("-id")
+        return Artist.objects.all().order_by("-created_at")
 
 
 class ArtistDetailView(DetailView):
@@ -148,7 +148,7 @@ class VenueListView(ListView):
     paginate_by = 20
 
     def get_queryset(self):
-        return Venue.objects.all().order_by("-id")
+        return Venue.objects.all().order_by("-created_at")
 
 
 class VenueDetailView(DetailView):
@@ -204,12 +204,14 @@ class ConcertListView(ListView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
+        # noinspection PyTypeChecker
         sort_by = self.request.GET.get("sort_by", "date")
+        # noinspection PyTypeChecker
         order = self.request.GET.get("order", "asc")
         prefix = "-" if order == "desc" else ""
 
         # For some reason, sorting is broken unless we compare the artist names after using Lower
-        # Something about being case sensitive breaks it apparently
+        # Something about being case-sensitive breaks it apparently
         if sort_by == "artist":
             if prefix:
                 queryset = queryset.annotate(lower_artist=Lower("artist__name")).order_by(f"{prefix}lower_artist")
