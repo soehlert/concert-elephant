@@ -272,7 +272,6 @@ class ConcertCreateView(CreateView):
         return context
 
     def form_valid(self, form):
-        # Extract the artist name from the form data
         artist_name = form.cleaned_data.get("artist")
 
         try:

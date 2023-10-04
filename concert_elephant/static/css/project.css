@@ -35,25 +35,26 @@
 }
 
 .btn:hover {
-  background-color: #93B1A6;
-  border-color: #93B1A6;
+  background-color: #183D3D;
+  border-color: #183D3D;
   transition: 0.7s;
 }
 
 .btn.active {
-  background-color: #5C8374;
-  border-color: #5C8374;
+  background-color: #040D12;
+  border-color: #040D12;
 }
 
 .btn.active:hover {
-  background-color: #93B1A6;
-  border-color: #93B1A6;
+  background-color: #183D3D;
+  border-color: #183D3D;
   transition: 0.7s;
 }
 
 .card-header-custom {
   color: #040D12;
   background-color: #93B1A6;
+  border-bottom: none !important;
 }
 
 thead.table-custom {
@@ -113,4 +114,12 @@ display: none;
 
 .sort-icon .asc-icon, .sort-icon .desc-icon {
     display: none;
+}
+
+.button-bar-custom {
+  background-color: #93B1A6;
+}
+
+.clickable-row:hover {
+  cursor: pointer;
 }
