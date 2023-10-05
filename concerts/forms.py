@@ -29,18 +29,28 @@ class ConcertForm(forms.ModelForm):
         cleaned_data = super().clean()
         opener_artists = []
 
-        # Create a list of keys to check before modifying cleaned_data
         opener_keys = [key for key in cleaned_data if key.startswith("opener-")]
 
         for key in opener_keys:
             value = cleaned_data.get(key)
-            print(f"{key} = {value}")
             if value:
                 try:
                     artist = Artist.objects.get(id=value)
                     opener_artists.append(artist)
                 except Artist.DoesNotExist:
                     self.add_error(key, f"Artist named {value} does not exist.")
+
+        # Ensure uniqueness across main artist and openers
+        main_artist = cleaned_data.get("artist")
+        all_artists_set = {main_artist.id} if main_artist else set()
+
+        for artist in opener_artists:
+            if artist.id in all_artists_set:
+                self.add_error(
+                    None,
+                    f"Artist {artist.name} is duplicated. Make sure the artist is not set as both main and opener or duplicated in openers.",  # noqa
+                )
+            all_artists_set.add(artist.id)
 
         cleaned_data["opener"] = opener_artists
         return cleaned_data
