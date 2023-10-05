@@ -99,11 +99,22 @@ class ArtistListView(ListView):
 
 class ArtistDetailView(DetailView):
     model = Artist
+    template_name = "concerts/artist_detail.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["recent_concerts"] = Concert.objects.filter(artist=self.object.id).select_related("venue")
         return context
+
+    def render_to_response(self, context, **response_kwargs):
+        if self.request.headers.get("X-Requested-With") == "XMLHttpRequest":
+            artist = context.get("object")
+            if artist:
+                return JsonResponse({"name": artist.name})
+            else:
+                return JsonResponse({"error": "Artist not found"}, status=404)
+        else:
+            return render(self.request, self.template_name, context)
 
 
 class ArtistCreateView(CreateView):
@@ -283,6 +294,7 @@ class ConcertCreateView(CreateView):
             if artist_form.is_valid():
                 artist_instance = artist_form.save(commit=True)
             else:
+                # Combining errors from the main form and the artist form
                 form._errors = {**form._errors, **artist_form.errors}
                 return self.form_invalid(form)
 
@@ -291,17 +303,28 @@ class ConcertCreateView(CreateView):
 
         # Save the form instance but don't commit to DB yet
         concert = form.save(commit=False)
-        concert.save()  # This will save the instance to DB, allowing many-to-many operations
+        concert.save()  # This saves the instance to the database, allowing many-to-many operations
 
         # Automatically set the creator as an attendee
         concert.attendees.add(self.request.user)
 
+        print("success message in create view form_valid")
         messages.success(self.request, "Concert successfully created!")
+
+        if self.request.headers.get("X-Requested-With") == "XMLHttpRequest":
+            return JsonResponse({"status": "success"})
+
         return super().form_valid(form)
 
     def form_invalid(self, form):
         print("Form errors:", form.errors)
-        messages.error(self.request, "There was an error creating the concert.")
+
+        if self.request.headers.get("X-Requested-With") == "XMLHttpRequest":
+            return JsonResponse({"status": "error", "errors": form.errors}, status=400)
+
+        non_field_errors = form.non_field_errors()
+        if non_field_errors:
+            messages.error(self.request, non_field_errors)
         return super().form_invalid(form)
 
 
