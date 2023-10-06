@@ -259,6 +259,7 @@ class ConcertListView(ListView):
 class ConcertDetailView(DetailView):
     model = Concert
     context_object_name = "concert"
+    template_name = "concerts/concert_detail.html"
 
     def get_object(self, **kwargs):
         # Use select_related to fetch related artist and venue in a single query
@@ -268,6 +269,20 @@ class ConcertDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         context["user_concerts"] = Concert.objects.filter(attendees=self.request.user).values_list("id", flat=True)
         return context
+
+    def render_to_response(self, context, **response_kwargs):
+        if self.request.headers.get("X-Requested-With") == "XMLHttpRequest":
+            "AJAX request received for ConcertDetailView."
+            concert = context.get("concert")
+            data = {
+                "concert_id": concert.pk,
+                "artist": concert.artist.name,
+                "date": concert.date.strftime("%Y-%m-%d"),
+            }
+            return JsonResponse(data)
+
+        print("no ajax used here")
+        return super().render_to_response(context, **response_kwargs)
 
 
 class ConcertCreateView(CreateView):
