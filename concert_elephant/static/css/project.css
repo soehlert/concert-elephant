@@ -51,6 +51,10 @@
   transition: 0.7s;
 }
 
+.card {
+    border: none !important;
+}
+
 .card-header-custom {
   color: #040D12;
   background-color: #93B1A6;

@@ -25,7 +25,7 @@ def home_page(request):
         "recent_venues": recent_venues,
         "popular_concerts": popular_concerts,
     }
-    return render(request, "pages/home.html", context)
+    return render(request, "home.html", context)
 
 
 def main_search(request):
