@@ -8,9 +8,15 @@ document.addEventListener("DOMContentLoaded", function() {
     const showModalBtns = document.querySelectorAll('.showModalBtn');
     const editButtons = document.querySelectorAll('.edit-review-btn');
 
+    const addReviewURL = reviewModal.getAttribute('data-add-review-url');
+    const updateReviewURL = reviewModal.getAttribute('data-update-review-url');
+    const getConcertURL = reviewModal.getAttribute('data-get-concert-url');
+    const getReviewURL = reviewModal.getAttribute('data-get-review-url');
+    const deleteReviewURL = reviewModal.getAttribute('data-delete-review-url');
+
     // Grab concert details to use elsewhere
     function fetchConcertDetails(concertId) {
-            return fetch(`/concerts/${concertId}/`, {
+            return fetch(getConcertURL.replace('0', concertId), {
                 headers: {
                     'X-Requested-With': 'XMLHttpRequest'
                 }
@@ -62,7 +68,7 @@ document.addEventListener("DOMContentLoaded", function() {
             fetchConcertDetails(concertId)
                 .then(concertDetails => {
                     // Once you have the artist and date, fetch the review details
-                    return fetch(`/concert/review/${reviewId}/`, {
+                    return fetch(getReviewURL.replace('0', reviewId), {
                         headers: {
                             'X-Requested-With': 'XMLHttpRequest'
                         }
@@ -93,9 +99,9 @@ document.addEventListener("DOMContentLoaded", function() {
         let url = "";
 
         if (actionType === 'add') {
-            url = reviewModal.getAttribute('data-add-review').replace('0', concertId);
+            url = addReviewURL.replace('0', concertId);
         } else if (actionType === 'edit') {
-            url = reviewModal.getAttribute('data-update-review').replace('0', reviewId);
+            url = updateReviewURL.replace('0', reviewId);
         }
 
         fetch(url, {
@@ -103,30 +109,6 @@ document.addEventListener("DOMContentLoaded", function() {
             body: new FormData(reviewForm),
             headers: {
                 'X-Requested-With': 'XMLHttpRequest',
-                'X-CSRFToken': csrfToken
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                location.reload();  // Reload the page to show the updated data
-            } else {
-                // Handle the errors here
-                console.error(data.errors);
-            }
-        });
-    });
-
-    // Delete a concert review with the trash can icon
-    document.querySelector('#deleteReviewIcon').addEventListener('click', function() {
-        const reviewId = document.querySelector('#reviewId').value;
-
-        if (!reviewId) return;
-
-        fetch(`/concert/review/delete/${reviewId}/`, {
-            method: 'DELETE',
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest', // To indicate this is an AJAX call
                 'X-CSRFToken': csrfToken
             }
         })
@@ -156,11 +138,53 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 
+    // Open the delete confirmation modal
+    document.querySelector('#deleteReviewIcon').addEventListener('click', function() {
+        const confirmDeleteBtn = document.querySelector('#confirmDeleteBtn');
+        confirmDeleteBtn.setAttribute('data-review-id', reviewId);
+        $('#confirmDeleteModal').modal('show');
+    });
+
+    // Delete the concert review
+    document.querySelector('#confirmDeleteBtn').addEventListener('click', function() {
+        let reviewId = document.getElementById('reviewId').value;
+
+        // Send a DELETE request to the server
+        fetch(deleteReviewURL.replace('0', reviewId), {
+            method: 'DELETE',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRFToken': csrfToken
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error('Failed to delete review');
+            }
+        })
+        .then(data => {
+            if (data.success) {
+                $('#createReviewModal').modal('hide');
+                location.reload();
+            } else {
+                console.error(data.errors);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+
+        // Close the confirmation modal
+        $('#confirmDeleteModal').modal('hide');
+    });
+
     // Close the add and edit modals
     document.querySelector('#closeReviewModalButton').addEventListener('click', function() {
         $('#createReviewModal').modal('hide');
     });
 
-    window.toggleReview = toggleReview;  // Make it available globally as you're using it inline in the template
-
+    // Make this available, so I can call it inline in the template
+    window.toggleReview = toggleReview;
 });
