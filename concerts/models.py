@@ -77,7 +77,7 @@ class ConcertReview(models.Model):
     """Allows users to give ratings and save notes on their concerts"""
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    concert = models.ForeignKey(Concert, on_delete=models.CASCADE)
+    concert = models.ForeignKey(Concert, on_delete=models.CASCADE, related_name="reviews")
     rating = models.PositiveIntegerField(choices=[(i, i) for i in range(1, 6)])  # 1-5 rating
     note = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)

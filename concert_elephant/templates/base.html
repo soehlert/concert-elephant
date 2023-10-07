@@ -90,6 +90,11 @@
           }, 2000);
         });
 
+        <!-- Initialize Bootstrap tooltips -->
+        $(document).ready(function() {
+          $('[data-toggle="tooltip"]').tooltip();
+        });
+
         document.addEventListener("DOMContentLoaded", function() {
           document.querySelectorAll('.clickable-row').forEach(function(row) {
             row.addEventListener('click', function() {

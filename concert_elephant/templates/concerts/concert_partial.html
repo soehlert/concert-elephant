@@ -1,22 +1,23 @@
 {% load crispy_forms_filters %}
 {% load crispy_forms_tags %}
+{% load static %}
 
 {% block form %}
   <form id="concert-form"
         method="POST"
         action="{% url 'concerts:concert-create' %}">
     {% csrf_token %}
-    <!-- Render all fields except the artist field -->
     <div class="form-group mb-2">
       <div>
         <label for="artist-autocomplete">Artist*</label>
         <i class="bi bi-person-plus-fill"
            style="cursor:pointer"
            title="Add new artist"
-           id="createArtistButton"></i>
+           id="createNewArtistButton"></i>
       </div>
       <input type="text"
              id="artist-autocomplete"
+             data-autocomplete-url="{% url 'concerts:artist-autocomplete' %}"
              style="cursor:pointer"
              class="form-control"
              placeholder="Start typing artist name..." />
@@ -29,10 +30,11 @@
         <i class="bi bi-plus-square"
            style="cursor:pointer"
            title="Add new venue"
-           id="createVenueButton"></i>
+           id="createNewVenueButton"></i>
       </div>
       <input type="text"
              id="venue-autocomplete"
+             data-autocomplete-url="{% url 'concerts:venue-autocomplete' %}"
              placeholder="Start typing a venue..."
              class="form-control" />
       <input type="hidden" name="venue" id="concert-venue" />
@@ -43,10 +45,11 @@
         <i class="bi bi-person-plus-fill"
            style="cursor:pointer"
            title="Add new opener"
-           id="createOpenerButton"></i>
+           id="createNewOpenerButton"></i>
       </div>
       <input type="text"
              id="opener-autocomplete-1"
+             data-autocomplete-url="{% url 'concerts:artist-autocomplete' %}"
              placeholder="Start typing opener name..."
              class="form-control opener-input" />
       <!-- This hidden input will hold the actual selected opener ID -->
@@ -56,7 +59,9 @@
          title="Add another opener"
          id="createOpenerButton-1"></i>
     </div>
-    {{ form.non_field_errors|as_crispy_errors }}
+    <div class="form-group custom-errors-container">
+        {{ form.non_field_errors|as_crispy_errors }}
+    </div>
     {% for field in form %}
       {% if field.name != "artist" and field.name != "venue" and field.name != "opener" %}
         <div class="form-group">{{ field|as_crispy_field }}</div>
@@ -66,10 +71,4 @@
       <button class="btn btn-outline-info text-white" type="submit">Add Concert</button>
     </div>
   </form>
-  <!-- Initialize Bootstrap tooltips -->
-  <script>
-    $(document).ready(function() {
-      $('[data-toggle="tooltip"]').tooltip();
-    });
-  </script>
 {% endblock form %}
