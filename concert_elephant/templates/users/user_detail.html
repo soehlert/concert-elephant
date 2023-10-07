@@ -20,7 +20,7 @@
             <th class="col-3">Review</th>
           </tr>
           {% for concert in concerts_with_reviews %}
-            <tr data-concert-details-url="{% url 'concerts:concert_detail' concert.id %}">
+            <tr data-concert-details-url="{% url 'concerts:concert-detail' concert.id %}">
               <td>{{ concert.artist }}</td>
               <td class="text-center">{{ concert.venue }}</td>
               <td class="text-center">{{ concert.date }}</td>
@@ -54,7 +54,7 @@
                                title="Edit review"
                                data-review-id="{{ concert.user_review.id }}"
                                data-concert-id="{{ concert.id }}"
-                               data-review-details-url="{% url 'concerts:review_detail' concert.user_review.id %}">
+                               data-review-details-url="{% url 'concerts:get-concert-review' concert.user_review.id %}">
                             </i>
                         {% else %}
                             {{ concert.user_review.note }}
@@ -64,7 +64,7 @@
                                title="Edit review"
                                data-review-id="{{ concert.user_review.id }}"
                                data-concert-id="{{ concert.id }}"
-                               data-review-details-url="{% url 'concerts:review_detail' concert.user_review.id %}">
+                               data-review-details-url="{% url 'concerts:get-concert-review' concert.user_review.id %}">
                             </i>
                         {% endif %}
                     </p>
@@ -116,8 +116,8 @@
          id="createReviewModal"
          tabindex="-1"
          role="dialog"
-         data-add-review="{% url 'concerts:add_concert_review' 0%}"
-         data-update-review="{% url 'concerts:update_concert_review' 0 %}"
+         data-add-review="{% url 'concerts:add-concert-review' 0%}"
+         data-update-review="{% url 'concerts:update-concert-review' 0 %}"
          data-action-type="add"
          aria-labelledby="createReviewModalLabel"
          aria-hidden="true">
@@ -159,9 +159,9 @@
               </div>
               <div class="d-flex mt-2">
                   <button type="submit" id="concert-review-submit" class="btn btn-primary text-white mx-auto"
-                      data-add-review-url-template="{% url 'concerts:add_concert_review' 0 %}">Submit Review</button>
+                      data-add-review-url-template="{% url 'concerts:add-concert-review' 0 %}">Submit Review</button>
                       <i id="deleteReviewIcon" title="Delete review" data-review-id="{{ concert.user_review.id }}"
-                         data-delete-review-url="{% url 'concerts:delete_review' concert.user_review.id %}"
+                         data-delete-review-url="{% url 'concerts:delete-concert-review' 0 %}"
                          class="bi bi-trash text-danger align-self-center" style="cursor:pointer; display:none"></i>
               </div>
             </form>
