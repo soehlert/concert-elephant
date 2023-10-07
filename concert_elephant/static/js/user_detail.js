@@ -8,43 +8,49 @@ document.addEventListener("DOMContentLoaded", function() {
     const showModalBtns = document.querySelectorAll('.showModalBtn');
     const editButtons = document.querySelectorAll('.edit-review-btn');
 
-    const addReviewURL = reviewModal.getAttribute('data-add-review-url');
-    const updateReviewURL = reviewModal.getAttribute('data-update-review-url');
-    const getConcertURL = reviewModal.getAttribute('data-get-concert-url');
-    const getReviewURL = reviewModal.getAttribute('data-get-review-url');
-    const deleteReviewURL = reviewModal.getAttribute('data-delete-review-url');
+    const addReviewURL = document.querySelector('#concert-review-submit').getAttribute('data-add-review-url-template');
+    const updateReviewURL = document.querySelector('#createReviewModal').getAttribute('data-update-review');
+    const deleteReviewURL = document.querySelector('#deleteReviewIcon').getAttribute('data-delete-review-url');
+
+    $.ajaxSetup({
+        headers: {
+            'X-CSRFToken': csrfToken
+        }
+    });
 
     // Grab concert details to use elsewhere
-    function fetchConcertDetails(concertId) {
-            return fetch(getConcertURL.replace('0', concertId), {
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            })
-            .then(response => {
-                if (!response.ok) {
-                    console.error("Network issues fetching concert details:", response.statusText);
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                return {
-                    artist: data.artist,
-                    date: data.date
-                };
-            })
-            .catch(error => {
-                console.error("Error fetching concert details:", error);
-            });
-        }
+    function fetchConcertDetails(concertId, getConcertURL) {
+        return fetch(getConcertURL.replace('0', concertId), {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                console.error("Network issues fetching concert details:", response.statusText);
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            return {
+                artist: data.artist,
+                date: data.date
+            };
+        })
+        .catch(error => {
+            console.error("Error fetching concert details:", error);
+        });
+    }
 
     // Event listener to open the modal for adding a review
     showModalBtns.forEach(btn => {
-        btn.addEventListener('click', function() {
+        btn.addEventListener('click', (e) => {
             const concertId = btn.getAttribute('data-concert-id');
+            const row = e.currentTarget.closest('tr');
+            const getConcertURL = row.getAttribute('data-concert-details-url');
 
-            fetchConcertDetails(concertId).then(details => {
+            fetchConcertDetails(concertId, getConcertURL).then(details => {
                 reviewModal.querySelector('#modalTitle').textContent = `Add Review for ${details.artist} on ${details.date}`;
                 reviewModal.setAttribute('data-concert-id', concertId);
                 reviewModal.setAttribute('data-action-type', 'add');
@@ -57,15 +63,18 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Event listener for the modal to edit a review
     editButtons.forEach(btn => {
-        btn.addEventListener('click', function() {
+        btn.addEventListener('click', (e) => {
+            const getReviewURL = e.currentTarget.getAttribute('data-review-details-url');
             const reviewId = btn.getAttribute('data-review-id');
             const concertId = btn.getAttribute('data-concert-id');
+            const row = e.currentTarget.closest('tr');
+            const getConcertURL = row.getAttribute('data-concert-details-url');
 
             reviewModal.setAttribute('data-action-type', 'edit');
             reviewIdField.value = reviewId;
 
             // First fetch the concert details
-            fetchConcertDetails(concertId)
+            fetchConcertDetails(concertId, getConcertURL)
                 .then(concertDetails => {
                     // Once you have the artist and date, fetch the review details
                     return fetch(getReviewURL.replace('0', reviewId), {
@@ -109,7 +118,6 @@ document.addEventListener("DOMContentLoaded", function() {
             body: new FormData(reviewForm),
             headers: {
                 'X-Requested-With': 'XMLHttpRequest',
-                'X-CSRFToken': csrfToken
             }
         })
         .then(response => response.json())
@@ -117,7 +125,6 @@ document.addEventListener("DOMContentLoaded", function() {
             if (data.success) {
                 location.reload();  // Reload the page to show the updated data
             } else {
-                // Handle the errors here
                 console.error(data.errors);
             }
         });
