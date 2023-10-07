@@ -30,12 +30,12 @@ urlpatterns = [
     path("concerts/<int:pk>/", views.ConcertDetailView.as_view(), name="concert-detail"),
     path("concerts/attend/<int:pk>/", view=views.attend_concert, name="attend-concert"),
     # Concert Reviews
-    path("concert/<int:pk>/add_review/", views.ConcertReviewCreateView.as_view(), name="add_concert_review"),
-    path("concert/review/<int:review_id>/", views.ConcertReviewDetailView.as_view(), name="get_concert_review"),
+    path("concert/<int:pk>/add_review/", views.ConcertReviewCreateView.as_view(), name="add-concert-review"),
+    path("concert/review/<int:review_id>/", views.ConcertReviewDetailView.as_view(), name="get-concert-review"),
     path(
-        "concert/review/update/<int:review_id>/", views.ConcertReviewUpdateView.as_view(), name="update_concert_review"
+        "concert/review/update/<int:review_id>/", views.ConcertReviewUpdateView.as_view(), name="update-concert-review"
     ),
     path(
-        "concert/review/delete/<int:review_id>/", views.ConcertReviewDeleteView.as_view(), name="delete_concert_review"
+        "concert/review/delete/<int:review_id>/", views.ConcertReviewDeleteView.as_view(), name="delete-concert-review"
     ),
 ]
