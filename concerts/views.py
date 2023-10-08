@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ValidationError
 from django.db.models import Count, Q
 from django.db.models.functions import Lower
@@ -130,7 +131,7 @@ class ArtistDetailView(DetailView):
             return render(self.request, self.template_name, context)
 
 
-class ArtistCreateView(CreateView):
+class ArtistCreateView(LoginRequiredMixin, CreateView):
     model = Artist
     template_name = "concerts/artist_create.html"
     form_class = ArtistForm
@@ -142,7 +143,7 @@ class ArtistCreateView(CreateView):
         artist_instance = form.save()
 
         # Check if the request is AJAX
-        if self.request.headers.get("x-requested-with") == "XMLHttpRequest":
+        if self.request.headers.get("X-Requested-With") == "XMLHttpRequest":
             data = {
                 "status": "success",
                 "artist": artist_instance.name,
@@ -157,7 +158,7 @@ class ArtistCreateView(CreateView):
 
     def form_invalid(self, form):
         # Check if the request is AJAX
-        if self.request.headers.get("x-requested-with") == "XMLHttpRequest":
+        if self.request.headers.get("X-Requested-With") == "XMLHttpRequest":
             errors = {field: error[0] for field, error in form.errors.items()}
             return JsonResponse({"status": "error", "errors": errors}, status=400)
 
@@ -184,7 +185,7 @@ class VenueDetailView(DetailView):
         return context
 
 
-class VenueCreateView(CreateView):
+class VenueCreateView(LoginRequiredMixin, CreateView):
     model = Venue
     template_name = "concerts/venue_create.html"
     form_class = VenueForm
@@ -196,7 +197,7 @@ class VenueCreateView(CreateView):
         venue = form.save()
 
         # Check if the request is AJAX
-        if self.request.headers.get("x-requested-with") == "XMLHttpRequest":
+        if self.request.headers.get("X-Requested-With") == "XMLHttpRequest":
             return JsonResponse(
                 {
                     "status": "success",
@@ -213,7 +214,7 @@ class VenueCreateView(CreateView):
         errors = {field: error[0] for field, error in form.errors.items()}
 
         # Check if the request is AJAX
-        if self.request.headers.get("x-requested-with") == "XMLHttpRequest":
+        if self.request.headers.get("X-Requested-With") == "XMLHttpRequest":
             return JsonResponse({"status": "error", "errors": errors}, status=400)
 
         # For non-AJAX requests:
@@ -280,7 +281,11 @@ class ConcertDetailView(DetailView):
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["user_concerts"] = Concert.objects.filter(attendees=self.request.user).values_list("id", flat=True)
+        if self.request.user.is_authenticated:
+            context["user_concerts"] = Concert.objects.filter(attendees=self.request.user).values_list("id", flat=True)
+        else:
+            context["user_concerts"] = []
+
         return context
 
     def render_to_response(self, context, **response_kwargs):
@@ -298,7 +303,7 @@ class ConcertDetailView(DetailView):
         return super().render_to_response(context, **response_kwargs)
 
 
-class ConcertCreateView(CreateView):
+class ConcertCreateView(LoginRequiredMixin, CreateView):
     model = Concert
     template_name = "concerts/concert_create.html"
     form_class = ConcertForm
@@ -356,7 +361,7 @@ class ConcertCreateView(CreateView):
         return super().form_invalid(form)
 
 
-class ConcertReviewCreateView(CreateView):
+class ConcertReviewCreateView(LoginRequiredMixin, CreateView):
     model = ConcertReview
     form_class = ConcertReviewForm
     template_name = "users/user_detail.html"
@@ -390,7 +395,7 @@ class ConcertReviewCreateView(CreateView):
         errors = {field: error[0] for field, error in form.errors.items()}
 
         # Check if the request is AJAX
-        if self.request.headers.get("x-requested-with") == "XMLHttpRequest":
+        if self.request.headers.get("X-Requested-With") == "XMLHttpRequest":
             return JsonResponse({"status": "error", "errors": errors}, status=400)
 
         # For non-AJAX requests:
@@ -398,7 +403,7 @@ class ConcertReviewCreateView(CreateView):
         return self.render_to_response(self.get_context_data(form=form))
 
 
-class ConcertReviewDetailView(View):
+class ConcertReviewDetailView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         review_id = kwargs.get("review_id")
         try:
@@ -413,7 +418,7 @@ class ConcertReviewDetailView(View):
             return JsonResponse({"error": "Review not found"}, status=404)
 
 
-class ConcertReviewUpdateView(View):
+class ConcertReviewUpdateView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         review_id = self.kwargs.get("review_id")
         review = get_object_or_404(ConcertReview, id=review_id)
@@ -436,7 +441,7 @@ class ConcertReviewUpdateView(View):
         return JsonResponse({"success": True, "note": review.note, "rating": review.rating, "reviewId": review_id})
 
 
-class ConcertReviewDeleteView(View):
+class ConcertReviewDeleteView(LoginRequiredMixin, View):
     def delete(self, request, *args, **kwargs):
         review_id = kwargs.get("review_id")
         try:
