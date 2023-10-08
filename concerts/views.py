@@ -89,10 +89,16 @@ def attend_concert(request, pk):
 
 
 @login_required
-def unattend_concert(request, pk):
+def unattend_concert(request, pk, next=None):
     concert = get_object_or_404(Concert, pk=pk)
     concert.attendees.remove(request.user)
-    return redirect("concerts:concert-list")
+
+    if next == "concert-list":
+        return redirect("concerts:concert-list")
+    elif next == "user-detail":
+        return redirect("users:detail", request.user.username)
+    else:
+        return redirect("concerts:concert-list")
 
 
 class ArtistListView(ListView):
