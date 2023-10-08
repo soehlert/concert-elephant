@@ -35,8 +35,10 @@
               action="{% url 'concerts:main_search' %}"
               method="POST">
           {% csrf_token %}
+          <label for="mainSearch" class="sr-only"></label>
           <input class="form-control pl-2 me-2"
                  type="search"
+                 id="mainSearch"
                  placeholder="Artist or Venue..."
                  name="search_query" />
           <button type="submit"
