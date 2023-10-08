@@ -7,11 +7,13 @@
         <h5 class="display-4 text-center">Artists</h5>
       </div>
       <div class="card-body">
+        {% if user.is_authenticated %}
         <div class="text-center button-bar-custom pb-2">
           <a class="link" href="{% url 'concerts:artist-create' %}">
             <button class="btn btn-outline-info text-white" type="submit">Add Artist</button>
           </a>
         </div>
+        {% endif %}
         <div class="table-responsive">
           <table class="table table-striped table-hover">
             <thead class="table-custom">
