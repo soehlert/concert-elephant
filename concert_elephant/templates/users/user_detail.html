@@ -85,39 +85,13 @@
           </table>
         </div>
       {% endif %}
-
-      <!-- Pagination -->
-      {% if concerts_with_reviews.has_other_pages %}
-        <div class="pagination justify-content-center mb-2">
-          <span class="step-links">
-            {% if concerts_with_reviews.has_previous %}
-              <a href="?page=1" class="btn btn-outline-primary text-white">&laquo; first</a>
-              <a href="?page={{ concerts_with_reviews.previous_page_number }}"
-                 class="btn btn-outline-primary text-white">previous</a>
-            {% endif %}
-            {# Display up to 2 pages before the current page #}
-            {% for page_number in concerts_with_reviews.paginator.page_range %}
-              {% if page_number >= concerts_with_reviews.number|subtract:2 and page_number <= concerts_with_reviews.number|add:2 %}
-                {% if concerts_with_reviews.number == page_number %}
-                  <button class="btn btn-outline-primary active text-white">
-                    <span class="current-page">{{ concerts_with_reviews.number }}</span>
-                  </button>
-                {% else %}
-                  <a href="?page={{ page_number }}"
-                     class="btn btn-outline-primary text-white">{{ page_number }}</a>
-                {% endif %}
-              {% endif %}
-            {% endfor %}
-            {% if concerts_with_reviews.has_next %}
-              <a href="?page={{ concerts_with_reviews.next_page_number }}"
-                 class="btn btn-outline-primary text-white">next</a>
-              <a href="?page={{ concerts_with_reviews.paginator.num_pages }}"
-                 class="btn btn-outline-primary text-white">last &raquo;</a>
-            {% endif %}
-          </span>
-        </div>
-      {% endif %}
     </div>
+
+    {% if concerts_with_reviews.has_other_pages %}
+        {% with paginator_data=concerts_with_reviews %}
+            {% include "pagination_partial.html" %}
+        {% endwith %}
+    {% endif %}
 
     <!-- Bootstrap Modal for Writing a Concert Review -->
     <div class="modal fade"
