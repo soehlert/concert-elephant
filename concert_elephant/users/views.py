@@ -27,11 +27,16 @@ class UserDetailView(LoginRequiredMixin, DetailView):
         for concert in concert_list:
             concert.user_review = ConcertReview.objects.filter(user=user, concert=concert).first()
 
+        # Include the IDs of concerts the user is attending.
+        user_concerts = user.concerts.values_list("id", flat=True)
+
         paginator = Paginator(concert_list, self.paginate_by)
         page = self.request.GET.get("page")
         concerts_with_reviews = paginator.get_page(page)
 
+        context["in_user_detail"] = True
         context["concerts_with_reviews"] = concerts_with_reviews
+        context["user_concerts"] = user_concerts
         context["review_form"] = ConcertReviewForm()
         return context
 

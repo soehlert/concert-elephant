@@ -88,6 +88,13 @@ def attend_concert(request, pk):
     return redirect("concerts:concert-list")
 
 
+@login_required
+def unattend_concert(request, pk):
+    concert = get_object_or_404(Concert, pk=pk)
+    concert.attendees.remove(request.user)
+    return redirect("concerts:concert-list")
+
+
 class ArtistListView(ListView):
     model = Artist
     template_name = "concerts/artist_list.html"
