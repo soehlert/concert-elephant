@@ -14,6 +14,5 @@ router.register("concerts", ConcertViewset)
 router.register("venues", VenueViewset)
 router.register("users", UserViewSet)
 
-
 app_name = "api"
 urlpatterns = router.urls
