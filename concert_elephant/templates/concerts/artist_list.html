@@ -14,21 +14,24 @@
             <button class="btn btn-outline-info text-white" type="submit">Add Artist</button>
           </a>
         </div>
-        <table class="table table-striped table-hover">
-          <thead class="table-custom">
-            <tr>
-              <th class="text-center" scope="col">Artist</th>
-              <th class="text-center" scope="col">Concerts</th>
-            </tr>
-          </thead>
-          {% for artist in page_obj %}
-            <tr class="clickable-row"
-                data-href="{% url 'concerts:artist-detail' artist.id %}">
-              <td class="text-center">{{ artist.name }}</td>
-              <td class="text-center">{{ artist.concerts.count }}</td>
-            </tr>
-          {% endfor %}
-        </table>
+        <div class="table-responsive">
+          <table class="table table-striped table-hover">
+            <thead class="table-custom">
+              <tr>
+                <th class="text-center" scope="col">Artist</th>
+                <th class="text-center" scope="col">Concerts</th>
+              </tr>
+            </thead>
+            {% for artist in page_obj %}
+              <tr class="clickable-row"
+                  data-href="{% url 'concerts:artist-detail' artist.id %}">
+                <td class="text-center">{{ artist.name }}</td>
+                <td class="text-center">{{ artist.concerts.count }}</td>
+              </tr>
+            {% endfor %}
+          </table>
+        </div>
+
         <div class="pagination justify-content-center mb-2">
           <span class="step-links">
             {% if page_obj.has_previous %}

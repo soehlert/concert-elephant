@@ -29,6 +29,7 @@ urlpatterns = [
     path("concerts/add/", views.ConcertCreateView.as_view(), name="concert-create"),
     path("concerts/<int:pk>/", views.ConcertDetailView.as_view(), name="concert-detail"),
     path("concerts/attend/<int:pk>/", view=views.attend_concert, name="attend-concert"),
+    path("concerts/unattend/<int:pk>/<str:next>/", views.unattend_concert, name="unattend-concert"),
     # Concert Reviews
     path("concert/<int:pk>/add_review/", views.ConcertReviewCreateView.as_view(), name="add-concert-review"),
     path("concert/review/<int:review_id>/", views.ConcertReviewDetailView.as_view(), name="get-concert-review"),

@@ -14,52 +14,55 @@
             <button class="btn btn-outline-info text-white" type="submit">Add Concert</button>
           </a>
         </div>
-        <table class="table table-striped table-hover">
-          <thead class="table-custom">
-            <tr>
-              <th scope="col" class="text-center">
-                Artist
-                <span class="sort-icon" data-sort="artist">
-                  <i title="Sort" class="bi bi-arrow-down-up default-icon"></i>
-                  <i title="Change to descending" class="bi bi-arrow-up asc-icon"></i>
-                  <i title="Change to ascending" class="bi bi-arrow-down desc-icon"></i>
-                </span>
-              </th>
-              <th scope="col" class="text-center">
-                Venue
-                <span class="sort-icon" data-sort="venue">
-                  <i title="Sort" class="bi bi-arrow-down-up default-icon"></i>
-                  <i title="Change to descending" class="bi bi-arrow-up asc-icon"></i>
-                  <i title="Change to ascending" class="bi bi-arrow-down desc-icon"></i>
-                </span>
-              </th>
-              <th scope="col" class="text-center">
-                Date
-                <span class="sort-icon" data-sort="date">
-                  <i title="Sort" class="bi bi-arrow-down-up default-icon"></i>
-                  <i title="Change to descending" class="bi bi-arrow-up asc-icon"></i>
-                  <i title="Change to ascending" class="bi bi-arrow-down desc-icon"></i>
-                </span>
-              </th>
-              <th class="text-center">Openers</th>
-            </tr>
-          </thead>
-          {% for concert in page_obj %}
-            <tr class="clickable-row"
-                data-href="{% url 'concerts:concert-detail' concert.id %}">
-              <td class="text-center">{{ concert.artist }}</td>
-              <td class="text-center">{{ concert.venue }}</td>
-              <td class="text-center">{{ concert.date }}</td>
-              <td class="text-center">
-                {% for opener in concert.opener.all %}
-                  {{ opener.name }}
-                  {% if not forloop.last %},{% endif %}
-                {% endfor %}
-              </td>
-            </tr>
-          {% endfor %}
-        </table>
+        <div class="table-responsive">
+          <table class="table table-striped table-hover">
+            <thead class="table-custom">
+              <tr>
+                <th scope="col" class="text-center">
+                  Artist
+                  <span class="sort-icon" data-sort="artist">
+                    <i title="Sort" class="bi bi-arrow-down-up default-icon"></i>
+                    <i title="Change to descending" class="bi bi-arrow-up asc-icon"></i>
+                    <i title="Change to ascending" class="bi bi-arrow-down desc-icon"></i>
+                  </span>
+                </th>
+                <th scope="col" class="text-center">
+                  Venue
+                  <span class="sort-icon" data-sort="venue">
+                    <i title="Sort" class="bi bi-arrow-down-up default-icon"></i>
+                    <i title="Change to descending" class="bi bi-arrow-up asc-icon"></i>
+                    <i title="Change to ascending" class="bi bi-arrow-down desc-icon"></i>
+                  </span>
+                </th>
+                <th scope="col" class="text-center">
+                  Date
+                  <span class="sort-icon" data-sort="date">
+                    <i title="Sort" class="bi bi-arrow-down-up default-icon"></i>
+                    <i title="Change to descending" class="bi bi-arrow-up asc-icon"></i>
+                    <i title="Change to ascending" class="bi bi-arrow-down desc-icon"></i>
+                  </span>
+                </th>
+                <th class="text-center">Openers</th>
+              </tr>
+            </thead>
+            {% for concert in page_obj %}
+              <tr class="clickable-row"
+                  data-href="{% url 'concerts:concert-detail' concert.id %}">
+                <td class="text-center">{{ concert.artist }}</td>
+                <td class="text-center">{{ concert.venue }}</td>
+                <td class="text-center">{{ concert.date }}</td>
+                <td class="text-center">
+                  {% for opener in concert.opener.all %}
+                    {{ opener.name }}
+                    {% if not forloop.last %},{% endif %}
+                  {% endfor %}
+                </td>
+              </tr>
+            {% endfor %}
+          </table>
+        </div>
       </div>
+
       <div class="pagination justify-content-center mb-2">
         <span class="step-links">
           {% if page_obj.has_previous %}

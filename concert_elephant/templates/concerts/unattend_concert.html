@@ -1,0 +1,20 @@
+{% if user.is_authenticated and concert.id in user_concerts %}
+    <form class="form-inline"
+        {% if in_user_detail %}
+              action="{% url 'concerts:unattend-concert' pk=concert.id next='user-detail' %}"
+          {% else %}
+              action="{% url 'concerts:unattend-concert' pk=concert.id next='concert-list' %}"
+        {% endif %}
+        method="POST">
+        {% csrf_token %}
+        <div class="text-center">
+          {% if in_user_detail %}
+              <button type="submit" title="I don't want to track this concert anymore"
+                      class="btn btn-danger btn-sm text-white">Remove Concert</button>
+          {% else %}
+              <button type="submit" title="I don't want to track this concert anymore"
+                      class="btn btn-danger btn-sm text-white">Remove from My Concerts</button>
+          {% endif %}
+        </div>
+    </form>
+{% endif %}
