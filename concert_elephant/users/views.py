@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.paginator import Paginator
+from django.db.models import Q
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import DetailView, RedirectView, UpdateView
@@ -22,8 +23,20 @@ class UserDetailView(LoginRequiredMixin, DetailView):
         context = super().get_context_data(**kwargs)
         user = self.object
 
-        # Attach the review to each concert if it exists
-        concert_list = [concert for concert in user.concerts.all()]
+        search_query = self.request.GET.get("q")
+        if search_query:
+            concert_list = [
+                concert
+                for concert in user.concerts.filter(
+                    Q(artist__name__icontains=search_query)
+                    | Q(venue__name__icontains=search_query)
+                    | Q(venue__city__icontains=search_query)
+                    | Q(opener__name__icontains=search_query)
+                )
+            ]
+        else:
+            concert_list = [concert for concert in user.concerts.all()]
+
         for concert in concert_list:
             concert.user_review = ConcertReview.objects.filter(user=user, concert=concert).first()
 

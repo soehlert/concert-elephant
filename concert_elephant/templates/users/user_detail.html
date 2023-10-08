@@ -5,6 +5,15 @@
 {% load custom_filters %}
 
 {% block content %}
+  <div class="d-flex justify-content-center mt-3 mb-3">
+    <form method="get" action="{% url 'users:detail' object.username %}"
+          class="form-inline d-flex text-center">
+        <label for="profileSearch" class="sr-only"></label>
+        <input class="form-control me-2" type="search" placeholder="Search my concerts"
+               aria-label="Search" id="profileSearch" name="q" value="{{ request.GET.q }}">
+        <button class="btn btn-outline-success text-white" type="submit">Search</button>
+    </form>
+  </div>
   <div class="row justify-content-center">
     <div class="col col-md-12 col-sm-12">
       <div class="card">
