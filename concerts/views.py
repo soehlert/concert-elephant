@@ -4,7 +4,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ValidationError
 from django.db.models import Count, Q
 from django.db.models.functions import Lower
-from django.http import HttpResponseRedirect, JsonResponse
+from django.http import HttpResponseForbidden, HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render, reverse
 from django.urls import reverse_lazy
 from django.views import View
@@ -423,19 +423,20 @@ class ConcertReviewUpdateView(LoginRequiredMixin, View):
         review_id = self.kwargs.get("review_id")
         review = get_object_or_404(ConcertReview, id=review_id)
 
+        # Check if the current user is the author of the review
+        if review.user != self.request.user:
+            return HttpResponseForbidden("You don't have permission to edit this review.")
+
         note = request.POST.get("note")
         rating = request.POST.get("rating")
 
         review.note = note
         review.rating = rating
-        review.save()
 
         try:
-            # Attempt to save. This may fail due to model field validations.
             review.full_clean()  # This will run all model field validations
             review.save()
         except ValidationError as e:
-            # Catch validation errors and return them
             return JsonResponse({"success": False, "errors": e.message_dict}, status=400)
 
         return JsonResponse({"success": True, "note": review.note, "rating": review.rating, "reviewId": review_id})
