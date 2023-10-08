@@ -11,71 +11,79 @@
         <h5 class="card-header card-header-custom display-4 text-center">My Concerts</h5>
       </div>
       {% if object == request.user %}
-        <table class="table table-striped">
-          <tr>
-            <th class="col-2">Artist</th>
-            <th class="col-2 text-center">Venue</th>
-            <th class="col-2 text-center">Date</th>
-            <th class="col-3 text-center">Openers</th>
-            <th class="col-3">Review</th>
-          </tr>
-          {% for concert in concerts_with_reviews %}
-            <tr data-concert-details-url="{% url 'concerts:concert-detail' concert.id %}">
-              <td>{{ concert.artist }}</td>
-              <td class="text-center">{{ concert.venue }}</td>
-              <td class="text-center">{{ concert.date }}</td>
-              <td>
-                {% for opener in concert.opener.all %}
-                  {{ opener.name }}{% if not forloop.last %},{% endif %}
-                {% endfor %}
-              </td>
-              <td>
-                 {% if concert.user_review %}
-                    <strong>Rating:</strong> {{ concert.user_review.rating }}/5
-                    <p class="review-note">
-                        {% if concert.user_review.note|length > 150 %}
-                            <span class="truncated-note">
-                                {{ concert.user_review.note|slice:":150" }}...
-                                <i class="bi bi-arrow-bar-down show-more-btn"
-                                   style="cursor:pointer"
-                                   title="Show more"
-                                   onclick="toggleReview(this)"></i>
-                            </span>
-                            <span class="full-note" style="display:none;">
-                                {{ concert.user_review.note }}
-                                <i class="bi bi-arrow-bar-up show-less-btn"
-                                   style="cursor:pointer"
-                                   title="Show less"
-                                   onclick="toggleReview(this)"></i>
-                            </span>
-                            <br />
-                            <i class="bi bi-pencil-square edit-review-btn"
-                               style="cursor:pointer"
-                               title="Edit review"
-                               data-review-id="{{ concert.user_review.id }}"
-                               data-concert-id="{{ concert.id }}"
-                               data-review-details-url="{% url 'concerts:get-concert-review' concert.user_review.id %}">
-                            </i>
-                        {% else %}
-                            {{ concert.user_review.note }}
-                            <br />
-                            <i class="bi bi-pencil-square edit-review-btn"
-                               style="cursor:pointer"
-                               title="Edit review"
-                               data-review-id="{{ concert.user_review.id }}"
-                               data-concert-id="{{ concert.id }}"
-                               data-review-details-url="{% url 'concerts:get-concert-review' concert.user_review.id %}">
-                            </i>
-                        {% endif %}
-                    </p>
-                {% else %}
-                    <button class="btn btn-primary text-white showModalBtn"
-                            data-concert-id="{{ concert.id }}">Add Review</button>
-                {% endif %}
-            </td>
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <tr>
+              <th class="col-2">Artist</th>
+              <th class="col-2 text-center">Venue</th>
+              <th class="col-2 text-center">Date</th>
+              <th class="col-2 text-center">Openers</th>
+              <th class="col-3">Review</th>
+              <th class="col-1"></th>
             </tr>
-          {% endfor %}
-        </table>
+            {% for concert in concerts_with_reviews %}
+              <tr data-concert-details-url="{% url 'concerts:concert-detail' concert.id %}">
+                <td>{{ concert.artist }}</td>
+                <td class="text-center">{{ concert.venue }}</td>
+                <td class="text-center">{{ concert.date }}</td>
+                <td>
+                  {% for opener in concert.opener.all %}
+                    {{ opener.name }}{% if not forloop.last %},{% endif %}
+                  {% endfor %}
+                </td>
+                <td>
+                   {% if concert.user_review %}
+                      <strong>Rating:</strong> {{ concert.user_review.rating }}/5
+                      <p class="review-note">
+                          {% if concert.user_review.note|length > 150 %}
+                              <span class="truncated-note">
+                                  {{ concert.user_review.note|slice:":150" }}...
+                                  <i class="bi bi-arrow-bar-down show-more-btn"
+                                     style="cursor:pointer"
+                                     title="Show more"
+                                     onclick="toggleReview(this)"></i>
+                              </span>
+                              <span class="full-note" style="display:none;">
+                                  {{ concert.user_review.note }}
+                                  <i class="bi bi-arrow-bar-up show-less-btn"
+                                     style="cursor:pointer"
+                                     title="Show less"
+                                     onclick="toggleReview(this)"></i>
+                              </span>
+                              <br />
+                              <i class="bi bi-pencil-square edit-review-btn"
+                                 style="cursor:pointer"
+                                 title="Edit review"
+                                 data-review-id="{{ concert.user_review.id }}"
+                                 data-concert-id="{{ concert.id }}"
+                                 data-review-details-url="{% url 'concerts:get-concert-review' concert.user_review.id %}">
+                              </i>
+                          {% else %}
+                              {{ concert.user_review.note }}
+                              <br />
+                              <i class="bi bi-pencil-square edit-review-btn"
+                                 style="cursor:pointer"
+                                 title="Edit review"
+                                 data-review-id="{{ concert.user_review.id }}"
+                                 data-concert-id="{{ concert.id }}"
+                                 data-review-details-url="{% url 'concerts:get-concert-review' concert.user_review.id %}">
+                              </i>
+                          {% endif %}
+                      </p>
+                  {% else %}
+                      <div class="d-flex align-items-center">
+                        <button class="btn btn-primary text-white showModalBtn"
+                                data-concert-id="{{ concert.id }}">Add Review</button>
+                      </div>
+                  {% endif %}
+                </td>
+                <td>
+                  {% include "concerts/unattend_concert.html" %}
+                </td>
+              </tr>
+            {% endfor %}
+          </table>
+        </div>
       {% endif %}
 
       <!-- Pagination -->
@@ -160,9 +168,9 @@
               <div class="d-flex mt-2">
                   <button type="submit" id="concert-review-submit" class="btn btn-primary text-white mx-auto"
                       data-add-review-url-template="{% url 'concerts:add-concert-review' 0 %}">Submit Review</button>
-                      <i id="deleteReviewIcon" title="Delete review" data-review-id="{{ concert.user_review.id }}"
-                         data-delete-review-url="{% url 'concerts:delete-concert-review' 0 %}"
-                         class="bi bi-trash text-danger align-self-center" style="cursor:pointer; display:none"></i>
+                  <i id="deleteReviewIcon" title="Delete review" data-review-id="{{ concert.user_review.id }}"
+                     data-delete-review-url="{% url 'concerts:delete-concert-review' 0 %}"
+                     class="bi bi-trash text-danger align-self-center" style="cursor:pointer; display:none"></i>
               </div>
             </form>
           </div>

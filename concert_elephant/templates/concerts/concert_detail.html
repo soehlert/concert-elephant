@@ -6,27 +6,29 @@
       <div class="card">
         <h5 class="card-header card-header-custom display-4 text-center">{{ concert.artist }}</h5>
       </div>
-      <table class="table table-striped table-hover">
-        <thead class="table-custom">
+      <div class="table-responsive">
+        <table class="table table-striped table-hover">
+          <thead class="table-custom">
+            <tr>
+              <th scope="col">Artist</th>
+              <th class="text-center" scope="col">Venue</th>
+              <th class="text-center" scope="col">Date</th>
+              <th class="text-center" scope="col">Openers</th>
+            </tr>
+          </thead>
           <tr>
-            <th scope="col">Artist</th>
-            <th class="text-center" scope="col">Venue</th>
-            <th class="text-center" scope="col">Date</th>
-            <th class="text-center" scope="col">Openers</th>
+            <td>{{ concert.artist }}</td>
+            <td class="text-center">{{ concert.venue }}</td>
+            <td class="text-center">{{ concert.date }}</td>
+            <td class="text-center">
+              {% for opener in concert.opener.all %}
+                {{ opener.name }}
+                {% if not forloop.last %},{% endif %}
+              {% endfor %}
+            </td>
           </tr>
-        </thead>
-        <tr>
-          <td>{{ concert.artist }}</td>
-          <td class="text-center">{{ concert.venue }}</td>
-          <td class="text-center">{{ concert.date }}</td>
-          <td class="text-center">
-            {% for opener in concert.opener.all %}
-              {{ opener.name }}
-              {% if not forloop.last %},{% endif %}
-            {% endfor %}
-          </td>
-        </tr>
-      </table>
+        </table>
+      </div>
       {% if user.is_authenticated %}
         {% if concert.id not in user_concerts %}
           <form class="form-inline"
@@ -37,6 +39,8 @@
               <button class="btn btn-info btn-sm text-white" type="submit">I Was There!</button>
             </div>
           </form>
+        {% else %}
+          {% include "concerts/unattend_concert.html" %}
         {% endif %}
       {% endif %}
     </div>
