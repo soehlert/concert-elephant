@@ -1,32 +1,51 @@
-from behave import given, then, when
+from behave import then, when
 from django.http import Http404
 from django.urls import reverse
 
-
-@given("I have valid credentials")
-def step_impl(context):
-    pass  # We've already created a user in before_all, so we don't need to recreate it here.
+from concerts.tests.features.steps.common import create_test_concert, create_test_review
 
 
-@given("I am an unauthenticated user")
-def step_impl(context):
-    context.client.logout()
+@when("I try to access a protected page {url_name}")
+def step_impl(context, url_name):
+    concert = create_test_concert(date="2023-01-01")
+    review = create_test_review(
+        user=context.user, concert=concert, rating=5, note="A test note"
+    )  # Assuming this creates a review with the created concert
 
+    # URLs mapped to the type of parameter they require
+    param_mapping = {
+        "concerts:concert-detail": [concert.id],
+        "concerts:attend-concert": [concert.id],
+        "concerts:unattend-concert": [concert.id, "dummy_next_value"],
+        "concerts:add-concert-review": [concert.id],
+        "concerts:update-concert-review": [review.id],
+        "concerts:delete-concert-review": [review.id],
+        "concerts:get-concert-review": [review.id],
+    }
 
-@when("I try to access a protected page")
-def step_impl(context):
-    context.response = context.client.get(context.protected_page_url)
+    if url_name in param_mapping:
+        actual_url = reverse(url_name, args=param_mapping[url_name])
+    else:
+        actual_url = reverse(url_name)
 
-
-@when("I login and access a protected page")
-def step_impl(context):
-    context.client.login(username="testuser", password="testpassword")
-    context.response = context.client.get(context.protected_page_url)
+    context.response = context.client.get(actual_url)
+    context.tested_url_name = url_name
 
 
 @then("I should be able to view the page")
 def step_impl(context):
-    assert context.response.status_code == 200, f"Expected 200 status code, but got {context.response.status_code}"
+    if context.tested_url_name in ["concerts:attend-concert", "concerts:unattend-concert"]:
+        expected_status = 302
+        expected_location = reverse("concerts:concert-list")
+        assert (
+            context.response["Location"] == expected_location
+        ), f"Unexpected redirect location: {context.response['Location']}"
+    else:
+        expected_status = 200
+
+    assert (
+        context.response.status_code == expected_status
+    ), f"Expected {expected_status} status code, but got {context.response.status_code}"
 
 
 @then("I get a {status_code:d} status code")
