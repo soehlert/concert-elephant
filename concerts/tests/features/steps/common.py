@@ -32,15 +32,20 @@ def create_test_review(user, concert, rating, note):
 
 
 @given('I have a registered user "{username}"')
-def step_impl(context, username):  # noqa: F811
+def step_impl(context, username):
     user = create_test_user(username)
     context.user = user
 
 
+@given("I am an unauthenticated user")
+def step_impl(context):
+    context.client.logout()
+
+
 @given('"{username}" is logged in')
-def step_impl(context, username):  # noqa: F811
-    context.test.client.login(username=username, password="testpassword")
-    if not context.test.client.login(username=username, password="testpassword"):
+def step_impl(context, username):
+    context.client.login(username=username, password="testpassword")
+    if not context.client.login(username=username, password="testpassword"):
         raise AssertionError(f"Failed to log in as {username}")
 
 
