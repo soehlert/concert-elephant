@@ -60,3 +60,4 @@ INSTALLED_APPS += ["django_extensions"]  # noqa: F405
 
 # Your stuff...
 # ------------------------------------------------------------------------------
+INSTALLED_APPS += ["behave_django"]  # noqa F405
