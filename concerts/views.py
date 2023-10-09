@@ -94,9 +94,7 @@ def unattend_concert(request, pk, next=None):
     concert = get_object_or_404(Concert, pk=pk)
     concert.attendees.remove(request.user)
 
-    if next == "concert-list":
-        return redirect("concerts:concert-list")
-    elif next == "user-detail":
+    if next == "user-detail":
         return redirect("users:detail", request.user.username)
     else:
         return redirect("concerts:concert-list")
@@ -445,6 +443,12 @@ class ConcertReviewUpdateView(LoginRequiredMixin, View):
 class ConcertReviewDeleteView(LoginRequiredMixin, View):
     def delete(self, request, *args, **kwargs):
         review_id = kwargs.get("review_id")
+        review = get_object_or_404(ConcertReview, id=review_id)
+
+        # Check if the current user is the author of the review
+        if review.user != self.request.user:
+            return HttpResponseForbidden("You don't have permission to edit this review.")
+
         try:
             review = ConcertReview.objects.get(pk=review_id)
             review.delete()
