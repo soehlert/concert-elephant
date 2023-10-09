@@ -19,9 +19,9 @@ docker-compose.yaml:
 	@ln -sf local.yml docker-compose.yaml
 
 ## behave-all: runs behave inside the containers against all of your features
-.Phony: behave-all
-behave-all: docker-compose.yaml
-	@docker-compose run django coverage run -a manage.py behave --no-input --simple
+.Phony: behave-concerts
+behave-concerts: docker-compose.yaml
+	@docker-compose run django python manage.py behave --no-input --simple --no-capture concerts/tests/features/
 
 ## behave: runs behave inside the containers against a specific feature (append FEATURE=feature_name_here)
 .Phony: behave

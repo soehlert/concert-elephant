@@ -70,17 +70,17 @@ DJANGO_APPS = [
     "django.forms",
 ]
 THIRD_PARTY_APPS = [
-    "crispy_forms",
-    "crispy_bootstrap5",
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
+    "bootstrap_datepicker_plus",
+    "corsheaders",
+    "crispy_bootstrap5",
+    "crispy_forms",
+    "django_countries",
+    "drf_spectacular",
     "rest_framework",
     "rest_framework.authtoken",
-    "corsheaders",
-    "drf_spectacular",
-    "django_countries",
-    "bootstrap_datepicker_plus",
 ]
 
 LOCAL_APPS = [
