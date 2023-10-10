@@ -1,6 +1,5 @@
-name: CI
+name: Combined CI and Behave Tests
 
-# Enable Buildkit and let compose use it to speed up image building
 env:
   DOCKER_BUILDKIT: 1
   COMPOSE_DOCKER_CLI_BUILD: 1
@@ -29,14 +28,12 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: '3.11'
-      # Consider using pre-commit.ci for open source project
+
       - name: Run pre-commit
         uses: pre-commit/action@v3.0.0
 
-  # With no caching at all the entire ci process takes 4m 30s to complete!
   pytest:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout Code Repository
         uses: actions/checkout@v4
@@ -52,3 +49,21 @@ jobs:
 
       - name: Tear down the Stack
         run: docker compose -f local.yml down
+
+  behave:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build and run containers using docker-compose
+        run: |
+          docker-compose up -d
+
+      - name: Run Behave tests
+        run: |
+          docker-compose run django python manage.py behave --no-input --simple --no-capture concerts/tests/features/
+
+      - name: Stop containers
+        run: |
+          docker-compose down
