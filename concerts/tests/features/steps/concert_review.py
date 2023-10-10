@@ -4,19 +4,24 @@ from behave import given, then, when
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 
-from concerts.tests.features.steps.common import create_test_concert, create_test_review
+from concerts.tests.features.steps.common import (
+    create_test_artist,
+    create_test_concert,
+    create_test_review,
+    create_test_venue,
+)
 
 
-@given('"{username}" has written a concert review')
+@given("{username} has written a concert review")
 def step_impl(context, username):
     user = get_user_model().objects.get(username=username)
-    concert = create_test_concert("2023-01-01")
+    concert = create_test_concert(artist=create_test_artist(), venue=create_test_venue(), date="2023-01-01")
     review = create_test_review(user, concert, 5, "A test note")
     context.review = review
     context.review_id = review.id
 
 
-@when('"{username}" tries to update {username2} concert review')
+@when("{username} tries to update {username2} concert review")
 def step_impl(context, username, username2):
     user = get_user_model().objects.get(username=username)
     context.client.login(username=user.username, password="testpassword")
@@ -35,14 +40,8 @@ def step_impl(context, username, author):
 
 @then("the delete operation should be successful")
 def step_impl(context):
-    assert context.response.status_code == 200
     response_data = json.loads(context.response.content.decode("utf-8"))
     assert response_data["success"] == True  # noqa: E712
-
-
-@then("the delete operation should be forbidden")
-def step_impl(context):
-    assert context.response.status_code == 403
 
 
 @then("the review update should be successful")
@@ -60,8 +59,3 @@ def step_impl(context):
     assert (
         response_data["reviewId"] == context.review_id
     ), f"Expected reviewId to be {context.review_id}, but got {response_data['reviewId']}"
-
-
-@then("the review update should be denied")
-def step_impl(context):
-    assert context.response.status_code == 403

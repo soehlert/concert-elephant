@@ -3,7 +3,7 @@ Feature: Authorization
   Scenario Outline: Unauthenticated user tries to access a protected page
     Given I am an unauthenticated user
     When I try to access a protected page <url_name>
-    Then I get a 302 status code
+    Then the response status code should be 302
     Then I am on the "account_login" page
 
     Examples: Our login required create pages

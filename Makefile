@@ -26,7 +26,7 @@ behave-concerts: docker-compose.yaml
 ## behave: runs behave inside the containers against a specific feature (append FEATURE=feature_name_here)
 .Phony: behave
 behave: docker-compose.yaml
-	@docker-compose run django python manage.py behave --no-input --simple -i $(FEATURE)
+	@docker-compose run django python manage.py behave --no-input --simple --no-capture concerts/tests/features/ -i $(FEATURE)
 
 ## build: rebuilds all your containers or a single one if CONTAINER is specified
 .Phony: build

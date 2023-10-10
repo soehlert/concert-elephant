@@ -2,6 +2,7 @@ from django.conf import settings
 from django.db import models
 from django.db.models import UniqueConstraint
 from django.db.models.functions import Lower
+from django.utils import timezone
 from django_countries.fields import CountryField
 
 
@@ -57,7 +58,7 @@ class Concert(models.Model):
 
     artist = models.ForeignKey(Artist, on_delete=models.CASCADE, related_name="concerts")
     venue = models.ForeignKey(Venue, on_delete=models.CASCADE, related_name="concerts")
-    date = models.DateField()
+    date = models.DateField(default=timezone.now)
     opener = models.ManyToManyField(Artist, related_name="opener_concerts", blank=True)
     attendees = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="concerts")
     created_at = models.DateTimeField(auto_now_add=True)
