@@ -2,15 +2,18 @@ from behave import then, when
 from django.http import Http404
 from django.urls import reverse
 
-from concerts.tests.features.steps.common import create_test_concert, create_test_review
+from concerts.tests.features.steps.common import (
+    create_test_artist,
+    create_test_concert,
+    create_test_review,
+    create_test_venue,
+)
 
 
 @when("I try to access a protected page {url_name}")
 def step_impl(context, url_name):
-    concert = create_test_concert(date="2023-01-01")
-    review = create_test_review(
-        user=context.user, concert=concert, rating=5, note="A test note"
-    )  # Assuming this creates a review with the created concert
+    concert = create_test_concert(artist=create_test_artist(), venue=create_test_venue(), date="2023-01-01")
+    review = create_test_review(user=context.user, concert=concert, rating=5, note="A test note")
 
     # URLs mapped to the type of parameter they require
     param_mapping = {
@@ -46,11 +49,6 @@ def step_impl(context):
     assert (
         context.response.status_code == expected_status
     ), f"Expected {expected_status} status code, but got {context.response.status_code}"
-
-
-@then("I get a {status_code:d} status code")
-def step_impl(context, status_code):
-    context.test.assertEqual(context.response.status_code, status_code)
 
 
 @then('I am on the "{url}" page')
