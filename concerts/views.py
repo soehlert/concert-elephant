@@ -336,10 +336,12 @@ class ConcertCreateView(LoginRequiredMixin, CreateView):
         concert = form.save(commit=False)
         concert.save()  # This saves the instance to the database, allowing many-to-many operations
 
+        for opener in form.cleaned_data["opener"]:
+            concert.opener.add(opener)
+
         # Automatically set the creator as an attendee
         concert.attendees.add(self.request.user)
 
-        print("success message in create view form_valid")
         messages.success(self.request, "Concert successfully created!")
 
         if self.request.headers.get("X-Requested-With") == "XMLHttpRequest":
