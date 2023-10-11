@@ -47,12 +47,9 @@ $(document).ready(function() {
     }
 
     function fetchDisplayNameById(urlTemplate, hiddenInputId, displayInputId) {
-        console.log(`Called fetchDisplayNameById for: ${hiddenInputId}`);
         const itemId = $(hiddenInputId).val();
-        console.log(`Item ID for ${hiddenInputId}: ${itemId}`);
         if (itemId) {
             const url = urlTemplate.replace('__pk__', itemId);
-            console.log(`Calling AJAX for URL: ${url}`);
             $.ajax({
                 url: url,
                 type: "GET",
@@ -163,7 +160,6 @@ $(document).ready(function() {
                 } else if (response.status === "error") {
                     $(".error").remove();
 
-                    // Display new errors next to the respective fields
                     const errors = response.errors;
                     for (const field in errors) {
                         $(`[name=${field}]`).after(`<div class="error">${errors[field]}</div>`);
