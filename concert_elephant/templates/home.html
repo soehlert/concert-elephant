@@ -17,7 +17,7 @@
             </tr>
           </thead>
           {% for concert in popular_concerts %}
-            <tr>
+            <tr class="clickable-row" data-href="{% url 'concerts:concert-detail' concert.pk %}">
               <td>{{ concert.artist }}</td>
               <td class="text-center">{{ concert.venue }}</td>
               <td class="text-center">{{ concert.date }}</td>
@@ -42,7 +42,7 @@
             </tr>
           </thead>
           {% for concert in recent_concerts %}
-            <tr>
+            <tr class="clickable-row" data-href="{% url 'concerts:concert-detail' concert.pk %}">
               <td>{{ concert.artist }}</td>
               <td class="text-center">{{ concert.venue }}</td>
               <td class="text-center">{{ concert.date }}</td>
@@ -67,7 +67,7 @@
             </tr>
           </thead>
           {% for artist in recent_artists %}
-            <tr>
+            <tr class="clickable-row" data-href="{% url 'concerts:artist-detail' artist.pk %}">
               <td>{{ artist.name }}</td>
               <td class="text-center">{{ artist.concerts.count }}</td>
             </tr>
@@ -90,7 +90,7 @@
             </tr>
           </thead>
           {% for venue in recent_venues %}
-            <tr>
+            <tr class="clickable-row" data-href="{% url 'concerts:venue-detail' venue.pk %}">
               <td>{{ venue.name }}</td>
               <td class="text-center">{{ venue.city }}</td>
               <td class="text-center">{{ venue.country.alpha3 }}</td>

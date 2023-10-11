@@ -149,11 +149,19 @@
                 </select>
               </div>
               <div class="d-flex mt-2">
-                  <button type="submit" id="concert-review-submit" class="btn btn-primary text-white mx-auto"
-                      data-add-review-url-template="{% url 'concerts:add-concert-review' 0 %}">Submit Review</button>
-                  <i id="deleteReviewIcon" title="Delete review" data-review-id="{{ concert.user_review.id }}"
-                     data-delete-review-url="{% url 'concerts:delete-concert-review' 0 %}"
-                     class="bi bi-trash text-danger align-self-center" style="cursor:pointer; display:none"></i>
+                  <button type="submit"
+                          id="concert-review-submit"
+                          class="btn btn-primary text-white mx-auto"
+                          data-add-review-url-template="{% url 'concerts:add-concert-review' 0 %}">
+                      Submit Review
+                  </button>
+                  <i id="deleteReviewIcon"
+                     title="Delete review"
+                     data-review-id="{{ concert.user_review.id }}"
+                     data-delete-review-url-template="{% url 'concerts:delete-concert-review' 0 %}"
+                     class="bi bi-trash text-danger align-self-center"
+                     style="cursor:pointer; display:none">
+                  </i>
               </div>
             </form>
           </div>

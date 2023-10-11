@@ -59,15 +59,14 @@
             {% if ACCOUNT_ALLOW_REGISTRATION %}
               <li class="nav-item d-inline mt-2">
                 {# URL provided by django-allauth/account/urls.py #}
-                <a id="sign-up-link nav-link-custom"
-                   class="nav-link"
+                <a id="sign-up-link"
+                   class="nav-link nav-link-custom"
                    href="{% url 'account_signup' %}">{% translate "Sign Up" %}</a>
               </li>
             {% endif %}
             <li class="nav-item d-inline mt-2">
-              {# URL provided by django-allauth/account/urls.py #}
-              <a id="log-in-link nav-link-custom"
-                 class="nav-link"
+              <a id="log-in-link"
+                 class="nav-link nav-link-custom"
                  href="{% url 'account_login' %}">{% translate "Sign In" %}</a>
             </li>
           {% endif %}
