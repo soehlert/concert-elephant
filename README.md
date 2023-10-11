@@ -4,6 +4,7 @@ Never forget your concerts
 
 [![Built with Cookiecutter Django](https://img.shields.io/badge/built%20with-Cookiecutter%20Django-ff69b4.svg?logo=cookiecutter)](https://github.com/cookiecutter/cookiecutter-django/)
 [![Black code style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
+[![Combined CI and Behave Tests](https://github.com/soehlert/concert-elephant/actions/workflows/ci.yml/badge.svg)](https://github.com/soehlert/concert-elephant/actions/workflows/ci.yml)
 
 License: MIT
 
