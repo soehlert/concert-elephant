@@ -34,20 +34,17 @@
     ================================================== -->
     {# Placed at the top of the document so pages load faster with defer #}
     {% block javascript %}
-      <!-- Bootstrap JS -->
-      <script defer
-              src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/js/bootstrap.min.js"
-              integrity="sha512-1/RvZTcCDEUjY/CypiMz+iqqtaoQfAITmNSJY17Myp4Ms5mdxPS5UV7iOfdZoxcGhzFbOm6sntTKJppjvuhg4g=="
-              crossorigin="anonymous"
-              referrerpolicy="no-referrer"></script>
-      <!-- DAL doesn't work with the slim versions -->
       <script src="https://code.jquery.com/jquery-3.7.0.js"
               integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM="
               crossorigin="anonymous"></script>
       <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"
               integrity="sha256-xLD7nhI62fcsEZK2/v8LsBcb4lG7dgULkuXoXB/j91c="
               crossorigin="anonymous"></script>
-      <!-- Your stuff: Third-party javascript libraries go here -->
+      <!-- Bootstrap JS -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/js/bootstrap.min.js"
+              integrity="sha512-1/RvZTcCDEUjY/CypiMz+iqqtaoQfAITmNSJY17Myp4Ms5mdxPS5UV7iOfdZoxcGhzFbOm6sntTKJppjvuhg4g=="
+              crossorigin="anonymous"
+              referrerpolicy="no-referrer"></script>
       <!-- place project specific Javascript in this file -->
       <script defer src="{% static 'js/project.js' %}"></script>
     {% endblock javascript %}
@@ -82,16 +79,13 @@
         /* Run whatever you want */
       });
     </script>
-      {% endcomment %}
+    {% endcomment %}
       <script type="text/javascript">
         $(document).ready(function() {
           setTimeout(function() {
             $('.alert-dismissible').fadeOut('slow');
           }, 2000);
-        });
 
-        <!-- Initialize Bootstrap tooltips -->
-        $(document).ready(function() {
           $('[data-toggle="tooltip"]').tooltip();
         });
 
