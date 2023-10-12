@@ -26,10 +26,10 @@
           {% for venue in page_obj %}
             <tr class="clickable-row"
                 data-href="{% url 'concerts:venue-detail' venue.id %}">
-              <td class="text-center">{{ venue.name }}</td>
-              <td class="text-center">{{ venue.city }}</td>
-              <td class="text-center">{{ venue.country }}</td>
-              <td class="text-center">{{ venue.concerts.count }}</td>
+              <td class="align-middle text-center">{{ venue.name }}</td>
+              <td class="align-middle text-center">{{ venue.city }}</td>
+              <td class="align-middle text-center">{{ venue.country }}</td>
+              <td class="align-middle text-center">{{ venue.concerts.count }}</td>
             </tr>
           {% endfor %}
         </table>
