@@ -94,6 +94,10 @@ def unattend_concert(request, pk, next=None):
     concert = get_object_or_404(Concert, pk=pk)
     concert.attendees.remove(request.user)
 
+    messages.info(
+        request,
+        "Concert removed from your profile. Your review has been saved and can be accessed if you re-add the concert.",
+    )
     if next == "user-detail":
         return redirect("users:detail", request.user.username)
     else:

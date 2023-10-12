@@ -27,20 +27,20 @@
               <th class="col-2 text-center">Venue</th>
               <th class="col-2 text-center">Date</th>
               <th class="col-2 text-center">Openers</th>
-              <th class="col-3">Review</th>
+              <th class="col-4">Review</th>
               <th class="col-1"></th>
             </tr>
             {% for concert in concerts_with_reviews %}
               <tr data-concert-details-url="{% url 'concerts:concert-detail' concert.id %}">
-                <td>{{ concert.artist }}</td>
-                <td class="text-center">{{ concert.venue }}</td>
-                <td class="text-center">{{ concert.date }}</td>
-                <td>
+                <td class="align-middle">{{ concert.artist }}</td>
+                <td class="align-middle text-center">{{ concert.venue }}</td>
+                <td class="align-middle text-center">{{ concert.date }}</td>
+                <td class="align-middle">
                   {% for opener in concert.opener.all %}
                     {{ opener.name }}{% if not forloop.last %},{% endif %}
                   {% endfor %}
                 </td>
-                <td>
+                <td class="align-middle">
                    {% if concert.user_review %}
                       <strong>Rating:</strong> {{ concert.user_review.rating }}/5
                       <p class="review-note">
@@ -86,7 +86,7 @@
                       </div>
                   {% endif %}
                 </td>
-                <td>
+                <td class="align-middle">
                   {% include "concerts/unattend_concert.html" %}
                 </td>
               </tr>
@@ -159,7 +159,7 @@
                      title="Delete review"
                      data-review-id="{{ concert.user_review.id }}"
                      data-delete-review-url-template="{% url 'concerts:delete-concert-review' 0 %}"
-                     class="bi bi-trash text-danger align-self-center"
+                     class="bi bi-trash3-fill text-danger align-self-center trash-icon-red"
                      style="cursor:pointer; display:none">
                   </i>
               </div>

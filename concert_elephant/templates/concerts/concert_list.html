@@ -48,10 +48,10 @@
             {% for concert in page_obj %}
               <tr class="clickable-row"
                   data-href="{% url 'concerts:concert-detail' concert.id %}">
-                <td class="text-center">{{ concert.artist }}</td>
-                <td class="text-center">{{ concert.venue }}</td>
-                <td class="text-center">{{ concert.date }}</td>
-                <td class="text-center">
+                <td class="align-middle text-center">{{ concert.artist }}</td>
+                <td class="align-middle text-center">{{ concert.venue }}</td>
+                <td class="align-middle text-center">{{ concert.date }}</td>
+                <td class="align-middle text-center">
                   {% for opener in concert.opener.all %}
                     {{ opener.name }}
                     {% if not forloop.last %},{% endif %}
