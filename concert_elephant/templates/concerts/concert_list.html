@@ -21,25 +21,43 @@
                 <th scope="col" class="text-center">
                   Artist
                   <span class="sort-icon" data-sort="artist">
-                    <i title="Sort" class="bi bi-arrow-down-up default-icon"></i>
-                    <i title="Change to descending" class="bi bi-arrow-up asc-icon"></i>
-                    <i title="Change to ascending" class="bi bi-arrow-down desc-icon"></i>
+                      <a href="?sort_by=artist">
+                        <i title="Sort" class="bi bi-arrow-down-up default-icon {% if request.GET.sort_by == "artist" or request.GET.sort_by == "-artist" %}hidden{% endif %}"></i>
+                    </a>
+                    <a href="?sort_by=-artist">
+                        <i title="Change to descending" class="bi bi-arrow-down asc-icon {% if request.GET.sort_by == "artist" %}active{% endif %}"></i>
+                    </a>
+                    <a href="?sort_by=artist">
+                        <i title="Change to ascending" class="bi bi-arrow-up desc-icon {% if request.GET.sort_by == "-artist" %}active{% endif %}"></i>
+                    </a>
                   </span>
                 </th>
                 <th scope="col" class="text-center">
                   Venue
                   <span class="sort-icon" data-sort="venue">
-                    <i title="Sort" class="bi bi-arrow-down-up default-icon"></i>
-                    <i title="Change to descending" class="bi bi-arrow-up asc-icon"></i>
-                    <i title="Change to ascending" class="bi bi-arrow-down desc-icon"></i>
+                    <a href="?sort_by=venue">
+                        <i title="Sort" class="bi bi-arrow-down-up default-icon {% if request.GET.sort_by == "venue" or request.GET.sort_by == "-venue" %}hidden{% endif %}"></i>
+                    </a>
+                    <a href="?sort_by=-venue">
+                        <i title="Change to descending" class="bi bi-arrow-down asc-icon {% if request.GET.sort_by == "venue" %}active{% endif %}"></i>
+                    </a>
+                    <a href="?sort_by=venue">
+                        <i title="Change to ascending" class="bi bi-arrow-up desc-icon {% if request.GET.sort_by == "-venue" %}active{% endif %}"></i>
+                    </a>
                   </span>
                 </th>
                 <th scope="col" class="text-center">
                   Date
                   <span class="sort-icon" data-sort="date">
-                    <i title="Sort" class="bi bi-arrow-down-up default-icon"></i>
-                    <i title="Change to descending" class="bi bi-arrow-up asc-icon"></i>
-                    <i title="Change to ascending" class="bi bi-arrow-down desc-icon"></i>
+                    <a href="?sort_by=date">
+                        <i title="Sort" class="bi bi-arrow-down-up default-icon {% if request.GET.sort_by == "date" or request.GET.sort_by == "-date" %}hidden{% endif %}"></i>
+                    </a>
+                    <a href="?sort_by=-date">
+                        <i title="Change to descending" class="bi bi-arrow-down asc-icon {% if request.GET.sort_by == "date" %}active{% endif %}"></i>
+                    </a>
+                    <a href="?sort_by=date">
+                        <i title="Change to ascending" class="bi bi-arrow-up desc-icon {% if request.GET.sort_by == "-date" %}active{% endif %}"></i>
+                    </a>
                   </span>
                 </th>
                 <th class="text-center">Openers</th>
