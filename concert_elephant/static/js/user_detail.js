@@ -145,8 +145,9 @@ document.addEventListener("DOMContentLoaded", function() {
 
     document.querySelector('#confirmDeleteBtn').addEventListener('click', function() {
         const reviewId = document.getElementById('reviewId').value;
+        const deleteURL = deleteReviewURLTemplate.replace(0, reviewId);
 
-        fetch(deleteReviewURLTemplate.replace('REVIEW_ID', reviewId), {
+        fetch(deleteURL,{
             method: 'DELETE',
             headers: {
                 'X-Requested-With': 'XMLHttpRequest',

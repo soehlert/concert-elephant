@@ -1,29 +1,27 @@
 {% load custom_filters %}
 
 <div class="pagination justify-content-center mb-5">
-  <span class="step-links">
-    {% if paginator_data.has_previous %}
-      <a href="?page=1" class="btn btn-outline-primary text-white">&laquo; first</a>
-      <a href="?page={{ paginator_data.previous_page_number }}"
-         class="btn btn-outline-primary text-white">previous</a>
-    {% endif %}
-    {% for page_number in paginator_data.paginator.page_range %}
-      {% if page_number >= paginator_data.number|subtract:"2" and page_number <= paginator_data.number|add:"2" %}
-        {% if paginator_data.number == page_number %}
-          <button class="btn btn-outline-primary active text-white">
-            <span class="current-page">{{ paginator_data.number }}</span>
-          </button>
-        {% else %}
-          <a href="?page={{ page_number }}"
-             class="btn btn-outline-primary text-white">{{ page_number }}</a>
+    <span class="step-links">
+        {% if paginator_data.has_previous %}
+            <a href="?page=1{% if request.GET.sort_by %}&sort_by={{ request.GET.sort_by }}{% endif %}" class="btn btn-outline-primary text-white">&laquo; first</a>
+            <a href="?page={{ paginator_data.previous_page_number }}{% if request.GET.sort_by %}&sort_by={{ request.GET.sort_by }}{% endif %}" class="btn btn-outline-primary text-white">previous</a>
         {% endif %}
-      {% endif %}
-    {% endfor %}
-    {% if paginator_data.has_next %}
-      <a href="?page={{ paginator_data.next_page_number }}"
-         class="btn btn-outline-primary  text-white">next</a>
-      <a href="?page={{ paginator_data.paginator.num_pages }}"
-         class="btn btn-outline-primary  text-white">last &raquo;</a>
-    {% endif %}
-  </span>
+
+        {% for page_number in paginator_data.paginator.page_range %}
+            {% if page_number >= paginator_data.number|subtract:"2" and page_number <= paginator_data.number|add:"2" %}
+                {% if paginator_data.number == page_number %}
+                    <button class="btn btn-outline-primary active text-white">
+                        <span class="current-page">{{ paginator_data.number }}</span>
+                    </button>
+                {% else %}
+                    <a href="?page={{ page_number }}{% if request.GET.sort_by %}&sort_by={{ request.GET.sort_by }}{% endif %}" class="btn btn-outline-primary text-white">{{ page_number }}</a>
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+
+        {% if paginator_data.has_next %}
+            <a href="?page={{ paginator_data.next_page_number }}{% if request.GET.sort_by %}&sort_by={{ request.GET.sort_by }}{% endif %}" class="btn btn-outline-primary  text-white">next</a>
+            <a href="?page={{ paginator_data.paginator.num_pages }}{% if request.GET.sort_by %}&sort_by={{ request.GET.sort_by }}{% endif %}" class="btn btn-outline-primary  text-white">last &raquo;</a>
+        {% endif %}
+    </span>
 </div>
