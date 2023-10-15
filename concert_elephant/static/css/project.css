@@ -141,3 +141,20 @@ thead.table-custom {
   background-color: #A8A196;
   transition: 0.7s;
 }
+
+.sort-icon .default-icon {
+  display: inline-block; /* By default, show the default icon */
+  color: black;
+}
+
+.sort-icon i.asc-icon, .sort-icon i.desc-icon {
+  color: black;
+}
+
+.sort-icon i.active {
+  display: inline-block; /* Show the icon with the 'active' class */
+}
+
+.hidden {
+  display: none !important;
+}
