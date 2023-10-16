@@ -114,10 +114,10 @@ class ArtistListView(ListView):
     paginate_by = 20
 
     def get_queryset(self):
-        logger.warning(f"Unrecognized sort option received: {self.request.GET.get('sort_by')}")
         sort_options = ["name", "-name", "-created_at", "concert_count", "-concert_count"]
         sort_by = self.request.GET.get("sort_by", "-created_at")
         if sort_by not in sort_options:
+            logger.warning(f"Unrecognized sort option received: {self.request.GET.get('sort_by')}")
             sort_by = "-created_at"
 
         queryset = Artist.objects.annotate(concert_count=Count("concerts")).order_by(sort_by)
@@ -187,7 +187,6 @@ class VenueListView(ListView):
     paginate_by = 20
 
     def get_queryset(self):
-        logger.warning(f"Unrecognized sort option received: {self.request.GET.get('sort_by')}")
         sort_options = [
             "name",
             "-name",
@@ -201,6 +200,7 @@ class VenueListView(ListView):
         ]
         sort_by = self.request.GET.get("sort_by", "-created_at")
         if sort_by not in sort_options:
+            logger.warning(f"Unrecognized sort option received: {self.request.GET.get('sort_by')}")
             sort_by = "-created_at"
 
         queryset = Venue.objects.annotate(concert_count=Count("concerts")).order_by(sort_by)
@@ -260,11 +260,11 @@ class ConcertListView(ListView):
     paginate_by = 20
 
     def get_queryset(self):
-        logger.warning(f"Unrecognized sort option received: {self.request.GET.get('sort_by')}")
         sort_options = ["artist", "-artist", "venue", "-venue", "date", "-date"]
         sort_by = self.request.GET.get("sort_by", "-date")
 
         if sort_by not in sort_options:
+            logger.warning(f"Unrecognized sort option received: {self.request.GET.get('sort_by')}")
             sort_by = "-date"
 
         if sort_by == "artist" or sort_by == "-artist":
