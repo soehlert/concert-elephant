@@ -1,3 +1,5 @@
+import logging
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -12,6 +14,8 @@ from django.views.generic import CreateView, DetailView, ListView
 
 from .forms import ArtistForm, ConcertForm, ConcertReviewForm, VenueForm
 from .models import Artist, Concert, ConcertReview, Venue
+
+logger = logging.getLogger(__name__)
 
 
 def home_page(request):
@@ -94,6 +98,10 @@ def unattend_concert(request, pk, next=None):
     concert = get_object_or_404(Concert, pk=pk)
     concert.attendees.remove(request.user)
 
+    messages.info(
+        request,
+        "Concert removed from your profile. Your review has been saved and can be accessed if you re-add the concert.",
+    )
     if next == "user-detail":
         return redirect("users:detail", request.user.username)
     else:
@@ -106,7 +114,15 @@ class ArtistListView(ListView):
     paginate_by = 20
 
     def get_queryset(self):
-        return Artist.objects.all().order_by("-created_at")
+        logger.warning(f"Unrecognized sort option received: {self.request.GET.get('sort_by')}")
+        sort_options = ["name", "-name", "-created_at", "concert_count", "-concert_count"]
+        sort_by = self.request.GET.get("sort_by", "-created_at")
+        if sort_by not in sort_options:
+            sort_by = "-created_at"
+
+        queryset = Artist.objects.annotate(concert_count=Count("concerts")).order_by(sort_by)
+
+        return queryset
 
 
 class ArtistDetailView(DetailView):
@@ -171,7 +187,25 @@ class VenueListView(ListView):
     paginate_by = 20
 
     def get_queryset(self):
-        return Venue.objects.all().order_by("-created_at")
+        logger.warning(f"Unrecognized sort option received: {self.request.GET.get('sort_by')}")
+        sort_options = [
+            "name",
+            "-name",
+            "city",
+            "-city",
+            "country",
+            "-country",
+            "concert_count",
+            "-concert_count",
+            "-created_at",
+        ]
+        sort_by = self.request.GET.get("sort_by", "-created_at")
+        if sort_by not in sort_options:
+            sort_by = "-created_at"
+
+        queryset = Venue.objects.annotate(concert_count=Count("concerts")).order_by(sort_by)
+
+        return queryset
 
 
 class VenueDetailView(DetailView):
@@ -226,46 +260,25 @@ class ConcertListView(ListView):
     paginate_by = 20
 
     def get_queryset(self):
-        queryset = super().get_queryset()
-        # noinspection PyTypeChecker
-        sort_by = self.request.GET.get("sort_by", "date")
-        # noinspection PyTypeChecker
-        order = self.request.GET.get("order", "asc")
-        prefix = "-" if order == "desc" else ""
+        logger.warning(f"Unrecognized sort option received: {self.request.GET.get('sort_by')}")
+        sort_options = ["artist", "-artist", "venue", "-venue", "date", "-date"]
+        sort_by = self.request.GET.get("sort_by", "-date")
 
-        # For some reason, sorting is broken unless we compare the artist names after using Lower
-        # Something about being case-sensitive breaks it apparently
-        if sort_by == "artist":
-            if prefix:
-                queryset = queryset.annotate(lower_artist=Lower("artist__name")).order_by(f"{prefix}lower_artist")
-            else:
-                queryset = queryset.annotate(lower_artist=Lower("artist__name")).order_by("lower_artist")
+        if sort_by not in sort_options:
+            sort_by = "-date"
+
+        if sort_by == "artist" or sort_by == "-artist":
+            queryset = Concert.objects.annotate(lower_artist=Lower("artist__name")).order_by(
+                sort_by.replace("artist", "lower_artist")
+            )
+        elif sort_by == "venue" or sort_by == "-venue":
+            queryset = Concert.objects.annotate(lower_venue=Lower("venue__name")).order_by(
+                sort_by.replace("venue", "lower_venue")
+            )
         else:
-            queryset = queryset.order_by(f"{prefix}{sort_by}")
+            queryset = Concert.objects.order_by(sort_by)
+
         return queryset
-
-    def render_to_response(self, context, **response_kwargs):
-        if self.request.headers.get("X-Requested-With") == "XMLHttpRequest":
-            page_data = context.get("page_obj").object_list
-
-            data = []
-            for concert in page_data:
-                concert_data = {
-                    "pk": concert.pk,
-                    "fields": {
-                        "artist": str(concert.artist),
-                        "venue": str(concert.venue),
-                        "date": concert.date.strftime("%Y-%m-%d"),
-                        "openers": [str(opener) for opener in concert.opener.all()],
-                    },
-                }
-                data.append(concert_data)
-
-            sort_by = self.request.GET.get("sort_by", "date")
-            order = self.request.GET.get("order", "asc")
-
-            return JsonResponse({"concerts": data, "sort": {"column": sort_by, "direction": order}})
-        return super().render_to_response(context, **response_kwargs)
 
 
 class ConcertDetailView(DetailView):

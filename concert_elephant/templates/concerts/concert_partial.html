@@ -17,6 +17,7 @@
       </div>
       <input type="text"
              id="artist-autocomplete"
+             name="artist"
              data-autocomplete-url="{% url 'concerts:artist-autocomplete' %}"
              style="cursor:pointer"
              class="form-control"
@@ -33,6 +34,7 @@
       </div>
       <input type="text"
              id="venue-autocomplete"
+             name="venue"
              data-autocomplete-url="{% url 'concerts:venue-autocomplete' %}"
              placeholder="Start typing a venue..."
              class="form-control" />

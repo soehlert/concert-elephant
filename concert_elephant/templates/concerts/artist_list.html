@@ -18,15 +18,41 @@
           <table class="table table-striped table-hover">
             <thead class="table-custom">
               <tr>
-                <th class="text-center" scope="col">Artist</th>
-                <th class="text-center" scope="col">Concerts</th>
+                <th class="text-center" scope="col">
+                  Artist
+                  <span class="sort-icon" data-sort="name">
+                    <a href="{% if request.GET.sort_by == "name" %}?sort_by=-name{% else %}?sort_by=name{% endif %}">
+                      <i title="Sort" class="bi bi-arrow-down-up default-icon {% if "name" in request.GET.sort_by or "-name" in request.GET.sort_by %}hidden{% endif %}"></i>
+                    </a>
+                    <a href="?sort_by=-name">
+                      <i title="Change to descending" class="bi bi-arrow-up asc-icon {% if request.GET.sort_by == "name" %}active{% endif %}"></i>
+                    </a>
+                    <a href="?sort_by=name">
+                      <i title="Change to ascending" class="bi bi-arrow-down desc-icon {% if request.GET.sort_by == "-name" %}active{% endif %}"></i>
+                    </a>
+                  </span>
+                </th>
+                <th class="text-center" scope="col">
+                  Concerts
+                  <span class="sort-icon" data-sort="concert_count">
+                    <a href="{% if request.GET.sort_by == "concert_count" %}?sort_by=-concert_count{% else %}?sort_by=concert_count{% endif %}">
+                      <i title="Sort" class="bi bi-arrow-down-up default-icon {% if "concert_count" in request.GET.sort_by or "-concert_count" in request.GET.sort_by %}hidden{% endif %}"></i>
+                    </a>
+                    <a href="?sort_by=-concert_count">
+                      <i title="Change to descending" class="bi bi-arrow-up asc-icon {% if request.GET.sort_by == "concert_count" %}active{% endif %}"></i>
+                    </a>
+                    <a href="?sort_by=concert_count">
+                      <i title="Change to ascending" class="bi bi-arrow-down desc-icon {% if request.GET.sort_by == "-concert_count" %}active{% endif %}"></i>
+                    </a>
+                  </span>
+                </th>
               </tr>
             </thead>
             {% for artist in page_obj %}
               <tr class="clickable-row"
                   data-href="{% url 'concerts:artist-detail' artist.id %}">
-                <td class="text-center">{{ artist.name }}</td>
-                <td class="text-center">{{ artist.concerts.count }}</td>
+                <td class="align-middle text-center">{{ artist.name }}</td>
+                <td class="align-middle text-center">{{ artist.concerts.count }}</td>
               </tr>
             {% endfor %}
           </table>

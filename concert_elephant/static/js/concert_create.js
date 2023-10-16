@@ -167,10 +167,7 @@ $(document).ready(function() {
                 }
             },
             error: function(response) {
-                console.log("Error callback triggered");
-
                 let jsonResponse = JSON.parse(response.responseText);
-
                 let errors = jsonResponse.errors;
 
                 // Clear any existing alerts
@@ -184,7 +181,7 @@ $(document).ready(function() {
                         $(".custom-errors-container").append(alertHtml);
                     } else {
                         // Append the alert after the input field with the error
-                        $("#" + field).closest('.form-group').append(alertHtml);
+                        $("input[name='" + field + "']").closest('.form-group').append(alertHtml);
                     }
                 }
             }

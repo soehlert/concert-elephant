@@ -103,13 +103,13 @@ thead.table-custom {
 }
 
 .modal-messages {
-  width: 75%;
-  margin: 0 auto;
-  padding: 5px;
+    width: 75%;
+    margin: 0 auto;
+    padding: 5px;
 }
 
 .country-select-flag {
-display: none;
+    display: none;
 }
 
 .review-note {
@@ -126,4 +126,35 @@ display: none;
 
 .clickable-row:hover {
   cursor: pointer;
+}
+
+.trash-icon-red {
+  color: #eb4034 !important;
+}
+
+.btn-delete {
+  background-color: #F2F2F2;
+  border: none;
+}
+
+.btn-delete:hover {
+  background-color: #A8A196;
+  transition: 0.7s;
+}
+
+.sort-icon .default-icon {
+  display: inline-block; /* By default, show the default icon */
+  color: black;
+}
+
+.sort-icon i.asc-icon, .sort-icon i.desc-icon {
+  color: black;
+}
+
+.sort-icon i.active {
+  display: inline-block; /* Show the icon with the 'active' class */
+}
+
+.hidden {
+  display: none !important;
 }

@@ -9,12 +9,19 @@
         {% csrf_token %}
         <div class="text-center">
           {% if in_user_detail %}
-              <button type="submit" title="I don't want to track this concert anymore"
-                      class="btn btn-danger btn-sm text-white">Remove Concert</button>
+            <div>
+              <button type="submit" data-bs-toggle="tooltip" data-bs-placement="top" title="Remove concert from my list"
+                      class="btn btn-danger btn-delete btn-sm">
+                  <i class="bi bi-trash3-fill trash-icon-red"></i>
+              </button>
+            </div>
           {% else %}
-              <button type="submit" title="I don't want to track this concert anymore"
-                      class="btn btn-danger btn-sm text-white">Remove from My Concerts</button>
+              <button type="submit" data-bs-toggle="tooltip" data-bs-placement="top" title="Remove concert from my list"
+                      class="btn btn-danger btn-sm btn-delete text-danger">
+                  Remove From My Concerts
+              </button>
           {% endif %}
         </div>
     </form>
 {% endif %}
+
