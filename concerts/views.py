@@ -217,7 +217,7 @@ class VenueCreateView(LoginRequiredMixin, CreateView):
 
         # For non-AJAX requests:
         messages.error(self.request, "There was an error creating the venue.")
-        return self.render_to_response(self.get_context_data(form=form))
+        return super().form_invalid(form)
 
 
 class ConcertListView(ListView):
@@ -297,7 +297,6 @@ class ConcertDetailView(DetailView):
             }
             return JsonResponse(data)
 
-        print("no ajax used here")
         return super().render_to_response(context, **response_kwargs)
 
 
@@ -350,8 +349,6 @@ class ConcertCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
     def form_invalid(self, form):
-        print("Form errors:", form.errors)
-
         if self.request.headers.get("X-Requested-With") == "XMLHttpRequest":
             return JsonResponse({"status": "error", "errors": form.errors}, status=400)
 
@@ -400,7 +397,7 @@ class ConcertReviewCreateView(LoginRequiredMixin, CreateView):
 
         # For non-AJAX requests:
         messages.error(self.request, "There was an error creating the review.")
-        return self.render_to_response(self.get_context_data(form=form))
+        return super().form_invalid(form)
 
 
 class ConcertReviewDetailView(LoginRequiredMixin, View):
