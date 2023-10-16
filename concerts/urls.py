@@ -1,26 +1,19 @@
 from django.urls import path
 
 from . import views
-from .views import ArtistAutocomplete, OpenerAutocomplete, VenueAutocomplete
+from .views import UnifiedAutocomplete
 
 app_name = "concerts"
 
 urlpatterns = [
     path("", views.home_page, name="home"),
     path("search/", views.main_search, name="main_search"),
+    path("autocomplete/<str:model_name>/", UnifiedAutocomplete.as_view(), name="unified-autocomplete"),
     # Artists
-    path(
-        "artist-autocomplete/",
-        ArtistAutocomplete.as_view(),
-        name="artist-autocomplete",
-    ),
     path("artists/", views.ArtistListView.as_view(), name="artist-list"),
     path("artists/add/", views.ArtistCreateView.as_view(), name="artist-create"),
     path("artists/<int:pk>/", views.ArtistDetailView.as_view(), name="artist-detail"),
-    # Opener to let us do autocomplete on the opener field
-    path("opener/autocomplete/", OpenerAutocomplete.as_view(), name="opener-autocomplete"),
     # Venues
-    path("venue-autocomplete/", VenueAutocomplete.as_view(), name="venue-autocomplete"),
     path("venues/", views.VenueListView.as_view(), name="venue-list"),
     path("venues/add/", views.VenueCreateView.as_view(), name="venue-create"),
     path("venues/<int:pk>", views.VenueDetailView.as_view(), name="venue-detail"),

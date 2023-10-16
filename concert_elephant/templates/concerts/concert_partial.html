@@ -18,7 +18,7 @@
       <input type="text"
              id="artist-autocomplete"
              name="artist"
-             data-autocomplete-url="{% url 'concerts:artist-autocomplete' %}"
+             data-autocomplete-url="{% url 'concerts:unified-autocomplete' 'artist' %}"
              style="cursor:pointer"
              class="form-control"
              placeholder="Start typing artist name..." />
@@ -35,7 +35,7 @@
       <input type="text"
              id="venue-autocomplete"
              name="venue"
-             data-autocomplete-url="{% url 'concerts:venue-autocomplete' %}"
+             data-autocomplete-url="{% url 'concerts:unified-autocomplete' 'venue' %}"
              placeholder="Start typing a venue..."
              class="form-control" />
       <input type="hidden" name="venue" id="concert-venue" />
@@ -50,7 +50,7 @@
       </div>
       <input type="text"
              id="opener-autocomplete-1"
-             data-autocomplete-url="{% url 'concerts:artist-autocomplete' %}"
+             data-autocomplete-url="{% url 'concerts:unified-autocomplete' 'opener' %}"
              placeholder="Start typing opener name..."
              class="form-control opener-input" />
       <input type="hidden" name="opener-1" id="concert-opener-1" />

@@ -24,9 +24,9 @@ def step_impl(context, entity, name):
         raise AssertionError(error_message)
 
 
-@when('I search for a {model} with the term "{term}" using the "{url_name}" URL')
-def step_impl(context, model, term, url_name):
-    url = reverse(f"concerts:{url_name}")
+@when('I search for a {model} with the term "{term}"')
+def step_impl(context, model, term):
+    url = reverse("concerts:unified-autocomplete", kwargs={"model_name": model})
     context.response = Client().get(url, {"term": term})
 
 
