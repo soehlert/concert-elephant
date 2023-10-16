@@ -48,41 +48,28 @@ def main_search(request):
     )
 
 
-class ArtistAutocomplete(View):
-    def get_queryset(self, term):
-        return Artist.objects.filter(name__icontains=term)
+class UnifiedAutocomplete(View):
+    def get_queryset(self, model_class, term, search_field="name"):
+        kwargs = {f"{search_field}__icontains": term}
+        return model_class.objects.filter(**kwargs)
 
-    def render_to_response(self, context):
-        artists = self.get_queryset(context["term"])
-        artist_data = [{"id": artist.id, "label": artist.name} for artist in artists]
-        return JsonResponse(artist_data, safe=False)
-
-    def get(self, request, *args, **kwargs):
+    def get(self, request, model_name, *args, **kwargs):
         term = request.GET.get("term", "")
-        context = {"term": term}
-        return self.render_to_response(context)
+        search_field = "name"
 
+        # Map model name to actual model class
+        models_map = {
+            "artist": Artist,
+            "venue": Venue,
+            "opener": Artist,
+        }
 
-class VenueAutocomplete(View):
-    def get_queryset(self, term):
-        return Venue.objects.filter(name__icontains=term)
+        model_class = models_map.get(model_name)
 
-    def get(self, request, *args, **kwargs):
-        term = request.GET.get("term", "")
-        venues = self.get_queryset(term)
-
-        # Prepare the data for autocomplete
-        data = [{"id": venue.id, "label": str(venue)} for venue in venues]
+        items = self.get_queryset(model_class, term, search_field)
+        data = [{"id": item.id, "label": str(item)} for item in items]
 
         return JsonResponse(data, safe=False)
-
-
-class OpenerAutocomplete(View):
-    def get(self, request, *args, **kwargs):
-        query = request.GET.get("term", "")
-        artists = Artist.objects.filter(name__icontains=query)[:10]
-        results = [{"id": artist.id, "label": artist.name, "value": artist.name} for artist in artists]
-        return JsonResponse(results, safe=False)
 
 
 @login_required
