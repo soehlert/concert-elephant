@@ -32,7 +32,7 @@ def step_impl(context, model, term, url_name):
 
 @then('I should receive a response containing "{expected}"')
 def step_impl(context, expected):
-    print(context.response.content)
+    logger.info(context.response.content)
     # Decode the byte-string to string and load into a dictionary
     response_data = json.loads(context.response.content.decode("utf-8"))
 
@@ -110,6 +110,8 @@ def step_impl(context, name, city, country):
 def step_impl(context):
     url = reverse("concerts:concert-list")
     context.response = context.client.get(url, HTTP_X_REQUESTED_WITH="XMLHttpRequest")
+    logger.info(context.response)
+    logger.info(context.response.content)
 
 
 @then("I should receive a JSON response containing the concert list")
