@@ -114,10 +114,10 @@ class ArtistListView(ListView):
     paginate_by = 20
 
     def get_queryset(self):
-        logger.warning(f"Unrecognized sort option received: {self.request.GET.get('sort_by')}")
         sort_options = ["name", "-name", "-created_at", "concert_count", "-concert_count"]
         sort_by = self.request.GET.get("sort_by", "-created_at")
         if sort_by not in sort_options:
+            logger.warning(f"Unrecognized sort option received: {self.request.GET.get('sort_by')}")
             sort_by = "-created_at"
 
         queryset = Artist.objects.annotate(concert_count=Count("concerts")).order_by(sort_by)
@@ -187,7 +187,6 @@ class VenueListView(ListView):
     paginate_by = 20
 
     def get_queryset(self):
-        logger.warning(f"Unrecognized sort option received: {self.request.GET.get('sort_by')}")
         sort_options = [
             "name",
             "-name",
@@ -201,6 +200,7 @@ class VenueListView(ListView):
         ]
         sort_by = self.request.GET.get("sort_by", "-created_at")
         if sort_by not in sort_options:
+            logger.warning(f"Unrecognized sort option received: {self.request.GET.get('sort_by')}")
             sort_by = "-created_at"
 
         queryset = Venue.objects.annotate(concert_count=Count("concerts")).order_by(sort_by)
@@ -251,7 +251,7 @@ class VenueCreateView(LoginRequiredMixin, CreateView):
 
         # For non-AJAX requests:
         messages.error(self.request, "There was an error creating the venue.")
-        return self.render_to_response(self.get_context_data(form=form))
+        return super().form_invalid(form)
 
 
 class ConcertListView(ListView):
@@ -260,11 +260,11 @@ class ConcertListView(ListView):
     paginate_by = 20
 
     def get_queryset(self):
-        logger.warning(f"Unrecognized sort option received: {self.request.GET.get('sort_by')}")
         sort_options = ["artist", "-artist", "venue", "-venue", "date", "-date"]
         sort_by = self.request.GET.get("sort_by", "-date")
 
         if sort_by not in sort_options:
+            logger.warning(f"Unrecognized sort option received: {self.request.GET.get('sort_by')}")
             sort_by = "-date"
 
         if sort_by == "artist" or sort_by == "-artist":
@@ -310,7 +310,6 @@ class ConcertDetailView(DetailView):
             }
             return JsonResponse(data)
 
-        print("no ajax used here")
         return super().render_to_response(context, **response_kwargs)
 
 
@@ -363,8 +362,6 @@ class ConcertCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
     def form_invalid(self, form):
-        print("Form errors:", form.errors)
-
         if self.request.headers.get("X-Requested-With") == "XMLHttpRequest":
             return JsonResponse({"status": "error", "errors": form.errors}, status=400)
 
@@ -413,7 +410,7 @@ class ConcertReviewCreateView(LoginRequiredMixin, CreateView):
 
         # For non-AJAX requests:
         messages.error(self.request, "There was an error creating the review.")
-        return self.render_to_response(self.get_context_data(form=form))
+        return super().form_invalid(form)
 
 
 class ConcertReviewDetailView(LoginRequiredMixin, View):

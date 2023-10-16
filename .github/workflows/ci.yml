@@ -58,7 +58,7 @@ jobs:
 
       - name: Build and run containers using docker-compose
         run: |
-          docker-compose up -d
+          docker-compose -f local.yml up -d
 
       - name: Run Behave tests
         run: |

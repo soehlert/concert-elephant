@@ -1,5 +1,6 @@
 from behave import given, then
 from django.contrib.auth import get_user_model
+from django.urls import reverse
 from rest_framework.authtoken.models import Token
 
 from concerts.models import Artist, Concert, ConcertReview, Venue
@@ -52,6 +53,18 @@ def step_impl(context, username):
     context.client.login(username=username, password="testpassword")
     if not context.client.login(username=username, password="testpassword"):
         raise AssertionError(f"Failed to log in as {username}")
+
+    # Capture the user's ID using get_user_model()
+    User = get_user_model()
+    user = User.objects.get(username=username)
+    context.user_id = user.id
+
+    # Optionally: Reverse the URL for the user detail view using the captured ID to ensure it works
+    try:
+        reverse_url = reverse("users:detail", kwargs={"username": username})
+        print("Successfully reversed URL:", reverse_url)
+    except Exception as e:
+        raise AssertionError(f"Failed to reverse URL for user {username}. Error: {e}")
 
 
 @given("I am a token authenticated user {username}")
