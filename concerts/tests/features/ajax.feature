@@ -2,14 +2,14 @@ Feature: Autocomplete
 
   Scenario Outline: Testing Autocomplete features
     Given a <entity> named "<name>"
-    When I search for a <entity> with the term "<term>" using the "<url_name>" URL
+    When I search for a <entity> with the term "<term>"
     Then I should receive a response containing "<expected>"
 
     Examples:
-      | entity  | name                  | term     | url_name              | expected              |
-      | artist  | Michael Jackson       | Mich     | artist-autocomplete   | Michael Jackson       |
-      | venue   | Madison Square Garden | Madison  | venue-autocomplete    | Madison Square Garden |
-      | opener  | Britney Spears        | Brit     | opener-autocomplete   | Britney Spears        |
+      | entity  | name                  | term     | expected              |
+      | artist  | Michael Jackson       | Mich     | Michael Jackson       |
+      | venue   | Madison Square Garden | Madison  | Madison Square Garden |
+      | opener  | Britney Spears        | Brit     | Britney Spears        |
 
     Scenario: Access artist detail through an AJAX request
       Given an artist named "John Doe"
