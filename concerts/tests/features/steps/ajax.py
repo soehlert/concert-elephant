@@ -32,6 +32,7 @@ def step_impl(context, model, term, url_name):
 
 @then('I should receive a response containing "{expected}"')
 def step_impl(context, expected):
+    print(context.response.content)
     # Decode the byte-string to string and load into a dictionary
     response_data = json.loads(context.response.content.decode("utf-8"))
 
