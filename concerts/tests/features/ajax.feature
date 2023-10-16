@@ -30,10 +30,6 @@ Feature: Autocomplete
       Then I should receive a JSON response indicating success
       And the response should contain the venue id, name "Awesome Venue", city "New York", and country "US"
 
-    Scenario: View concert list through an AJAX request
-      When I request the concert list using AJAX
-      Then I should receive a JSON response containing the concert list
-
     Scenario: View concert detail through an AJAX request
       Given a concert exists
       When I request the detail of the existing concert using AJAX

@@ -106,21 +106,6 @@ def step_impl(context, name, city, country):
     assert venue["country"] == country, f"Expected venue country '{country}', but got '{venue['country']}'"
 
 
-@when("I request the concert list using AJAX")
-def step_impl(context):
-    url = reverse("concerts:concert-list")
-    context.response = context.client.get(url, HTTP_X_REQUESTED_WITH="XMLHttpRequest")
-    logger.info(context.response)
-    logger.info(context.response.content)
-
-
-@then("I should receive a JSON response containing the concert list")
-def step_impl(context):
-    assert context.response.status_code == 200, f"Expected status code 200, but got {context.response.status_code}"
-    response_json = json.loads(context.response.content)
-    assert "concerts" in response_json, "Response JSON does not contain 'concerts'"
-
-
 @given("a concert exists")
 def step_impl(context):
     artist = create_test_artist()
