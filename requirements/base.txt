@@ -21,5 +21,3 @@ django-cors-headers==4.2.0  # https://github.com/adamchainz/django-cors-headers
 drf-spectacular==0.26.4  # https://github.com/tfranzel/drf-spectacular
 django-countries==7.5.1  # https://github.com/SmileyChris/django-countries/
 django-bootstrap-datepicker-plus==5.0.4  # https://github.com/monim67/django-bootstrap-datepicker-plus
-
-django-storages[boto3] == 1.14.2  # https://django-storages.readthedocs.io/en/latest/index.html
