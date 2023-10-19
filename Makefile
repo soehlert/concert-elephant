@@ -21,23 +21,23 @@ docker-compose.yaml:
 ## behave-all: runs behave inside the containers against all of your features
 .Phony: behave-concerts
 behave-concerts: docker-compose.yaml
-	@docker-compose run django python manage.py behave --no-input --simple --no-capture concerts/tests/features/
+	@docker compose run django python manage.py behave --no-input --simple --no-capture concerts/tests/features/
 
 ## behave: runs behave inside the containers against a specific feature (append FEATURE=feature_name_here)
 .Phony: behave
 behave: docker-compose.yaml
-	@docker-compose run django python manage.py behave --no-input --simple --no-capture concerts/tests/features/ -i $(FEATURE)
+	@docker compose run django python manage.py behave --no-input --simple --no-capture concerts/tests/features/ -i $(FEATURE)
 
 ## build: rebuilds all your containers or a single one if CONTAINER is specified
 .Phony: build
 build: docker-compose.yaml
-	@docker-compose up -d --no-deps --build $(CONTAINER)
-	@docker-compose restart $(CONTAINER)
+	@docker compose up -d --no-deps --build $(CONTAINER)
+	@docker compose restart $(CONTAINER)
 
 ## coverage.xml: generate coverage from test runs
 coverage.xml: pytest behave-all
-	@docker-compose run django coverage report
-	@docker-compose run django coverage xml
+	@docker compose run django coverage report
+	@docker compose run django coverage xml
 
 ## ci-test: runs all tests just like Gitlab CI does
 .Phony: ci-test
@@ -46,18 +46,18 @@ ci-test: | toggle-local build migrate run coverage.xml
 ## cleanup: remove local containers and volumes
 .Phony: clean
 clean: docker-compose.yaml
-	@docker-compose rm -f -s
+	@docker compose rm -f -s
 	@docker volume prune -f
 
 ## collect-static: run collect static admin command
 .Phony: collectstatic
 collectstatic: docker-compose.yaml
-	@docker-compose run django python manage.py collectstatic
+	@docker compose run django python manage.py collectstatic
 
 ## django-addr: get the IP and ephemeral port assigned to docker:8000
 .Phony: django-addr
 django-addr: docker-compose.yaml
-	@docker-compose port django 8000
+	@docker compose port django 8000
 
 ## django-url: get the URL based on http://$(make django-addr)
 .Phony: django-url
@@ -72,17 +72,17 @@ django-open: docker-compose.yaml
 ## down: turn down docker compose stack
 .Phony: down
 down: docker-compose.yaml
-	@docker-compose down
+	@docker compose down
 
 ## exec: executes a given command on a given container (append CONTAINER=container_name_here and COMMAND=command_here)
 .Phony: exec
 exec: docker-compose.yaml
-	@docker-compose exec $(CONTAINER) $(COMMAND)
+	@docker compose exec $(CONTAINER) $(COMMAND)
 
 ## generate-data: generates some test data of all types (users, artists, venues, concerts, concert reviews)
 .Phony: generate-data
 generate-data:
-	@docker-compose run django python manage.py generate_test_data
+	@docker compose run django python manage.py generate_test_data
 
 # This automatically builds the help target based on commands prepended with a double hashbang
 ## help: print this help output
@@ -93,40 +93,40 @@ help: Makefile
 ## tail-log: tail a docker container's logs (append CONTAINER=container_name_here)
 .Phony: tail-log
 tail-log: docker-compose.yaml
-	@docker-compose logs -f $(CONTAINER)
+	@docker compose logs -f $(CONTAINER)
 
 ## migrate: makemigrations and then migrate
 .Phony: migrate
 migrate: docker-compose.yaml
-	@docker-compose run django python manage.py makemigrations
-	@docker-compose run django python manage.py migrate
+	@docker compose run django python manage.py makemigrations
+	@docker compose run django python manage.py migrate
 
 ## pytest: runs pytest inside the containers
 .Phony: pytest
 pytest: docker-compose.yaml
-	@docker-compose run django coverage run -m pytest
+	@docker compose run django coverage run -m pytest
 
 ## run: brings up the containers as described in docker-compose.yaml
 .Phony: run
 run: docker-compose.yaml
-	@docker-compose up -d
+	@docker compose up -d
 
 ## stop: turns off running containers
 .Phony: stop
 stop: docker-compose.yaml
-	@docker-compose stop
+	@docker compose stop
 
 ## type-check: static type checking
 .Phony: type-check
 type-check: docker-compose.yaml
-	@docker-compose run django mypy scram
+	@docker compose run django mypy scram
 
 ## pass-reset: change admin's password
 .Phony: pass-reset
 pass-reset: docker-compose.yaml
-	@docker-compose run django python manage.py changepassword admin
+	@docker compose run django python manage.py changepassword admin
 
 ## superuser: create an admin account
 .Phony: superuser
 superuser: docker-compose.yaml
-	@docker-compose run django python manage.py createsuperuser
+	@docker compose run django python manage.py createsuperuser

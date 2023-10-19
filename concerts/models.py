@@ -4,6 +4,7 @@ from django.db.models import UniqueConstraint
 from django.db.models.functions import Lower
 from django.utils import timezone
 from django_countries.fields import CountryField
+from titlecase import titlecase
 
 
 # Create your models here.
@@ -26,7 +27,7 @@ class Artist(models.Model):
         return str(f"{self.name}")
 
     def save(self, *args, **kwargs):
-        self.name = self.name.title()
+        self.name = titlecase(self.name)
         super().save(*args, **kwargs)
 
 
@@ -48,8 +49,8 @@ class Venue(models.Model):
             return str(f"{self.name} - {self.city}")
 
     def save(self, *args, **kwargs):
-        self.name = self.name.title()
-        self.city = self.city.title()
+        self.name = titlecase(self.name)
+        self.city = titlecase(self.city)
         super().save(*args, **kwargs)
 
 
