@@ -21,8 +21,8 @@ def create_test_artist(name="Test Artist"):
     return Artist.objects.create(name=name)
 
 
-def create_test_venue(name="Test Venue", city="Test City"):
-    return Venue.objects.create(name=name, city=city)
+def create_test_venue(name="Test Venue", city="Test City", state="IL"):
+    return Venue.objects.create(name=name, city=city, state=state)
 
 
 def create_test_concert(artist, venue, date):
@@ -59,10 +59,8 @@ def step_impl(context, username):
     user = User.objects.get(username=username)
     context.user_id = user.id
 
-    # Optionally: Reverse the URL for the user detail view using the captured ID to ensure it works
     try:
-        reverse_url = reverse("users:detail", kwargs={"username": username})
-        print("Successfully reversed URL:", reverse_url)
+        reverse("users:detail", kwargs={"username": username})
     except Exception as e:
         raise AssertionError(f"Failed to reverse URL for user {username}. Error: {e}")
 

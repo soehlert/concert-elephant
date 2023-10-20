@@ -32,7 +32,7 @@ def step_impl(context, entity_type):
         data = {"name": "Test Artist 2"}
         url = reverse("concerts:artist-create")
     elif entity_type == "venue":
-        data = {"name": "Test Venue 2", "city": "Test City 2", "country": "US"}
+        data = {"name": "Test Venue 2", "city": "Test City 2", "state": "IL", "country": "US"}
         url = reverse("concerts:venue-create")
     elif entity_type == "review":
         concert = create_test_concert(create_test_artist(), create_test_venue(), "2023-10-15")

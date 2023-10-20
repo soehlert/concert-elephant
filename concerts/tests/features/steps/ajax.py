@@ -13,7 +13,6 @@ logger = logging.getLogger(__name__)
 
 @given('a {entity} named "{name}"')
 def step_impl(context, entity, name):
-    logger.info(f"Creating {entity}: {name}")
     if entity == "artist" or entity == "opener":
         Artist.objects.create(name=name)
     elif entity == "venue":
@@ -32,7 +31,6 @@ def step_impl(context, model, term):
 
 @then('I should receive a response containing "{expected}"')
 def step_impl(context, expected):
-    logger.info(context.response.content)
     # Decode the byte-string to string and load into a dictionary
     response_data = json.loads(context.response.content.decode("utf-8"))
 
@@ -53,7 +51,6 @@ def step_impl(context, name):
     artist = Artist.objects.get(name=name)
     url = reverse("concerts:artist-detail", args=[artist.id])
     context.response = Client().get(url, HTTP_X_REQUESTED_WITH="XMLHttpRequest")
-    logger.info("Made AJAX request for detail page")
 
 
 @then('I should receive a JSON response containing the name "{name}"')
@@ -89,20 +86,27 @@ def step_impl(context, name):
     assert response_data.get("artist") == name, f"Actual artist name: '{response_data.get('artist')}'"
 
 
-@when('I submit the venue creation form with name "{name}", city "{city}", and country "{country}" using AJAX')
-def step_impl(context, name, city, country):
+@when(
+    'I submit the venue creation form with name "{name}", city "{city}", '
+    'state "{state}" and country "{country}" using AJAX'
+)
+def step_impl(context, name, city, state, country):
     url = reverse("concerts:venue-create")
     context.response = context.client.post(
-        url, {"name": name, "city": city, "country": country}, HTTP_X_REQUESTED_WITH="XMLHttpRequest"
+        url, {"name": name, "city": city, "state": state, "country": country}, HTTP_X_REQUESTED_WITH="XMLHttpRequest"
     )
+    logger.info(context.response.content)
 
 
-@then('the response should contain the venue id, name "{name}", city "{city}", and country "{country}"')
-def step_impl(context, name, city, country):
+@then(
+    'the response should contain the venue id, name "{name}", city "{city}", state "{state}" and country "{country}"'
+)
+def step_impl(context, name, city, state, country):
     response_json = json.loads(context.response.content)
     venue = response_json["venue"]
     assert venue["name"] == name, f"Expected venue name '{name}', but got '{venue['name']}'"
     assert venue["city"] == city, f"Expected venue city '{city}', but got '{venue['city']}'"
+    assert venue["state"] == state, f"Expected venue state '{state}', but got '{venue['state']}"
     assert venue["country"] == country, f"Expected venue country '{country}', but got '{venue['country']}'"
 
 

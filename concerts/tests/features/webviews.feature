@@ -66,5 +66,5 @@ Scenario Outline: Authenticated user cannot create entities with invalid data
         | entity_type | invalid_data                            |
         | concert     | { "artist": "", "venue": "" }           |
         | artist      | { "name": "" }                          |
-        | venue       | { "name": "", "city": "", "country": ""}|
+        | venue       | { "name": "", "city": "", "state": "", "country": ""}|
 

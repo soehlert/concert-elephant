@@ -26,9 +26,9 @@ Feature: Autocomplete
     Scenario: Create a venue through an AJAX request
       Given I have a registered user "Sam"
       And "Sam" is logged in
-      When I submit the venue creation form with name "Awesome Venue", city "New York", and country "US" using AJAX
+      When I submit the venue creation form with name "Awesome Venue", city "New York", state "New York" and country "US" using AJAX
       Then I should receive a JSON response indicating success
-      And the response should contain the venue id, name "Awesome Venue", city "New York", and country "US"
+      And the response should contain the venue id, name "Awesome Venue", city "New York", state "NY" and country "US"
 
     Scenario: View concert detail through an AJAX request
       Given a concert exists
