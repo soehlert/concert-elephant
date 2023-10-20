@@ -115,7 +115,12 @@
           <div class="modal-messages" id="modal-venue-messages"></div>
           <form id="createVenueForm">
             {% csrf_token %}
-            {{ venue_form|crispy }}
+            {{ venue_form.name|as_crispy_field }}
+            {{ venue_form.city|as_crispy_field }}
+            {{ venue_form.country|as_crispy_field }}
+            <div id="state-field" style="display:none;">  {# add an id to this div #}
+              {{ venue_form.state|as_crispy_field }}
+            </div>
             <div class="text-center">
               <button type="submit" class="btn btn-primary text-white mt-2" id="venueCreateButton"
                       data-url="{% url 'concerts:venue-create' %}">Add Venue</button>
@@ -127,4 +132,5 @@
   </div>
 
   <script src="{% static 'js/concert_create.js' %}"></script>
+  <script src="{% static 'js/venue_form.js' %}"></script>
 {% endblock content %}
