@@ -46,7 +46,10 @@ class Venue(models.Model):
 
     def __str__(self):
         if self.country:
-            return str(f"{self.name} - {self.city}, {self.country}")
+            if self.state:
+                return str(f"{self.name} - {self.city}, {self.state}")
+            else:
+                return str(f"{self.name} - {self.city}, {self.country}")
         else:
             return str(f"{self.name} - {self.city}")
 
