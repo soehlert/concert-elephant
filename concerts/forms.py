@@ -1,6 +1,7 @@
 from bootstrap_datepicker_plus.widgets import DatePickerInput
 from django import forms
 from django_countries.widgets import CountrySelectWidget
+from localflavor.us.forms import USStateField, USStateSelect
 
 from .models import Artist, Concert, ConcertReview, Venue
 
@@ -76,7 +77,9 @@ class ArtistForm(forms.ModelForm):
 
 
 class VenueForm(forms.ModelForm):
+    state = USStateField(widget=USStateSelect(), required=False)
+
     class Meta:
         model = Venue
-        fields = ["name", "city", "country"]
+        fields = ["name", "city", "state", "country"]
         widgets = {"country": CountrySelectWidget(attrs={"class": "form-control"})}

@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% load crispy_forms_filters %}
+{% load static %}
 
 {% block content %}
   <div class="row justify-content-center">
@@ -11,7 +12,12 @@
       <form method="POST">
         {% csrf_token %}
         <fieldset class="form-group">
-          {{ form|crispy }}
+          {{ form.name|as_crispy_field }}
+          {{ form.city|as_crispy_field }}
+          {{ form.country|as_crispy_field }}
+          <div id="state-field" style="display:none;">  {# add an id to this div #}
+            {{ form.state|as_crispy_field }}
+          </div>
         </fieldset>
         <div class="text-center">
           <button class="btn btn-outline-info text-white" type="submit">Add Venue</button>
@@ -20,4 +26,5 @@
       </form>
     </div>
   </div>
+  <script src="{% static 'js/venue_form.js' %}"></script>
 {% endblock content %}

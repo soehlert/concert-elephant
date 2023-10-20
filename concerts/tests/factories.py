@@ -19,11 +19,12 @@ class ArtistFactory(factory.django.DjangoModelFactory):
 class VenueFactory(factory.django.DjangoModelFactory):
     name = Faker("street_name")
     city = Faker("city")
+    state = Faker("state")
     country = Faker("country_code")
 
     class Meta:
         model = Venue
-        django_get_or_create = ["name", "city"]
+        django_get_or_create = ["name", "city", "state"]
 
 
 class ConcertFactory(factory.django.DjangoModelFactory):

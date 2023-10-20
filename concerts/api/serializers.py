@@ -25,7 +25,7 @@ class VenueSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Venue
-        fields = ["id", "url", "name", "city", "country", "created_at", "total_concerts"]
+        fields = ["id", "url", "name", "city", "state", "country", "created_at", "total_concerts"]
 
     def get_total_concerts(self, obj):
         return obj.concerts.count()

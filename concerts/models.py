@@ -4,6 +4,7 @@ from django.db.models import UniqueConstraint
 from django.db.models.functions import Lower
 from django.utils import timezone
 from django_countries.fields import CountryField
+from localflavor.us.models import USStateField
 from titlecase import titlecase
 
 
@@ -36,6 +37,7 @@ class Venue(models.Model):
 
     name = models.CharField(max_length=100)
     city = models.CharField(max_length=100)
+    state = USStateField(blank=True, null=True)
     country = CountryField(default="US")
     created_at = models.DateTimeField(auto_now_add=True)
 
