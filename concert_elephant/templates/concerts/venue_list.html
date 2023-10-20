@@ -46,6 +46,20 @@
                   </span>
               </th>
               <th class="text-center" scope="col">
+                  State
+                  <span class="sort-icon" data-sort="state">
+                      <a href="{% if request.GET.sort_by == "city" %}?sort_by=-state{% else %}?sort_by=state{% endif %}">
+                          <i title="Sort" class="bi bi-arrow-down-up default-icon {% if "state" in request.GET.sort_by or "-state" in request.GET.sort_by %}hidden{% endif %}"></i>
+                      </a>
+                      <a href="?sort_by=-state">
+                          <i title="Change to descending" class="bi bi-arrow-up asc-icon {% if request.GET.sort_by == "state" %}active{% endif %}"></i>
+                      </a>
+                      <a href="?sort_by=state">
+                          <i title="Change to ascending" class="bi bi-arrow-down desc-icon {% if request.GET.sort_by == "-state" %}active{% endif %}"></i>
+                      </a>
+                  </span>
+              </th>
+              <th class="text-center" scope="col">
                   Country
                   <span class="sort-icon" data-sort="country">
                       <a href="{% if request.GET.sort_by == "country" %}?sort_by=-country{% else %}?sort_by=country{% endif %}">
@@ -80,6 +94,7 @@
                 data-href="{% url 'concerts:venue-detail' venue.id %}">
               <td class="align-middle text-center">{{ venue.name }}</td>
               <td class="align-middle text-center">{{ venue.city }}</td>
+              <td class="align-middle text-center">{% if venue.state %}{{ venue.state }}{% else %}---{% endif %}</td>
               <td class="align-middle text-center">{{ venue.country }}</td>
               <td class="align-middle text-center">{{ venue.concert_count }}</td>
             </tr>
