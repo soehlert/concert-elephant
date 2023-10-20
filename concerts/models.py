@@ -42,7 +42,7 @@ class Venue(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = ["name", "city"]
+        constraints = [models.UniqueConstraint(fields=["name", "city", "state"], name="unique_venue")]
 
     def __str__(self):
         if self.country:
