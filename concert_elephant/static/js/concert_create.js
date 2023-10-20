@@ -130,7 +130,7 @@ $(document).ready(function() {
     $("#createVenueForm").on("submit", function (event) {
         handleModalSubmit(event, venueCreateUrl, function (data) {
             $("#modal-venue-messages").html('<div class="alert alert-success text-center">' + data.message + '</div>');
-            const venueName = data.venue.name + " - " + data.venue.city + ", " + data.venue.country;
+            const venueName = data.venue.name + " - " + data.venue.city + ", " + (data.venue.state ? data.venue.state : data.venue.country);
             $('#venue-autocomplete').val(venueName);
             $('#concert-venue').val(data.venue.id);
             setTimeout(() => closeModal("#createVenueModal"), 1000);

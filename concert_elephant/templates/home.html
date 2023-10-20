@@ -85,6 +85,7 @@
             <tr>
               <th scope="col">Venue</th>
               <th class="text-center" scope="col">City</th>
+              <th class="text-center" scope="col">State</th>
               <th class="text-center" scope="col">Country</th>
               <th class="text-center" scope="col">Concerts</th>
             </tr>
@@ -93,6 +94,7 @@
             <tr class="clickable-row" data-href="{% url 'concerts:venue-detail' venue.pk %}">
               <td>{{ venue.name }}</td>
               <td class="text-center">{{ venue.city }}</td>
+              <td class="text-center">{% if venue.state %}{{ venue.state }}{% else %}---{% endif %}</td>
               <td class="text-center">{{ venue.country.alpha3 }}</td>
               <td class="text-center">{{ venue.concerts.count }}</td>
             </tr>
