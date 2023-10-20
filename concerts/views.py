@@ -221,7 +221,13 @@ class VenueCreateView(LoginRequiredMixin, CreateView):
                 {
                     "status": "success",
                     "message": "Venue successfully created!",
-                    "venue": {"id": venue.id, "name": venue.name, "city": venue.city, "country": venue.country.code},
+                    "venue": {
+                        "id": venue.id,
+                        "name": venue.name,
+                        "city": venue.city,
+                        "state": venue.state,
+                        "country": venue.country.code,
+                    },
                 }
             )
 

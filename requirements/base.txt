@@ -22,4 +22,5 @@ drf-spectacular==0.26.4  # https://github.com/tfranzel/drf-spectacular
 django-countries==7.5.1  # https://github.com/SmileyChris/django-countries/
 django-bootstrap-datepicker-plus==5.0.4  # https://github.com/monim67/django-bootstrap-datepicker-plus
 
+django-localflavor==4.0  # https://django-localflavor.readthedocs.io/en/latest/#
 titlecase==2.4.1  # https://github.com/ppannuto/python-titlecase
