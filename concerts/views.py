@@ -179,6 +179,8 @@ class VenueListView(ListView):
             "-name",
             "city",
             "-city",
+            "state",
+            "-state",
             "country",
             "-country",
             "concert_count",
