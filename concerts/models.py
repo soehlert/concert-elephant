@@ -42,11 +42,14 @@ class Venue(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = ["name", "city"]
+        constraints = [models.UniqueConstraint(fields=["name", "city", "state"], name="unique_venue")]
 
     def __str__(self):
         if self.country:
-            return str(f"{self.name} - {self.city}, {self.country}")
+            if self.state:
+                return str(f"{self.name} - {self.city}, {self.state}")
+            else:
+                return str(f"{self.name} - {self.city}, {self.country}")
         else:
             return str(f"{self.name} - {self.city}")
 
