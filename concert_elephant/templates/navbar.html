@@ -49,7 +49,7 @@
             <li class="nav-item d-inline mt-2">
               {% url 'users:detail' request.user.username as path %}
               <a class="nav-link nav-link-custom {% if request.path == path %}nav-link-active{% endif %}"
-                 href="{% url 'users:detail' request.user.username %}">{% translate "My Profile" %}</a>
+                 href="{% url 'users:detail' request.user.username %}">{% translate "My Concerts" %}</a>
             </li>
             <li class="nav-item d-inline mt-2">
               {# URL provided by django-allauth/account/urls.py #}
