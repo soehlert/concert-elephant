@@ -2,6 +2,52 @@
 
 {% block content %}
   <div class="row justify-content-center">
+    <!-- Popular Artists Card -->
+    <div class="col col-md-6 col-sm-12">
+      <div class="card">
+        <h5 class="card-header card-header-custom display-4 text-center">Popular Artists</h5>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-striped table-hover">
+          <thead class="table-custom">
+            <tr>
+              <th scope="col">Artist</th>
+              <th class="text-center" scope="col">Concerts</th>
+            </tr>
+          </thead>
+          {% for artist in popular_artists %}
+            <tr class="clickable-row" data-href="{% url 'concerts:artist-detail' artist.pk %}">
+              <td>{{ artist.name }}</td>
+              <td class="text-center">{{ artist.total_concerts }}</td>
+            </tr>
+          {% endfor %}
+        </table>
+      </div>
+    </div>
+    <!-- Popular Venues Card -->
+    <div class="col col-md-6 col-sm-12">
+      <div class="card">
+        <h5 class="card-header card-header-custom display-4 text-center">Popular Venues</h5>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-striped table-hover">
+          <thead class="table-custom">
+            <tr>
+              <th scope="col">Venue</th>
+              <th class="text-center" scope="col">Concerts</th>
+            </tr>
+          </thead>
+          {% for venue in popular_venues %}
+            <tr class="clickable-row" data-href="{% url 'concerts:venue-detail' venue.pk %}">
+              <td>{{ venue.name }}</td>
+              <td class="text-center">{{ venue.concerts.count }}</td>
+            </tr>
+          {% endfor %}
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="row justify-content-center">
     <div class="col col-md-6 col-sm-12">
       <div class="card">
         <h5 class="card-header card-header-custom display-4 text-center">Popular Concerts</h5>
