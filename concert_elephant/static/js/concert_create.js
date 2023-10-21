@@ -26,7 +26,7 @@ $(document).ready(function() {
             minLength: 2,
             response: function(event, ui) {
                 if (!ui.content.length) {
-                    $(this).val("No results found; please add a new one");
+                    $(this).val("No results found - use the button above to create");
                 }
             },
             select: function(event, ui) {
