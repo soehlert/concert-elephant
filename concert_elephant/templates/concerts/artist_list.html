@@ -52,7 +52,7 @@
               <tr class="clickable-row"
                   data-href="{% url 'concerts:artist-detail' artist.id %}">
                 <td class="align-middle text-center">{{ artist.name }}</td>
-                <td class="align-middle text-center">{{ artist.concerts.count }}</td>
+                <td class="align-middle text-center">{{ artist.concert_count }}</td>
               </tr>
             {% endfor %}
           </table>

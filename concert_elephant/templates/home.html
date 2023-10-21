@@ -69,7 +69,7 @@
           {% for artist in recent_artists %}
             <tr class="clickable-row" data-href="{% url 'concerts:artist-detail' artist.pk %}">
               <td>{{ artist.name }}</td>
-              <td class="text-center">{{ artist.concerts.count }}</td>
+              <td class="text-center">{{ artist.total_concerts }}</td>
             </tr>
           {% endfor %}
         </table>
