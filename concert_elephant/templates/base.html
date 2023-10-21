@@ -80,12 +80,17 @@
     </script>
     {% endcomment %}
       <script type="text/javascript">
-        $(document).ready(function() {
+       $(document).ready(function() {
           setTimeout(function() {
             $('.alert-dismissible').fadeOut('slow');
           }, 2000);
 
           $('[data-toggle="tooltip"]').tooltip();
+
+          // Clear modal message when any modal is closed
+          $('.modal').on('hidden.bs.modal', function() {
+              $(this).find('.modal-messages').html("");
+          });
         });
 
         document.addEventListener("DOMContentLoaded", function() {
