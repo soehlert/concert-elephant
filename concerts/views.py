@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ValidationError
-from django.db.models import Count, Q
+from django.db.models import Count, F, Q
 from django.db.models.functions import Lower
 from django.http import HttpResponseForbidden, HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render, reverse
@@ -19,16 +19,24 @@ logger = logging.getLogger(__name__)
 
 
 def home_page(request):
-    recent_artists = Artist.objects.all().order_by("-created_at")[:5]
-    recent_concerts = Concert.objects.select_related("artist", "venue").order_by("-date")[:5]
-    recent_venues = Venue.objects.all().order_by("-created_at")[:5]
-    popular_concerts = Concert.objects.all().annotate(num_attendees=Count("attendees")).order_by("-num_attendees")[:5]
+    recent_artists = Artist.objects.annotate(total_concerts=Count("concerts") + Count("opener_concerts")).order_by(
+        "-created_at"
+    )[:10]
+    recent_concerts = Concert.objects.select_related("artist", "venue").order_by("-date")[:10]
+    recent_venues = Venue.objects.all().order_by("-created_at")[:10]
+    popular_artists = Artist.objects.annotate(total_concerts=Count("concerts") + Count("opener_concerts")).order_by(
+        "-total_concerts"
+    )[:10]
+    popular_concerts = Concert.objects.all().annotate(num_attendees=Count("attendees")).order_by("-num_attendees")[:10]
+    popular_venues = Venue.objects.annotate(num_shows=Count("concerts")).order_by("-num_shows")[:10]
 
     context = {
         "recent_artists": recent_artists,
         "recent_concerts": recent_concerts,
         "recent_venues": recent_venues,
+        "popular_artists": popular_artists,
         "popular_concerts": popular_concerts,
+        "popular_venues": popular_venues,
     }
     return render(request, "home.html", context)
 
@@ -107,7 +115,13 @@ class ArtistListView(ListView):
             logger.warning(f"Unrecognized sort option received: {self.request.GET.get('sort_by')}")
             sort_by = "-created_at"
 
-        queryset = Artist.objects.annotate(concert_count=Count("concerts")).order_by(sort_by)
+        queryset = (
+            Artist.objects.annotate(
+                main_concert_count=Count("concerts"), opener_concert_count=Count("opener_concerts")
+            )
+            .annotate(concert_count=F("main_concert_count") + F("opener_concert_count"))
+            .order_by(sort_by)
+        )
 
         return queryset
 
@@ -118,7 +132,19 @@ class ArtistDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["recent_concerts"] = Concert.objects.filter(artist=self.object.id).select_related("venue")
+        # Get concerts where the artist is the main performer
+        main_concerts = Concert.objects.filter(artist=self.object.id).select_related("venue")
+
+        # Get concerts where the artist is an opener
+        opener_concerts = Concert.objects.filter(opener=self.object.id).select_related("venue")
+
+        # Combine the querysets
+        total_concerts = main_concerts | opener_concerts
+        total_concerts_count = total_concerts.count()
+
+        context["recent_concerts"] = total_concerts
+        context["total_concerts_count"] = total_concerts_count
+
         return context
 
     def render_to_response(self, context, **response_kwargs):

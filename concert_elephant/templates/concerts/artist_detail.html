@@ -16,7 +16,7 @@
           </thead>
           <tr>
             <td class="text-center">{{ artist }}</td>
-            <td class="text-center">{{ artist.concerts.count }}</td>
+            <td class="text-center">{{ total_concerts_count }}</td>
           </tr>
         </table>
       </div>
@@ -37,7 +37,8 @@
             </tr>
           </thead>
           {% for concert in recent_concerts %}
-            <tr>
+            <tr class="clickable-row"
+              data-href="{% url 'concerts:concert-detail' concert.id %}">
               <td>{{ concert.artist }}</td>
               <td class="text-center">{{ concert.venue }}</td>
               <td class="text-center">{{ concert.date }}</td>

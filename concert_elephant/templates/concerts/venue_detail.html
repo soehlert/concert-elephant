@@ -37,7 +37,8 @@
             </tr>
           </thead>
           {% for concert in recent_concerts %}
-            <tr>
+            <tr class="clickable-row"
+              data-href="{% url 'concerts:concert-detail' concert.id %}">
               <td>{{ concert.artist }}</td>
               <td class="text-center">{{ concert.venue.name|title }}</td>
               <td class="text-center">{{ concert.date }}</td>
