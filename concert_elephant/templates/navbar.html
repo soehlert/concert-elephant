@@ -3,7 +3,10 @@
 <div class="mb-1">
   <nav class="navbar navbar-custom sticky-top navbar-expand-md navbar-dark justify-content-between bg-dark">
     <div class="container-fluid">
-      <a class="navbar-brand" href="{% url 'concerts:home' %}">Concert Elephant<span class="visually-hidden">(current)</span></a>
+      <a class="navbar-brand" href="{% url 'concerts:home' %}">
+          <img src="{% static 'images/logo.png' %}" alt="Concert Elephant Logo" class="logo">
+          <span class="visually-hidden">(current)</span>
+      </a>
       <button class="navbar-toggler navbar-toggler-right"
               type="button"
               data-bs-toggle="collapse"
