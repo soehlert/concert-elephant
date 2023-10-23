@@ -16,7 +16,6 @@ services:
     volumes:
       - production_django_media:/app/concert_elephant/media
     depends_on:
-      - postgres
       - redis
     env_file:
       - ./.envs/.production/.django

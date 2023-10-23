@@ -101,6 +101,11 @@ migrate: docker-compose.yaml
 	@docker compose run django python manage.py makemigrations
 	@docker compose run django python manage.py migrate
 
+## musicbrainz: lookup musicbrainz IDs for artists missing them
+.Phony: musicbrainz
+musicbrainz:
+	@docker compose run django python manage.py musicbrainz_lookup
+
 ## pytest: runs pytest inside the containers
 .Phony: pytest
 pytest: docker-compose.yaml
