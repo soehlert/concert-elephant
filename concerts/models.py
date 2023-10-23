@@ -1,7 +1,6 @@
 from django.conf import settings
 from django.db import models
 from django.db.models import UniqueConstraint
-from django.db.models.functions import Lower
 from django.utils import timezone
 from django_countries.fields import CountryField
 from localflavor.us.models import USStateField
@@ -13,14 +12,16 @@ class Artist(models.Model):
     """The artist you saw"""
 
     name = models.CharField(max_length=100)
+    musicbrainz_id = models.CharField(max_length=255, blank=True, null=True)
+    processed_for_musicbrainz = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
-    # Don't allow multiple bands with the same name
+    # Don't allow multiple bands with the same musicbrainz ID
     class Meta:
         constraints = [
             UniqueConstraint(
-                Lower("name"),
-                name="artist_name_unique",
+                "musicbrainz_id",
+                name="artist_mbid_unique",
             ),
         ]
 
