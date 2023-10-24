@@ -44,6 +44,16 @@ document.addEventListener("DOMContentLoaded", function() {
 
     showModalBtns.forEach(btn => {
         btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+
+            // Clearing previous state
+            reviewText.value = '';
+            starRating.value = '';
+            reviewModal.querySelectorAll('input').forEach(input => {
+                if (input.type === "text" || input.type === "number") {
+                    input.value = '';
+                }
+            });
             const concertId = btn.getAttribute('data-concert-id');
             const row = e.currentTarget.closest('tr');
             const getConcertURL = row.getAttribute('data-concert-details-url');
