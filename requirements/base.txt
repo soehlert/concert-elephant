@@ -24,3 +24,6 @@ django-bootstrap-datepicker-plus==5.0.4  # https://github.com/monim67/django-boo
 
 django-localflavor==4.0  # https://django-localflavor.readthedocs.io/en/latest/#
 titlecase==2.4.1  # https://github.com/ppannuto/python-titlecase
+musicbrainzngs==0.7.1  # https://github.com/alastair/python-musicbrainzngs
+fuzzywuzzy==0.18.0  # https://github.com/seatgeek/fuzzywuzzy
+python-Levenshtein==0.23.0  # https://github.com/ztane/python-Levenshtein

@@ -9,18 +9,15 @@ from concerts.models import Artist, Concert, ConcertReview, Venue
 
 
 class ArtistFactory(factory.django.DjangoModelFactory):
-    name = Faker("name")
-
     class Meta:
         model = Artist
-        django_get_or_create = ["name"]
 
 
 class VenueFactory(factory.django.DjangoModelFactory):
     name = Faker("street_name")
     city = Faker("city")
-    state = Faker("state")
-    country = Faker("country_code")
+    state = Faker("state_abbr")
+    country = Faker("country_code", representation="alpha-2")
 
     class Meta:
         model = Venue
@@ -28,7 +25,6 @@ class VenueFactory(factory.django.DjangoModelFactory):
 
 
 class ConcertFactory(factory.django.DjangoModelFactory):
-    artist = SubFactory(ArtistFactory)
     venue = SubFactory(VenueFactory)
 
     class Meta:
@@ -40,15 +36,25 @@ class ConcertFactory(factory.django.DjangoModelFactory):
 
     date = LazyFunction(random_date_within_past_year)
 
+    @factory.lazy_attribute
+    def artist(self):
+        artists = Artist.objects.all()
+        if artists.exists():
+            return random.choice(artists)
+
     @factory.post_generation
     def opener(self, create, extracted, **kwargs):
         if not create:
             return
         if extracted:
+            # If opener artists are explicitly provided, use them
             for artist in extracted:
                 self.opener.add(artist)
         else:
-            self.opener.add(ArtistFactory())
+            # Otherwise, choose a random artist from the database
+            artists = Artist.objects.exclude(id=self.artist.id).all()
+            if artists.exists():
+                self.opener.add(random.choice(artists))
 
 
 class ConcertReviewFactory(factory.django.DjangoModelFactory):

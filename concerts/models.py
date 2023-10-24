@@ -1,7 +1,6 @@
 from django.conf import settings
 from django.db import models
 from django.db.models import UniqueConstraint
-from django.db.models.functions import Lower
 from django.utils import timezone
 from django_countries.fields import CountryField
 from localflavor.us.models import USStateField
@@ -12,23 +11,34 @@ from titlecase import titlecase
 class Artist(models.Model):
     """The artist you saw"""
 
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
+    musicbrainz_id = models.CharField(max_length=255, blank=True, null=True)
+    processed_for_musicbrainz = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
-    # Don't allow multiple bands with the same name
+    # Don't allow multiple bands with the same musicbrainz ID
     class Meta:
         constraints = [
             UniqueConstraint(
-                Lower("name"),
-                name="artist_name_unique",
+                "musicbrainz_id",
+                name="artist_mbid_unique",
             ),
         ]
 
     def __str__(self):
         return str(f"{self.name}")
 
+    def custom_titlecase(self, name):
+        exceptions = {
+            # "lower case name for comparison": "Desired Format"
+            "ac/dc": "AC/DC",
+        }
+        if name.lower() in exceptions:
+            return exceptions[name.lower()]
+        return titlecase(name)
+
     def save(self, *args, **kwargs):
-        self.name = titlecase(self.name)
+        self.name = self.custom_titlecase(self.name)
         super().save(*args, **kwargs)
 
 

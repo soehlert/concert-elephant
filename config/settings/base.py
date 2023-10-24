@@ -80,6 +80,9 @@ THIRD_PARTY_APPS = [
     "crispy_forms",
     "django_countries",
     "drf_spectacular",
+    "fuzzywuzzy",
+    "Levenshtein",
+    "musicbrainzngs",
     "rest_framework",
     "rest_framework.authtoken",
 ]
