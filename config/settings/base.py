@@ -193,6 +193,7 @@ TEMPLATES = [
                 "django.template.context_processors.tz",
                 "django.contrib.messages.context_processors.messages",
                 "concert_elephant.users.context_processors.allauth_settings",
+                "concerts.context_processors.debug_mode",
             ],
         },
     }
