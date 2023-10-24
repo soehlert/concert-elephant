@@ -24,7 +24,7 @@
                   <tr>
                     <td>{{ artist.name }}</td>
                     <td>{{ artist.genre }}</td>
-                    <td><a href="{% url 'artist_detail' artist.id %}">View Details</a></td>
+                    <td><a href="{% url 'concerts:artist-detail' artist.id %}">View Details</a></td>
                   </tr>
                   {% endfor %}
                 </tbody>
@@ -51,7 +51,7 @@
                   <tr>
                     <td>{{ venue.name }}</td>
                     <td>{{ venue.location }}</td>
-                    <td><a href="{% url 'venue_detail' venue.id %}">View Details</a></td>
+                    <td><a href="{% url 'concerts:venue-detail' venue.id %}">View Details</a></td>
                   </tr>
                   {% endfor %}
                 </tbody>
