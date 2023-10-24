@@ -161,3 +161,8 @@ td[onclick]:hover {
   cursor: pointer;
   background-color: #D3D3D3;
 }
+
+.logo {
+    width: 100px;
+    height: auto;  /* This maintains the aspect ratio */
+}
