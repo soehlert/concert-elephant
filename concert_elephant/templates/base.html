@@ -8,7 +8,11 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
     <title>
       {% block title %}
-        Concert Elephant
+        {% if DEBUG_MODE %}
+            DEV - Concert Elephant
+        {% else %}
+            Concert Elephant
+        {% endif %}
       {% endblock title %}
     </title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
