@@ -11,7 +11,7 @@ from titlecase import titlecase
 class Artist(models.Model):
     """The artist you saw"""
 
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
     musicbrainz_id = models.CharField(max_length=255, blank=True, null=True)
     processed_for_musicbrainz = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -28,8 +28,17 @@ class Artist(models.Model):
     def __str__(self):
         return str(f"{self.name}")
 
+    def custom_titlecase(self, name):
+        exceptions = {
+            # "lower case name for comparison": "Desired Format"
+            "ac/dc": "AC/DC",
+        }
+        if name.lower() in exceptions:
+            return exceptions[name.lower()]
+        return titlecase(name)
+
     def save(self, *args, **kwargs):
-        self.name = titlecase(self.name)
+        self.name = self.custom_titlecase(self.name)
         super().save(*args, **kwargs)
 
 

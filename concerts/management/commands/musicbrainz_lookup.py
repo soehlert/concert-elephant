@@ -37,7 +37,7 @@ class Command(BaseCommand):
         # Fetch all artists who haven't been processed for MusicBrainz and don't have a MusicBrainz ID
         artists_to_lookup = Artist.objects.filter(
             processed_for_musicbrainz=False, musicbrainz_id__isnull=True
-        ).order_by("-created_at")[:9]
+        ).order_by("-created_at")
 
         for artist_obj in artists_to_lookup:
             artist_name_to_search = artist_obj.name  # Get the artist name from the artist_obj
