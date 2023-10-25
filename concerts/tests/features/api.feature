@@ -12,11 +12,11 @@ Feature: API Endpoints
     When I request the <entity> list
     Then I should receive a list of entities
 
-  Examples:
-    | entity  |
-    | artist  |
-    | venue   |
-    | concert |
+    Examples:
+      | entity  |
+      | artist  |
+      | venue   |
+      | concert |
 
   @api
   Scenario: Retrieve a user's concert reviews list
@@ -25,6 +25,13 @@ Feature: API Endpoints
     Given I have a registered user Alice
     When Alice requests the list of concert reviews for Sam
     Then the response should contain an empty list of reviews
+
+  Scenario: Create international venue through API
+    Given I have a registered user Bob
+    And I am a token authenticated user Bob
+    When I create a new venue with {"name": "International Venue", "city": "Paris", "country": "FR"}
+    Then the response status code should be 201
+    And the state of the created venue should be None
 
   @api
   Scenario: Update a user's own concert review
