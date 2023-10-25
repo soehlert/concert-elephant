@@ -30,6 +30,15 @@ class VenueSerializer(serializers.ModelSerializer):
     def get_total_concerts(self, obj):
         return obj.concerts.count()
 
+    def validate(self, data):
+        country = data.get("country")
+
+        # Check if the country is US and if not, remove the state
+        if country != "US":
+            data["state"] = None
+
+        return data
+
 
 class ConcertSerializer(serializers.ModelSerializer):
     artist = serializers.HyperlinkedRelatedField(view_name="api:v1:artist-detail", queryset=Artist.objects.all())

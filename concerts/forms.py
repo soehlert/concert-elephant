@@ -83,3 +83,12 @@ class VenueForm(forms.ModelForm):
         model = Venue
         fields = ["name", "city", "state", "country"]
         widgets = {"country": CountrySelectWidget(attrs={"class": "form-control"})}
+
+    def clean(self):
+        cleaned_data = super().clean()
+        country = cleaned_data.get("country")
+
+        if country != "US":
+            cleaned_data["state"] = None
+
+        return cleaned_data
