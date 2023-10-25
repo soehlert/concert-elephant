@@ -34,6 +34,7 @@
               <th scope="col">Artist</th>
               <th class="text-center" scope="col">Venue</th>
               <th class="text-center" scope="col">Date</th>
+              <th></th>
             </tr>
           </thead>
           {% for concert in recent_concerts %}
@@ -42,6 +43,10 @@
               <td>{{ concert.artist }}</td>
               <td class="text-center">{{ concert.venue }}</td>
               <td class="text-center">{{ concert.date }}</td>
+              <td>
+                {% include "concerts/attend_concert.html" %}
+                {% include "concerts/unattend_concert.html" %}
+              </td>
             </tr>
           {% endfor %}
         </table>
