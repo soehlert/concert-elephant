@@ -84,8 +84,7 @@ def step_impl(context):
 
 @when("I unattend the concert")
 def step_impl(context):
-    concert_list_url = reverse("concerts:concert-list").replace("/", "")
-    url = reverse("concerts:unattend-concert", kwargs={"pk": context.entity.id, "next": concert_list_url})
+    url = reverse("concerts:unattend-concert", kwargs={"pk": context.entity.id})
     context.response = context.client.post(url)
 
 
