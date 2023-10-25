@@ -78,6 +78,11 @@ class UserDetailView(LoginRequiredMixin, DetailView):
         context["concerts_with_reviews"] = concerts_with_reviews
         context["user_concerts"] = user_concerts
         context["review_form"] = ConcertReviewForm()
+
+        # Indicate that we're on the user detail page
+        # used for redirection when unattending/attending a concert
+        context["in_user_detail"] = True
+
         return context
 
 

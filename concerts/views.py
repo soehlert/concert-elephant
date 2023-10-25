@@ -84,20 +84,31 @@ class UnifiedAutocomplete(View):
 def attend_concert(request, pk):
     concert = get_object_or_404(Concert, pk=pk)
     Concert.attend_concert(request.user, concert)
-
-    return redirect("concerts:concert-list")
+    return handle_redirection(request, concert)
 
 
 @login_required
-def unattend_concert(request, pk, next=None):
+def unattend_concert(request, pk):
     concert = get_object_or_404(Concert, pk=pk)
     concert.attendees.remove(request.user)
 
     messages.info(
         request,
-        "Concert removed from your profile. Your review has been saved and can be accessed if you re-add the concert.",
+        "Concert removed from your profile. If you had a review, your review "
+        "has been saved and can be accessed if you re-add the concert.",
     )
-    if next == "user-detail":
+
+    return handle_redirection(request, concert)
+
+
+def handle_redirection(request, concert):
+    next_page = request.POST.get("next", "") or request.GET.get("next", "")
+
+    if next_page == "concert-list":
+        return redirect("concerts:concert-list")
+    elif next_page == "artist-detail":
+        return redirect("concerts:artist-detail", pk=concert.artist.pk)
+    elif next_page == "user-detail":
         return redirect("users:detail", request.user.username)
     else:
         return redirect("concerts:concert-list")
@@ -144,6 +155,16 @@ class ArtistDetailView(DetailView):
 
         context["recent_concerts"] = total_concerts
         context["total_concerts_count"] = total_concerts_count
+
+        # Add the user_concerts to the context
+        if self.request.user.is_authenticated:
+            context["user_concerts"] = Concert.objects.filter(attendees=self.request.user).values_list("id", flat=True)
+        else:
+            context["user_concerts"] = []
+
+        # Indicate that we're on the artist detail page
+        # used for redirection when unattending/attending a concert
+        context["in_artist_detail"] = True
 
         return context
 
@@ -300,6 +321,21 @@ class ConcertListView(ListView):
             queryset = Concert.objects.order_by(sort_by)
 
         return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        # Add the user_concerts to the context
+        if self.request.user.is_authenticated:
+            context["user_concerts"] = Concert.objects.filter(attendees=self.request.user).values_list("id", flat=True)
+        else:
+            context["user_concerts"] = []
+
+        # Indicate that we're on the concert list view
+        # used for redirection when unattending/attending a concert
+        context["in_concert_list"] = True
+
+        return context
 
 
 class ConcertDetailView(DetailView):
