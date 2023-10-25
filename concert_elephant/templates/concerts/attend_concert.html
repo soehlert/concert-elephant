@@ -1,0 +1,17 @@
+{% if user.is_authenticated %}
+    {% if concert.id not in user_concerts %}
+        <form class="form-inline"
+              action="{% url 'concerts:attend-concert' pk=concert.id %}"
+              method="POST">
+            {% csrf_token %}
+            {% if in_artist_detail %}
+              <input type="hidden" name="next" value="artist-detail">
+            {% elif in_concert_list %}
+              <input type="hidden" name="next" value="concert-list">
+            {% endif %}
+            <div class="text-center">
+                <button class="btn btn-info btn-sm text-white" type="submit">I Was There!</button>
+            </div>
+        </form>
+    {% endif %}
+{% endif %}

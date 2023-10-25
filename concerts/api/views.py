@@ -12,7 +12,6 @@ class ArtistViewset(viewsets.GenericViewSet, ListModelMixin, RetrieveModelMixin,
     serializer_class = ArtistSerializer
 
     def get_permissions(self):
-        print(self.request.headers)
         if self.action == "create":
             return [permissions.IsAuthenticated()]
         elif self.action == "list":
@@ -25,7 +24,6 @@ class VenueViewset(viewsets.GenericViewSet, ListModelMixin, RetrieveModelMixin, 
     serializer_class = VenueSerializer
 
     def get_permissions(self):
-        print(self.request.headers)
         if self.action == "create":
             return [permissions.IsAuthenticated()]
         elif self.action == "list":
@@ -38,7 +36,6 @@ class ConcertViewset(viewsets.GenericViewSet, ListModelMixin, RetrieveModelMixin
     serializer_class = ConcertSerializer
 
     def get_permissions(self):
-        print(self.request.headers)
         if self.action == "create":
             return [permissions.IsAuthenticated()]
         elif self.action == "list":

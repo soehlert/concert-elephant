@@ -61,6 +61,7 @@
                   </span>
                 </th>
                 <th class="text-center">Openers</th>
+                <th></th>
               </tr>
             </thead>
             {% for concert in page_obj %}
@@ -74,6 +75,10 @@
                     {{ opener.name }}
                     {% if not forloop.last %},{% endif %}
                   {% endfor %}
+                </td>
+                <td>
+                  {% include "concerts/attend_concert.html" %}
+                  {% include "concerts/unattend_concert.html" %}
                 </td>
               </tr>
             {% endfor %}

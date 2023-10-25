@@ -19,7 +19,7 @@ def step_impl(context, url_name):
     param_mapping = {
         "concerts:concert-detail": [concert.id],
         "concerts:attend-concert": [concert.id],
-        "concerts:unattend-concert": [concert.id, "dummy_next_value"],
+        "concerts:unattend-concert": [concert.id],
         "concerts:add-concert-review": [concert.id],
         "concerts:update-concert-review": [review.id],
         "concerts:delete-concert-review": [review.id],
