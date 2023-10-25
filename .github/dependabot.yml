@@ -28,19 +28,6 @@ updates:
           - 'version-update:semver-minor'
 
   - package-ecosystem: 'docker'
-    # Look for a `Dockerfile` in the `compose/local/docs` directory
-    directory: 'compose/local/docs/'
-    # Every weekday
-    schedule:
-      interval: 'daily'
-    # Ignore minor version updates (3.10 -> 3.11) but update patch versions
-    ignore:
-      - dependency-name: '*'
-        update-types:
-          - 'version-update:semver-major'
-          - 'version-update:semver-minor'
-
-  - package-ecosystem: 'docker'
     # Look for a `Dockerfile` in the `compose/local/node` directory
     directory: 'compose/local/node/'
     # Every weekday
