@@ -106,3 +106,10 @@ def step_impl(context, entity_type, invalid_data):
 @then("I should see form errors in the response")
 def step_impl(context):
     assert "This field is required." in context.response.content.decode(), "Expected form errors, but none were found."
+
+
+@when("I create an international venue with valid data")
+def step_impl(context):
+    data = {"name": "Test International Venue", "city": "Test City", "country": "FR"}
+    url = reverse("concerts:venue-create")
+    context.response = context.client.post(url, data=data)
