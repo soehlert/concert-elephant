@@ -1,4 +1,4 @@
-from behave import given, then
+from behave import given, step, then
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from rest_framework.authtoken.models import Token
@@ -80,6 +80,15 @@ def step_impl(context, status_code):
     assert context.response.status_code == int(
         status_code
     ), f"Expected {status_code} but got {context.response.status_code}"
+
+
+@step("the state of the created venue should be None")
+def step_impl(context):
+    # Get the latest venue created
+    venue = Venue.objects.order_by("-created_at").first()
+
+    # Check if the state is None
+    assert venue.state is None, f"Expected venue.state to be None, but got {venue.state}"
 
 
 def after_scenario(context, _):
