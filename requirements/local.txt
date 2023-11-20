@@ -7,7 +7,7 @@ psycopg[c]==3.1.10  # https://github.com/psycopg/psycopg
 # Testing
 # ------------------------------------------------------------------------------
 mypy==1.4.1  # https://github.com/python/mypy
-django-stubs[compatible-mypy]==4.2.3  # https://github.com/typeddjango/django-stubs
+django-stubs[compatible-mypy]==4.2.6  # https://github.com/typeddjango/django-stubs
 behave-django==1.4.0  # https://behave-django.readthedocs.io/en/stable/
 behave==1.2.6  # https://behave.readthedocs.io/en/latest/
 pytest==7.4.3  # https://github.com/pytest-dev/pytest
